@@ -10,7 +10,8 @@ app.use(express.json())
 
 //router분리
 const router = require('./routes/main')
-app.use('/', router)//라우터
+app.use('/', router)
+//라우터
 
 //오류처리
 app.use('*', (req, res) => {
