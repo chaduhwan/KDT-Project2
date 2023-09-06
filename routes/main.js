@@ -78,6 +78,9 @@ router.post("/upload", upload.single("dynamic"), M_controller.profileImg);
 router.get("/logout", M_controller.logout);
 
 //////////////////상녕/////////////////
+//채팅방 render페이지
 router.get("/chat", S_controller.chat);
+//채팅 불러오기
+router.post("/preMessage", S_controller.preMessage);
 
 module.exports = router;
