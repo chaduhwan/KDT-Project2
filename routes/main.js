@@ -24,6 +24,9 @@ router.delete("/board/delete", C_controller.BoardDelete);
 //////Board Like
 router.patch("/board/like", C_controller.BoardLike);
 
+//////comment Write
+router.post("/comment/write",C_controller.CommentWrite)
+
 //메인화면
 router.get("/", M_controller.main);
 

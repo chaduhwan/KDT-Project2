@@ -24,12 +24,15 @@
                  <td class="borad-like"> 좋아요 <%=data.like%></td>
                  <td class="board-tag"> 태그 : <%=data.tag%></td>
              </tr>
-         </a>
+             <button type="button" class="boardLike" value="<%=data.BoardId%>" onclick="BoardLike(this)"><%=data.like%></button>
      </main>
+     <button class="board-delete" onclick="BoardDelete()">삭제하기</button>
 
     <footer class="board-comment">
-        <button class="board-delete" onclick="BoardDelete()">삭제하기</button>
-        <button class="board-comment">댓글달기</button>
+        <form name="commentWrite">
+            <input type="text" name="commentContent">
+            <button type="button" class="board-comment" onclick="commentWrite()">댓글달기</button>
+        </form>
     </footer>
 </body>
     <script>
@@ -49,6 +52,33 @@
                 if(res.data.result){
                     window.location.href='/board';
                 }
+            })
+        }
+        
+        function BoardLike(button) {
+        const buttonValue = button.value;
+        console.log(`버튼의 value: ${buttonValue}`);
+            axios({
+                method :'PATCH',
+                url :'/board/like',
+                data : {BoardId : buttonValue}
+            }).then(res=> {
+              button.innerText =`${res.data.data.like}`
+        });
+        }
+
+        function commentWrite() {
+            const form = document.forms['commentContent']
+            const data = 
+            {content : form.commentContent.value,
+             writer : '<%=user%>',
+             date : Date(),
+             BoardId : document.querySelector('#board-id').value
+            }
+            axios({
+                method:'POST',
+                url :'/comment/write',
+                data : data
             })
         }
     </script>
