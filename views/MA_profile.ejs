@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- jquery cdn -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>내 회원 정보</h1>
+    <!-- 프로필 사진 -->
+    <div id="profile_img" style="width: 200px; height: 200px; border-radius: 50%; background-color: grey;"></div>
+    <form onsubmit="fileupload(event)" name="form-upload">
+        <input type="file" id="dynamic"><br />
+        <button type="submit">프로필 사진 등록</button>
+    </form>
+    <!-- 회원 정보 -->
+    <form name="form-profile">
+        이메일 <input type="email" id="email" value="<%= data.email%>"><br />
+        이름 <input type="text" id="name" value="<%= data.name %>"><br />
+        전화번호 <input type="number" id="phone" value="<%= data.phone %>"><br />
+        <button type="button" onclick="registerEdit(`<%= data.id %>`)">수정</button>
+        <button type="button" onclick="deleteUser(`<%= data.id %>`)">탈퇴하기</button>
+    </form>
+    <a href="/logout">로그아웃</a>
+
+    <script>
+
+        async function registerEdit(id) {
+            let email = $("#email"); // 이메일
+            let name = $('#name'); //이름
+            let phone = $('#phone')//핸드폰번호
+            const res = await axios({
+                method: 'PATCH',
+                url: '/profile',
+                data: {
+                    id: Number(id),
+                    email: email.value,
+                    name: name.value,
+                    phone: phone.value,
+                },
+            });
+            console.log('res', res.data);
+            if (res.data.result) {
+                alert('성공')
+                // window.location.reload();
+            }
+        }
+        async function fileupload(event){
+            event.preventDefault();
+            console.log('사진등록')
+            const imgBox = $('#profile_img');
+            const file = document.querySelector('#dynamic');
+           // const file = $('#dynamic');
+            console.log(file)
+            // console.log(file[0].files);
+
+            const formData = new FormData();
+            formData.append('dynamic', file.files[0]);
+            try {
+                const res = await axios({
+                    method: 'POST',
+                    url:'/upload',
+                    data: formData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                console.log('res', res);
+                imgBox.innerHTML = `<img src = ${res.data.path}>`
+            }catch(error){
+                console.log(error)
+            }
+        }
+    </script>
+</body>
+
+</html>

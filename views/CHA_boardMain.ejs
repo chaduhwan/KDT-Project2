@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <header class="board-hearder">
+        <h1>모든글</h1>
+        <form name="board-search">
+            <select id="search_select">
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+                <option value="tag">태그</option>
+            </select>
+            <input type="text" name="searchBar">
+            <button type="button" onclick="boardSearch()">검색</button>
+        </form>
+    </header>
+
+    <main class="board-main">
+        <% for (let i = 0 ; i < data.length ; i ++) {%>
+        <div class="board-object" data-board-id="<%=data[i].BoardId%>" onclick="boardDetail(this)">
+            <tr>
+                <td id="borad-ID">등록번호 : <%=data[i].BoradId%></td>
+                <td class="board-title"> 제목 : <%=data[i].title%></td>
+                <td class="board-date"> 날짜 : <%=data[i].date%></td>
+                <img class="board-writer-img" src="">
+                <td class="board-writer"> 작성자 : <%=data[i].writer%></td>
+                <td class="board-content"> 내용 : <%=data[i].content%></td>
+                <td class="board-tag"> 태그 : <%=data[i].tag%></td>
+            </tr>
+        </div>
+        <button type="button" class="boardLike" value="<%=data[i].BoardId%>" onclick="BoardLike(this)"><%=data[i].like%></button>
+            <%}%>
+    </main>
+    <footer class="board-footer">
+        <form name="board-write">
+            <input type="text" name="title" placeholder="제목을 입력해주세요">
+            <input type="text" name="content" placeholder="내용을 입력해주세요">
+            <button class="board-onWrite" onclick="boardWrite()">작성하기</button>
+        </form>
+    </footer>
+
+
+</body>
+<script>
+
+    function boardDetail(element) {
+        const boardid = element.getAttribute('data-board-id');
+        axios({
+            method : 'GET',
+            url : `/board/detail?boardId=${boardid}`,
+            params :{ boardId : boardid}
+        }).then(
+            window.location.href=`/board/detail?boardId=${boardid}`
+        )
+    }
+
+    function boardWrite() {
+        const form = document.forms['board-write']
+        const data = {
+            title : form.title.value,
+            date : Date(),
+            writer : '차두환',
+            content : form.content.value
+        }
+        axios ({
+            method : 'POST',
+            url : '/board/write',
+            data : data
+        }).then(
+           window.location.reload()
+        )
+    }
+
+    function BoardLike(button) {
+        const buttonValue = button.value;
+        console.log(`버튼의 value: ${buttonValue}`);
+            axios({
+                method :'PATCH',
+                url :'/board/like',
+                data : {BoardId : buttonValue}
+            }).then(res=> {
+              button.innerText =`${res.data.data.like}`
+        });
+    }
+    
+    function boardSearch() {
+        const form = document.forms['board-search']
+        const searchValue = document.querySelector('#search_select')
+        const data = {
+            searchValue : searchValue.value, 
+            searchBar : form.searchBar.value
+        }
+        console.log(data)
+        axios ({
+            method: 'POST',
+            url : '/board/search',
+            data : data
+        }).then(res=>{
+            const mainElement = document.querySelector('.board-main'); // main 요소를 선택합니다.
+            while (mainElement.firstChild) {
+                mainElement.removeChild(mainElement.firstChild);
+            }
+
+            console.log(res.data.data)
+            for (let i = 0 ; i < res.data.data.length; i++) {
+                const div = document.createElement('div')
+                div.classList.add('board-object')
+                div.setAttribute('data-board-id', `${res.data.data[i].BoardId}`)
+                div.onclick = function() {
+                boardDetail(this);};
+
+                const tr = document.createElement('tr');
+                const td1 = document.createElement('td');
+                td1.textContent = `등록번호 : ${res.data.data[i].BoardId}`;
+                td1.id = 'board-ID'
+
+                const td2 = document.createElement('td');
+                td2.textContent= `제목 : ${res.data.data[i].title}`
+                td2.className = 'board-title'
+
+                const td3 = document.createElement('td');
+                td3.textContent= `날짜 : ${res.data.data[i].date}`
+                td3.className = 'board-date'
+
+                const td4 = document.createElement('td');
+                td4.textContent= `작성자 : ${res.data.data[i].writer}`
+                td4.className = 'board-writer'
+
+                const td5 = document.createElement('td');
+                td5.textContent= `내용 : ${res.data.data[i].content}`
+                td5.className = 'board-content'
+
+                const td6 = document.createElement('td');
+                td6.textContent= `태그 : ${res.data.data[i].tag}`
+                td6.className = 'board-tag'
+
+                const button = document.createElement('button')
+                button.value =  `${res.data.data[i].BoardId}`
+                button.className = 'boardLike'
+                button.innerText = `${res.data.data[i].like}`
+                button.onclick = function(){
+                    BoardLike(this)
+                }
+
+                tr.appendChild(td1);
+                tr.appendChild(td2);
+                tr.appendChild(td3);
+                tr.appendChild(td4);
+                tr.appendChild(td5);
+                tr.appendChild(td6);
+                div.appendChild(tr)
+                const main = document.querySelector('.board-main')
+                main.appendChild(div)
+                main.appendChild(button)
+            }
+        })
+    }
+
+</script>
+</html>
