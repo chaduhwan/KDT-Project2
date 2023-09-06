@@ -1,70 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- jquery cdn -->
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
-        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
     <!-- axios cdn -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    
+    <!-- 소켓io 경로 -->
+    <script src="/socket.io/socket.io.js"></script>
     <title>로그인</title>
-</head>
-<body>
+  </head>
+  <body>
     <form id="loginForm">
-        <input type="email" id="email" placeholder="이메일"/><br/>
-        <input type="password" id="pw" placeholder="비밀번호"/><br/>
-        <button id="loginBtn">로그인</button>
+      <input type="email" id="email" placeholder="이메일" /><br />
+      <input type="password" id="pw" placeholder="비밀번호" /><br />
+      <button id="loginBtn">로그인</button>
     </form>
     <script>
-        const loginBtn =$('#loginBtn');
-        const loginForm =$('#loginForm');
-        const email = $('#email');
-        const pw = $('#pw');
+      //소켓 설정
+      const socket = io();
 
-        loginBtn.click( async function(e){
-            e.preventDefault()
-            console.log('로그인시도 1 ')
+      const loginBtn = $("#loginBtn");
+      const loginForm = $("#loginForm");
+      const email = $("#email");
+      const pw = $("#pw");
 
-            //이메일을 입력하지 않은 경우
-            if(email.val()==""){
-                alert('이메일을 입력하세용');
-                email.focus();
-                return false;
-            }
-            //비밀번호를 입력하지 않은 경우
-            if(pw.val()==""){
-                alert('비밀번호를 입력하세용');
-                pw.focus();
-                return false;
-            }
-            console.log('2')
-            try{
-                const res = await axios({
-                    method: 'POST',
-                    url:'/login',
-                    data:{
-                        email: email.val(),
-                        pw: pw.val(),
-                    }
-                })
-                console.log('백에서 왔다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', res)
-                if(res.data.result){
-                    console.log('들어왔다')
-                    // alert(res.data.message)
-                    alert('로그인 성공')
-                    location.href= '/profile';
+      loginBtn.click(async function (e) {
+        e.preventDefault();
+        console.log("로그인시도 1 ");
 
-                }else{
-                    console.log('실패했다ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ')
-                    alert(res.data.message);
-                    
-                }
-            }catch(error){
-                console.log('로그인 실패ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ',error);
-            }
-        })
+        //이메일을 입력하지 않은 경우
+        if (email.val() == "") {
+          alert("이메일을 입력하세용");
+          email.focus();
+          return false;
+        }
+        //비밀번호를 입력하지 않은 경우
+        if (pw.val() == "") {
+          alert("비밀번호를 입력하세용");
+          pw.focus();
+          return false;
+        }
+        console.log("2");
+        try {
+          const res = await axios({
+            method: "POST",
+            url: "/login",
+            data: {
+              email: email.val(),
+              pw: pw.val(),
+            },
+          });
+          console.log(
+            "백에서 왔다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+            res
+          );
+          if (res.data.result) {
+            console.log("들어왔다");
+            // alert(res.data.message)
+            socket.emit("loginSuccess", res.data.userid);
+            alert("로그인 성공");
+            //로그인이 성공하면 소켓서버에 id고유값(UUID)을 보냄
+
+            location.href = "/profile";
+          } else {
+            console.log("실패했다ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ");
+            alert(res.data.message);
+          }
+        } catch (error) {
+          console.log("로그인 실패ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ", error);
+        }
+      });
     </script>
-</body>
+  </body>
 </html>
