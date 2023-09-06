@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <header class="board-hearder">
+        <h1>상세글</h1>
+        <button class="board-search">검색</button>
+        <button class="board-tag-search">태그검색</button>
+    </header>
+
+    <main class="board-main">
+             <tr class="board-object">
+                <input type="text" id="board-id" value="<%=data.BoardId%>" hidden>
+                 <td class="board-title">제목 :<%=data.title%></td>
+                 <td class="board-date"> 날짜 : <%=data.date%></td>
+                 <img class="board-writer-img" src="">
+                 <td class="board-writer"> 작성자 : <%=data.writer%></td>
+                 <td class="board-content"> 내용 : <%=data.content%></td>
+                 <td class="borad-like"> 좋아요 <%=data.like%></td>
+                 <td class="board-tag"> 태그 : <%=data.tag%></td>
+             </tr>
+         </a>
+     </main>
+
+    <footer class="board-comment">
+        <button class="board-delete" onclick="BoardDelete()">삭제하기</button>
+        <button class="board-comment">댓글달기</button>
+    </footer>
+</body>
+    <script>
+        function BoardDelete() {
+            const boardid = document.querySelector('#board-id').value
+            console.log(boardid);
+            if(!confirm('삭제하시겠습니까?')){
+                return;
+            } 
+            axios({
+                method : 'DELETE',
+                url : '/board/delete',
+                data : {
+                    BoardId : boardid,
+                },
+            }).then((res)=>{
+                if(res.data.result){
+                    window.location.href='/board';
+                }
+            })
+        }
+    </script>
+</html>

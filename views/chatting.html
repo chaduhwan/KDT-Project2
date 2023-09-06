@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway"
+      rel="stylesheet"
+    />
+    <link
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.css"
+    />
+    <link rel="stylesheet" href="../css/chat.css" type="text/css" />
+    <style></style>
+  </head>
+  <body>
+    <div class="main-section">
+      <div class="head-section">
+        <div class="headLeft-section">
+          <div class="headLeft-sub">
+            <input type="text" name="search" placeholder="친구목록검색" />
+            <!-- <button><i class="fa fa-search"></i></button> -->
+          </div>
+        </div>
+        <div class="headRight-section">
+          <div class="headRight-sub">
+            <h3>상대방 이름 입력하는 곳</h3>
+            <small>상태메시지 입력</small>
+          </div>
+        </div>
+      </div>
+      <div class="body-section">
+        <div
+          class="left-section mCustomScrollbar"
+          data-mcs-theme="minimal-dark"
+        >
+          <ul>
+            <li>
+              <div class="chatList">
+                <div class="img">
+                  <i class="fa fa-circle"></i>
+                  <img
+                    src="https://t1.daumcdn.net/cfile/tistory/27738433597DCB1312"
+                  />
+                </div>
+                <div class="desc">
+                  <small class="time">시간입력</small>
+                  <h5>상대방이름</h5>
+                  <small>미리보기 메시지 보여주는곳</small>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="right-section">
+          <div class="message mCustomScrollbar" data-mcs-theme="minimal-dark">
+            <ul>
+              <li class="msg-left">
+                <div class="msg-left-sub">
+                  <img
+                    src="https://t1.daumcdn.net/cfile/tistory/27738433597DCB1312"
+                  />
+                  <div class="msg-desc">왼쪽내용 입력하는 곳!!</div>
+                  <small>시간입력</small>
+                </div>
+              </li>
+              <li class="msg-right">
+                <div class="msg-left-sub">
+                  <img
+                    src="https://i3.ruliweb.com/img/20/03/16/170dee06b1347bc9f.jpg"
+                  />
+                  <div class="msg-desc">오른쪽 내용 입력</div>
+                  <small>시간입력</small>
+                </div>
+              </li>
+              <li class="msg-day"><small>날짜입력하는 곳</small></li>
+            </ul>
+          </div>
+          <div class="right-section-bottom">
+            <form>
+              <div class="upload-btn">
+                <button class="btn"><i class="fa fa-photo"></i></button>
+                <input type="file" name="myfile" />
+              </div>
+              <input type="text" name="" placeholder="메시지 입력" />
+              <button class="btn-send"><i class="fa fa-send"></i></button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- custom scrollbar plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+  </body>
+</html>
