@@ -12,8 +12,10 @@ exports.Mypage = (req,res) => {
 
 ///// 게시판 메인페이지
 exports.BoardMain = (req,res) => {
+    const user = req.session.userName
+    console.log(user)
     board.findAll().then(result=>{
-        res.render('CHA_boardMain',{data:result})
+        res.render('CHA_boardMain',{data:result, user})
     })
 }
 
