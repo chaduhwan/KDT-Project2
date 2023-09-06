@@ -8,10 +8,21 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 
 //모델
 db.board = require('./Board')(sequelize)
+db.comment = require('./comment')(sequelize)
 db.User = require('./User')(sequelize);
 db.Chat = require("./Chat")(sequelize);
 db.participant = require("./participant")(sequelize);
 db.room = require("./room")(sequelize);
+
+//모델 관계
+////////////게시글과 댓글
+db.board.hasMany(db.comment,{foreignKey :'BoardId'})
+db.comment.belongsTo(db.board,{foreignKey :'BoardId'})
+
+///////////게시글과 유저
+db.User.hasMany(db.board,{foreignKey :'id'})
+db.board.belongsTo(db.User,{foreignKey :'id'})
+
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

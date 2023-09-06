@@ -21,11 +21,13 @@ exports.BoardMain = (req,res) => {
 
 ///////게시판 상세페이지
 exports.BoardDetail = (req,res) => {
+    const user = req.session.userName
+    const userid = req.session.userId
   board.findOne({
     where : {BoardId : req.query.boardId} 
 }).then(result=>{
     // console.log(result)
-    res.render('CHA_boardDetail',{data : result})
+    res.render('CHA_boardDetail',{data : result,user,userid})
 })
 }
 
@@ -84,4 +86,9 @@ exports.BoardLike = async (req, res) => {
             res.json({ data: updatedData });
         });
     });
+}
+
+//////////////댓글 작성
+exports.CommentWrite = async (req,res) => {
+    const {} = req.body;
 }
