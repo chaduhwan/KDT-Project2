@@ -63,9 +63,10 @@
           if (res.data.result) {
             console.log("들어왔다");
             // alert(res.data.message)
-            socket.emit("loginSuccess", res.data.userid);
-            alert("로그인 성공");
             //로그인이 성공하면 소켓서버에 id고유값(UUID)을 보냄
+            socket.emit("loginSuccess", res.data.userid);
+            
+            alert("로그인 성공");
 
             location.href = "/profile";
           } else {
