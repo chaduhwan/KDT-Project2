@@ -47,6 +47,12 @@
       </div>
     </div>
     <script>
+      let whoAmI = '<%= name %>';
+      let myType = '<%= userType %>';
+      if (myType != 'leader') {
+        alert('권한이 없습니다');
+        window.history.back();
+      }
       const socket = io();
       let db = [];
       let dataBase = [];
@@ -212,7 +218,7 @@
                   dataBase[i].chosen[a].which == dataBase[i].position[j].who
                 ) {
                   square.classList.add('chosen');
-                  numbering.innerText = dataBase[i].chosen[a].name;
+                  numbering.innerText = dataBase[i].chosen[a].owner;
                 }
               }
               numbering.style.marginTop = '-5px';

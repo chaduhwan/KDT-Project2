@@ -36,11 +36,7 @@
     <div class="main">
       <div class="room"></div>
       <div class="right-bar">
-        <button style="height: 50px" onclick="verify()">관리자</button>
-        <button style="height: 50px" onclick="verify()">비관리자</button>
-        <button style="height: 50px" onclick="verify()">비관리자2</button>
         <button style="height: 50px" onclick="Unoccupate()">예약취소</button>
-        <!-- <button style="height: 50px" onclick="dbSave()">자리확정</button> -->
         <a href="/desk" onclick="return confirm('페이지를 벗어나시겠습니까?');"
           >돌아가기</a
         >
@@ -48,51 +44,41 @@
       <ul></ul>
     </div>
     <script>
-      let whoAmI = '이태희'; // db 연결하면 고쳐야할 부분
+      let whoAmI = '<%= name %>';
+      let myType = '<%= userType %>';
+      console.log(myType);
       let nowMap = '';
-      const verify = () => {
-        if (event.target.innerText == '관리자') {
-          whoAmI = 'admin';
-        } else if (event.target.innerText == '비관리자') {
-          whoAmI = '이태희';
-        } else {
-          whoAmI = '김현승';
-        }
-      };
       const socket = io();
 
-      axios({
-        method: 'GET',
-        url: '/desk/get_generator',
-      }).then((res) => {
-        socket.emit('basicSetting', res.data);
-        console.log('data', res.data);
-        let ul = document.querySelector('ul');
-        const { desk: data } = res.data;
-        ul.innerHTML = '';
-        if (!ul.hasChildNodes()) {
-          for (let i = 0; i < data.length; i++) {
-            let li = document.createElement('li');
-            li.innerText = data[i].name;
-            li.onclick = () => {
-              if (whoAmI == 'admin') {
-                console.log(data[i].name);
-                //   socket.emit('confirmed', data[i].data);
+      if (myType == 'leader') {
+        axios({
+          method: 'GET',
+          url: '/desk/get_generator',
+        }).then((res) => {
+          socket.emit('basicSetting', res.data);
+          console.log('data', res.data);
+          let ul = document.querySelector('ul');
+          const { desk: data } = res.data;
+          ul.innerHTML = '';
+          if (!ul.hasChildNodes()) {
+            for (let i = 0; i < data.length; i++) {
+              let li = document.createElement('li');
+              li.innerText = data[i].name;
+              li.onclick = () => {
                 socket.emit('confirmed', data[i].name);
-              }
-            };
-            li.style.cursor = 'pointer';
-            ul.appendChild(li);
+              };
+              li.style.cursor = 'pointer';
+              ul.appendChild(li);
+            }
           }
-        }
-      });
+        });
+      }
 
       const chairGenerator = (dataBase, li) => {
         console.log(dataBase);
         let num = 0;
         let specify = li;
         for (let i = 0; i < dataBase.length; i++) {
-          //   let num = 0;
           if (dataBase[i].name == specify) {
             for (let j = 0; j < +dataBase[i].num; j++) {
               let square = document.createElement('div');
@@ -246,7 +232,7 @@
           console.log(data);
           socket.emit('saveState', [data], nowMap);
           socket.emit('dataPush', data);
-          dbSave();
+          dbSave(1);
         }
       });
 
@@ -280,7 +266,9 @@
                   document.querySelector('.room').innerHTML,
                   nowMap,
                 );
+                dbSave(0);
                 socket.emit('saveState', [data], nowMap);
+                socket.emit('dataPush', data);
                 break;
               }
             }
@@ -290,7 +278,7 @@
         }
       };
 
-      const dbSave = async () => {
+      const dbSave = async (e) => {
         let proto = document.querySelector('.room').innerHTML;
         let title = nowMap;
         let data = saveSetting(proto, title);
@@ -300,9 +288,17 @@
           data: data,
         });
         if (res.data == '성공') {
-          alert('자리 예약에 성공하셨습니다');
+          if (e == 1) {
+            alert('자리 예약에 성공하셨습니다');
+          } else {
+            alert('예약 취소에 성공하셨습니다');
+          }
         } else {
-          alert('자리 예약에 실패하셨습니다');
+          if (e == 1) {
+            alert('자리 예약에 실패하셨습니다');
+          } else {
+            alert('예약 취소에 실패하셨습니다');
+          }
         }
       };
     </script>
