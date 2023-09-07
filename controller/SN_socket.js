@@ -3,20 +3,39 @@ const Op = Sequelize.Op;
 
 //접속한 사람들
 let roomList = [];
+let checkToken;
 exports.connection = (io, socket) => {
   console.log("현재 접속해 있는 사람", roomList);
+
   //세션에 있는 내 아이디값 저장
   let userName = socket.request.session.userName;
+  
+  //바로바로 내 방에 넣어주는거
+  // if(userName != undefined){
+  //   let coin = 0;
+  //   roomList.forEach(res=>{
+  //     if(res == userName){
+  //       coin +=1
+  //     }
+  //   })
+  //   if(coin==0){
+  //     roomList.push(userName);
+  //     console.log("방에 들어갔음", userName, roomList);
+  //   }
+  // }
+
+  //접속자 체크해서 모달 갱신하는거
+  io.emit("accessCheck", roomList,userName);
+  //현재 접속자 계속 갱신하는거
+  io.emit("getAccess", roomList);
   //진짜 입장하는 방 번호
   let realNumber;
 
   //접속할 때마다 계속 내 이름으로 된 방으로 들어감
-  console.log("내이름으로 입장한 방 : ", userName);
-  console.log("진짜입장번호!!!!", realNumber);
   // socket?.join(userName);
 
   //접속하면 내 채팅방 목록 불러와주는거(나중에 채팅방 눌렀을 때 이벤트로 바꾸기)
-  socket.emit("chatList", userName);
+  socket.emit("chatList", userName, roomList);
 
   //잠깐 이름보내는거(나중에 지울거임 ㅎ)
   socket.emit("sendName", userName);
@@ -45,6 +64,7 @@ exports.connection = (io, socket) => {
 
   //로그인이 성공하면 받는 이름
   socket.on("loginSuccess", async (e) => {
+    checkToken +=1
     //id에서 이름 값 찾아서 저장하는거
     userName = await nameExtract(e);
     roomList.push(userName);
@@ -105,7 +125,6 @@ exports.connection = (io, socket) => {
         //리스트에 없으면 방에 join 시켜줌
         console.log("들어가는 방 번호", realNumber);
         socket.join(realNumber);
-        roomList.push(realNumber);
       }
       //방 번호 프론트로 보내기
       socket.emit("roomNumber", realNumber);
@@ -134,5 +153,18 @@ exports.connection = (io, socket) => {
   socket.on("typing", (username, msgValue) => {
     socket.broadcast.to(socket.room).emit("type", username, msgValue);
   });
+
+  //접속 끊겼을 때, 세션이 없어지면 접속이 끊긴 것으로 간주한다.
+  // socket.on("disconnect",()=>{
+  //   console.log("접속이 끊겼습니닷..!!!")
+  //   io.emit("addList", userName);
+  //   io.emit("deleteList", userName);
+  //   for(let i =0; i< roomList.length; i++){
+  //     if(roomList[i] === userName){
+  //       roomList.splice(i,1);
+  //       i--;
+  //     }
+  //   }
+  // })
 };
 //////////connection 끝////////////
