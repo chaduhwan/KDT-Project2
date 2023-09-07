@@ -17,15 +17,13 @@ exports.BoardMain = (req,res) => {
     // console.log(user)
     board.findAll().then(result=>{
         console.log(result.boardId)
-        for(i=0; i<result.length, i++) {
+        for(let i=0; i<result.length ; i++) {
             like.count({
                 where: result.boardId[i]
-            }).then(cou=>{
-
-        }
+            }).then(cou=>{})
             console.log(cou)
             res.render('CHA_boardMain',{data:result, user})
-        })
+        }
     })
 }
 
