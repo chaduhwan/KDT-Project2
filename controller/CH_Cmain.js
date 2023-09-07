@@ -1,4 +1,4 @@
-const {board} = require('../models')
+const {board, comment} = require('../models')
 const {Op} =require('sequelize')
 const Sequelize = require('sequelize')
 
@@ -26,8 +26,15 @@ exports.BoardDetail = (req,res) => {
   board.findOne({
     where : {BoardId : req.query.boardId} 
 }).then(result=>{
+    comment.findAll({
+        include : [{
+            model : board,
+            required : false
+        }]
+    }).then(commentData => {
+        res.render('CHA_boardDetail',{data : result,commentData,user,userid})
+    })
     // console.log(result)
-    res.render('CHA_boardDetail',{data : result,user,userid})
 })
 }
 
@@ -89,6 +96,10 @@ exports.BoardLike = async (req, res) => {
 }
 
 //////////////댓글 작성
-exports.CommentWrite = async (req,res) => {
-    const {} = req.body;
+exports.CommentWrite =(req,res) => {
+    const {content, writer, date, BoardId} = req.body;
+    comment.create({content, writer, date, BoardId}).then(result => {
+        console.log(result)
+        res.json({result:true})
+    })
 }

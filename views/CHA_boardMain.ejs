@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <title>Document</title>
 </head>
 <body>
@@ -23,15 +25,15 @@
     <main class="board-main">
         <% for (let i = 0 ; i < data.length ; i ++) {%>
         <div class="board-object" data-board-id="<%=data[i].BoardId%>" onclick="boardDetail(this)">
-            <tr>
-                <td id="borad-ID">등록번호 : <%=data[i].BoradId%></td>
-                <td class="board-title"> 제목 : <%=data[i].title%></td>
-                <td class="board-date"> 날짜 : <%=data[i].date%></td>
+            <!-- <tr> -->
+                <span id="borad-ID">등록번호 : <%=data[i].BoradId%></span>
+                <span class="board-title"> 제목 : <%=data[i].title%></span>
+                <span class="board-date"> 날짜 : <%=data[i].date%></span>
                 <img class="board-writer-img" src="">
-                <td class="board-writer"> 작성자 : <%=data[i].writer%></td>
-                <td class="board-content"> 내용 : <%=data[i].content%></td>
-                <td class="board-tag"> 태그 : <%=data[i].tag%></td>
-            </tr>
+                <span class="board-writer"> 작성자 : <%=data[i].writer%></span>
+                <span class="board-content"> <%=data[i].content%></span>
+                <span class="board-tag"> 태그 : <%=data[i].tag%></span>
+            <!-- </tr> -->
         </div>
         <button type="button" class="boardLike" value="<%=data[i].BoardId%>" onclick="BoardLike(this)"><%=data[i].like%></button>
             <%}%>
@@ -39,7 +41,8 @@
     <footer class="board-footer">
         <form name="board-write">
             <input type="text" name="title" placeholder="제목을 입력해주세요">
-            <input type="text" name="content" placeholder="내용을 입력해주세요">
+            <div id="editor"></div>
+            <!-- <input type="text" name="content" placeholder="내용을 입력해주세요"> -->
             <button class="board-onWrite" onclick="boardWrite()">작성하기</button>
         </form>
     </footer>
@@ -47,6 +50,16 @@
 
 </body>
 <script>
+
+        if(document.querySelector(".board-main").hasChildNodes){
+
+            for(let i = 0; i < document.querySelector(".board-main").children.length; i+=2){
+                    let temp = document.querySelector(".board-main").children[i].children[5].innerText 
+                    document.querySelector(".board-main").children[i].children[5].innerText = ""
+                    let arr = Array.from(format(temp))
+                for(let j = 0; j < arr.length; j++){
+                     document.querySelector(".board-main").children[i].children[5].appendChild(arr[j])   
+        }}}
 
     function boardDetail(element) {
         const boardid = element.getAttribute('data-board-id');
@@ -59,21 +72,23 @@
         )
     }
 
-    function boardWrite() {
+    async function boardWrite() {
         const form = document.forms['board-write']
         const data = {
             title : form.title.value,
             date : Date(),
             writer : '<%=user %>',
-            content : form.content.value
+            content : editor.getHTML()
         }
-        axios ({
+        await axios ({
             method : 'POST',
             url : '/board/write',
             data : data
         }).then(
+
            window.location.reload()
         )
+
     }
 
     function BoardLike(button) {
@@ -115,29 +130,29 @@
                 boardDetail(this);};
 
                 const tr = document.createElement('tr');
-                const td1 = document.createElement('td');
-                td1.textContent = `등록번호 : ${res.data.data[i].BoardId}`;
-                td1.id = 'board-ID'
+                const span1 = document.createElement('span');
+                span1.textContent = `등록번호 : ${res.data.data[i].BoardId}`;
+                span1.id = 'board-ID'
 
-                const td2 = document.createElement('td');
-                td2.textContent= `제목 : ${res.data.data[i].title}`
-                td2.className = 'board-title'
+                const span2 = document.createElement('span');
+                span2.textContent= `제목 : ${res.data.data[i].title}`
+                span2.className = 'board-title'
 
-                const td3 = document.createElement('td');
-                td3.textContent= `날짜 : ${res.data.data[i].date}`
-                td3.className = 'board-date'
+                const span3 = document.createElement('span');
+                span3.textContent= `날짜 : ${res.data.data[i].date}`
+                span3.className = 'board-date'
 
-                const td4 = document.createElement('td');
-                td4.textContent= `작성자 : ${res.data.data[i].writer}`
-                td4.className = 'board-writer'
+                const span4 = document.createElement('span');
+                span4.textContent= `작성자 : ${res.data.data[i].writer}`
+                span4.className = 'board-writer'
 
-                const td5 = document.createElement('td');
-                td5.textContent= `내용 : ${res.data.data[i].content}`
-                td5.className = 'board-content'
+                const span5 = document.createElement('span');
+                span5.textContent= `내용 : ${res.data.data[i].content}`
+                span5.className = 'board-content'
 
-                const td6 = document.createElement('td');
-                td6.textContent= `태그 : ${res.data.data[i].tag}`
-                td6.className = 'board-tag'
+                const span6 = document.createElement('span');
+                span6.textContent= `태그 : ${res.data.data[i].tag}`
+                span6.className = 'board-tag'
 
                 const button = document.createElement('button')
                 button.value =  `${res.data.data[i].BoardId}`
@@ -147,12 +162,12 @@
                     BoardLike(this)
                 }
 
-                tr.appendChild(td1);
-                tr.appendChild(td2);
-                tr.appendChild(td3);
-                tr.appendChild(td4);
-                tr.appendChild(td5);
-                tr.appendChild(td6);
+                tr.appendChild(span1);
+                tr.appendChild(span2);
+                tr.appendChild(span3);
+                tr.appendChild(span4);
+                tr.appendChild(span5);
+                tr.appendChild(span6);
                 div.appendChild(tr)
                 const main = document.querySelector('.board-main')
                 main.appendChild(div)
@@ -161,5 +176,22 @@
         })
     }
 
+       const Editor = toastui.Editor;
+       const editor = new Editor({
+               el: document.querySelector('#editor'),
+               height: '500px',
+               initialEditType: 'markdown',
+               previewStyle: 'vertical'
+           });
+
+           function format(text) {
+                let html = new DOMParser();
+                html = html.parseFromString(text, 'text/html');
+                console.log(html.children[0].children[1].children)
+
+                return html.children[0].children[1].children
+                // 
+                
+            }
 </script>
 </html>

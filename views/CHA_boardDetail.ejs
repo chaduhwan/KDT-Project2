@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <title>Document</title>
 </head>
 <body>
@@ -14,28 +16,47 @@
     </header>
 
     <main class="board-main">
-             <tr class="board-object">
-                <input type="text" id="board-id" value="<%=data.BoardId%>" hidden>
-                 <td class="board-title">제목 :<%=data.title%></td>
-                 <td class="board-date"> 날짜 : <%=data.date%></td>
+             <div class="board-object">
+                 <span id="borad-ID">등록번호 : <%=data.BoradId%></span>
+                 <span class="board-title"> 제목 : <%=data.title%></span>
+                 <span class="board-date"> 날짜 : <%=data.date%></span>
                  <img class="board-writer-img" src="">
-                 <td class="board-writer"> 작성자 : <%=data.writer%></td>
-                 <td class="board-content"> 내용 : <%=data.content%></td>
-                 <td class="borad-like"> 좋아요 <%=data.like%></td>
-                 <td class="board-tag"> 태그 : <%=data.tag%></td>
-             </tr>
+                 <span class="board-writer"> 작성자 : <%=data.writer%></span>
+                 <span class="board-content"> <%=data.content%></span>
+                 <span class="board-tag"> 태그 : <%=data.tag%></span>
+                 <input type="text" id="board-id" value="<%=data.BoardId%>" hidden>
+             </div>
              <button type="button" class="boardLike" value="<%=data.BoardId%>" onclick="BoardLike(this)"><%=data.like%></button>
      </main>
      <button class="board-delete" onclick="BoardDelete()">삭제하기</button>
 
+     <section class="comment-container">
+        <tr class="comment-object">
+            <td></td>
+        </tr>
+     </section>
+
+
+
     <footer class="board-comment">
-        <form name="commentWrite">
-            <input type="text" name="commentContent">
+        <form name="comment-Write">
+            <div id="editor"></div>
             <button type="button" class="board-comment" onclick="commentWrite()">댓글달기</button>
         </form>
     </footer>
 </body>
     <script>
+
+        if(document.querySelector(".board-main").hasChildNodes){
+
+            for(let i = 0; i < document.querySelector(".board-main").children.length; i+=2){
+                    let temp = document.querySelector(".board-main").children[i].children[5].innerText 
+                    document.querySelector(".board-main").children[i].children[5].innerText = ""
+                    let arr = Array.from(format(temp))
+                for(let j = 0; j < arr.length; j++){
+                     document.querySelector(".board-main").children[i].children[5].appendChild(arr[j])   
+        }}}
+
         function BoardDelete() {
             const boardid = document.querySelector('#board-id').value
             console.log(boardid);
@@ -68,9 +89,9 @@
         }
 
         function commentWrite() {
-            const form = document.forms['commentContent']
+            const form = document.forms['comment-Write']
             const data = 
-            {content : form.commentContent.value,
+            {content : editor.getHTML(),
              writer : '<%=user%>',
              date : Date(),
              BoardId : document.querySelector('#board-id').value
@@ -81,5 +102,23 @@
                 data : data
             })
         }
+
+        const Editor = toastui.Editor;
+        const editor = new Editor({
+               el: document.querySelector('#editor'),
+               height: '500px',
+               initialEditType: 'markdown',
+               previewStyle: 'vertical'
+           });
+
+           function format(text) {
+                let html = new DOMParser();
+                html = html.parseFromString(text, 'text/html');
+                console.log(html.children[0].children[1].children)
+
+                return html.children[0].children[1].children
+                // 
+                
+            }
     </script>
 </html>

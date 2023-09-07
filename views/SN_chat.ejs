@@ -15,12 +15,12 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.css"
     />
-        <!-- 제이쿼리cdn -->
-        <script
-        src="https://code.jquery.com/jquery-3.7.1.js"
-        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-        crossorigin="anonymous"
-      ></script>
+    <!-- 제이쿼리cdn -->
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
     <!-- axios CDN -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <!-- 소켓io 경로 -->
@@ -147,6 +147,7 @@
       }
       .left-section .chatList .img img {
         width: 30px;
+        height: 25px;
         border-radius: 50%;
       }
       .left-section .chatList .img i {
@@ -323,11 +324,10 @@
           <div class="headLeft-sub">
             <!-- 채팅방에 초대할 상대방 -->
             <form id="room">
-            <input type="text" id="search" placeholder="방 번호 적기" />
-            <!-- <button><i class="fa fa-search"></i></button> -->
-            <button>초대하기</button>
-          </form>
-
+              <input type="text" id="search" placeholder="방 번호 적기" />
+              <!-- <button><i class="fa fa-search"></i></button> -->
+              <button>초대하기</button>
+            </form>
           </div>
         </div>
         <div class="headRight-section">
@@ -346,7 +346,7 @@
             <li>
               <div class="chatList">
                 <div class="img">
-                  <i class="fa fa-circle"></i>
+                  <i class="fa fa-circle" style="color: rgb(215, 215, 215)"></i>
                   <img
                     src="https://t1.daumcdn.net/cfile/tistory/27738433597DCB1312"
                   />
@@ -362,8 +362,8 @@
         </div>
         <!-- 채팅창 section -->
         <div class="right-section">
-          <div class="message"  style="overflow-y: scroll;">
-            <ul id="chat-messages" >
+          <div class="message" style="overflow-y: scroll">
+            <ul id="chat-messages">
               <!-- 상대방이 보낸 메시지 -->
               <li class="msg-left">
                 <div class="msg-left-sub">
@@ -395,18 +395,19 @@
                 <button class="btn"><i class="fa fa-photo"></i></button>
                 <input type="file" name="myfile" />
               </div>
-              <div id="messageStatus" style="display: none;">상대방이 입력중입니다..</div>
+              <div id="messageStatus" style="display: none">
+                상대방이 입력중입니다..
+              </div>
             </form>
-              <!-- <form id="chat">
+            <!-- <form id="chat">
                 메시지 입력<input type="text" id="message" placeholder="메시지입력~"/>
                 <button class="btn-send"><i class="fa fa-send"></i></button>
               </form>               -->
-              <form id="chat">
-                <input type="text" id="message" />
-                <button>보내기</button>
-              </form>
-              <!-- 여기까지 -->
-            
+            <form id="chat">
+              <input type="text" id="message" />
+              <button>보내기</button>
+            </form>
+            <!-- 여기까지 -->
           </div>
           <!-- 메시지 보내는곳 끝 -->
         </div>
@@ -420,7 +421,7 @@
 
       //현재 접속한 유저 이름
       let username;
-      
+
       //메시지를 보내는 상대방 이름
       let otherName;
 
@@ -428,8 +429,8 @@
       let timer;
 
       //사진1번, 2번 (이건 나중에 프로필사진 추가하면 삭제하기)
-      const pic1 = "https://t1.daumcdn.net/cfile/tistory/27738433597DCB1312"
-      const pic2 = "https://i3.ruliweb.com/img/20/03/16/170dee06b1347bc9f.jpg"
+      const pic1 = "https://t1.daumcdn.net/cfile/tistory/27738433597DCB1312";
+      const pic2 = "https://i3.ruliweb.com/img/20/03/16/170dee06b1347bc9f.jpg";
       ////////////////////////////////
 
       ////////////함수////////////////
@@ -437,72 +438,123 @@
       let now = new Date();
       let hour = now.getHours();
       let minute = now.getMinutes();
-      let sendTime = hour+":"+ minute
+      let sendTime = hour + ":" + minute;
       // 상대방이 출력하는 메시지 함수
       function createLeftMessage(imageSrc, messageText, timestamp) {
-          const listItem = document.createElement("li");
-          listItem.classList.add("msg-left");
+        const listItem = document.createElement("li");
+        listItem.classList.add("msg-left");
 
-          const messageContainer = document.createElement("div");
-          messageContainer.classList.add("msg-left-sub");
+        const messageContainer = document.createElement("div");
+        messageContainer.classList.add("msg-left-sub");
 
-          const image = document.createElement("img");
-          image.src = imageSrc;
+        const image = document.createElement("img");
+        image.src = imageSrc;
 
-          const message = document.createElement("div");
-          message.classList.add("msg-desc");
-          message.textContent = messageText;
+        const message = document.createElement("div");
+        message.classList.add("msg-desc");
+        message.textContent = messageText;
 
-          const time = document.createElement("small");
-          time.textContent = timestamp;
+        const time = document.createElement("small");
+        time.textContent = timestamp;
 
-          messageContainer.appendChild(image);
-          messageContainer.appendChild(message);
-          messageContainer.appendChild(time);
+        messageContainer.appendChild(image);
+        messageContainer.appendChild(message);
+        messageContainer.appendChild(time);
 
-          listItem.appendChild(messageContainer);
+        listItem.appendChild(messageContainer);
 
-          return listItem;
-        }
+        return listItem;
+      }
 
-        // 내가 출력하는 메시지 함수
-        function createRightMessage(msgText, imgUrl, timestamp) {
-            const listItem = document.createElement("li");
-            listItem.classList.add("msg-right");
+      // 내가 출력하는 메시지 함수
+      function createRightMessage(msgText, imgUrl, timestamp) {
+        const listItem = document.createElement("li");
+        listItem.classList.add("msg-right");
 
-            const msgLeftSub = document.createElement("div");
-            msgLeftSub.classList.add("msg-left-sub");
+        const msgLeftSub = document.createElement("div");
+        msgLeftSub.classList.add("msg-left-sub");
 
-            const imgElement = document.createElement("img");
-            imgElement.src = imgUrl;
+        const imgElement = document.createElement("img");
+        imgElement.src = imgUrl;
 
-            const msgDesc = document.createElement("div");
-            msgDesc.classList.add("msg-desc");
-            msgDesc.textContent = msgText;
+        const msgDesc = document.createElement("div");
+        msgDesc.classList.add("msg-desc");
+        msgDesc.textContent = msgText;
 
-            const smallElement = document.createElement("small");
-            smallElement.textContent = timestamp;
+        const smallElement = document.createElement("small");
+        smallElement.textContent = timestamp;
 
-            msgLeftSub.appendChild(imgElement);
-            msgLeftSub.appendChild(msgDesc);
-            msgLeftSub.appendChild(smallElement);
+        msgLeftSub.appendChild(imgElement);
+        msgLeftSub.appendChild(msgDesc);
+        msgLeftSub.appendChild(smallElement);
 
-            listItem.appendChild(msgLeftSub);
+        listItem.appendChild(msgLeftSub);
 
-            return listItem;
-         }
+        return listItem;
+      }
+      //미리보기 메시지 출력하는 함수
+      function createMessageElement(
+        time,
+        otherPersonName,
+        previewMessage,
+        imageUrl
+      ) {
+        // 이미지를 포함한 div 요소 생성
+        const imgDiv = document.createElement("div");
+        imgDiv.className = "img";
 
-         //스크롤 다운 함수
-         function scrollBottom(){
-          chatMessageList.scrollTop = chatMessageList.scrollHeight;
-         }
+        // 이미지 아이콘 생성
+        const imgIcon = document.createElement("i");
+        imgIcon.className = "fa fa-circle";
+
+        // 이미지 요소 생성
+        const imgElement = document.createElement("img");
+        imgElement.src = imageUrl;
+
+        // desc div 요소 생성
+        const descDiv = document.createElement("div");
+        descDiv.className = "desc";
+
+        // 시간 요소 생성 및 설정
+        const timeElement = document.createElement("small");
+        timeElement.className = "time";
+        timeElement.textContent = time;
+
+        // 상대방 이름 요소 생성 및 설정
+        const otherPersonElement = document.createElement("h5");
+        otherPersonElement.id = "OtherPerson2";
+        otherPersonElement.textContent = otherPersonName;
+
+        // 미리보기 메시지 요소 생성 및 설정
+        const previewMessageElement = document.createElement("small");
+        previewMessageElement.textContent = previewMessage;
+
+        // 생성한 요소들을 계층적으로 추가
+        imgDiv.appendChild(imgIcon);
+        imgDiv.appendChild(imgElement);
+
+        descDiv.appendChild(timeElement);
+        descDiv.appendChild(otherPersonElement);
+        descDiv.appendChild(previewMessageElement);
+
+        chatContainer.appendChild(imgDiv);
+        chatContainer.appendChild(descDiv);
+        return chatContainer;
+      }
+      //스크롤 다운 함수
+      function scrollBottom() {
+        // console.log(messageList.scrollHeight);
+        // messageList.scrollTop = messageList.scrollHeight;
+        messageList.scrollTo(0, messageList.scrollHeight);
+      }
       ////////////////////////////////
       //이름받기(지울거임ㅎ)
-      socket.on("sendName",(name)=>{
+      socket.on("sendName", (name) => {
         username = name;
-      })
+      });
       //상대채팅생성하는 ul태그
-      const chatMessageList = document.getElementById("chat-messages")
+      const chatMessageList = document.getElementById("chat-messages");
+      const messageList = document.querySelector(".message");
       //방 입력하는 form태그
       const roomForm = document.querySelector("#room");
       //방 번호 적는 form
@@ -511,88 +563,129 @@
       const messageForm = document.querySelector("#chat");
       //채팅 리스트 지우는거
       const clear = document.getElementById("chat-messages");
-      
+      //채팅방 리스트
+      const chatContainer = document.querySelector(".chatList");
+
+      //내가 채팅하고 잇는 방 불러오고 -> 그 채팅방 미리보기 메시지까지 가져오는거
+      socket.on("sendName", async (username) => {
+        //참여 채팅방 불러오기
+        const listResult = await axios({
+          method: "POST",
+          url: "/myChatList",
+          data: {
+            username: username,
+          },
+          //각 방의 메세지 하나씩 불러오기
+        });
+        for (const myMessage of listResult.data) {
+          const messageResult = await axios({
+            method: "POST",
+            url: "/myMessage",
+            data: {
+              send: myMessage,
+            },
+          });
+          const preViewMessage = createMessageElement(
+            sendTime,
+            messageResult.data.send,
+            messageResult.data.message,
+            pic2
+          );
+          console.log("몇번왔다갔다 했는지 확인");
+          preViewMessage;
+          console.log(
+            `${messageResult.data.send}님의 메시지 : ${messageResult.data.message}`
+          );
+        }
+        console.log("배열로 온 값은?", listResult.data);
+      });
       //방 번호 정해서 들어가기
-      roomForm.addEventListener("submit", (e)=>{
+      roomForm.addEventListener("submit", (e) => {
         e.preventDefault();
         //상대방 방 번호(이름)
-        otherName = searchName.value
+        otherName = searchName.value;
 
         //create -> 방 만들기
         socket.emit("create", otherName, username);
-        socket.on("true",()=>{
+        socket.on("true", () => {
           //원래 헤더만 바꿔야 되는데 일단은 이것만 바꾸고 나중에 수정하기
           const OtherPerson1 = document.querySelector("#OtherPerson1");
           const OtherPerson2 = document.querySelector("#OtherPerson2");
           OtherPerson1.innerText = otherName;
           OtherPerson2.innerText = otherName;
-          alert(`${otherName}님 방에 입장하였습니다.`)
-        })
-      })
+          alert(`${otherName}님 방에 입장하였습니다.`);
+        });
+      });
 
       //메시지 보내는 이벤트
-      messageForm.addEventListener("submit", (e)=>{
+      messageForm.addEventListener("submit", (e) => {
         e.preventDefault();
         //메시지 input
         const message = document.querySelector("#message");
-        console.log(message.value)
+        console.log(message.value);
         socket.emit("sendMessage", message.value, username, otherName);
-        scrollBottom()
-        message.value="";
+        scrollBottom();
+        message.value = "";
       });
       //보낸 메시지 받는 이벤트
-      socket.on("newMessage", (message,userid)=>{
+      socket.on("newMessage", (message, userid) => {
         console.log("보낸 메시지?", message);
-        console.log("보낸놈 이름", userid)
-        if(userid == username){
-          const newChatMessage = createRightMessage(message,pic2,sendTime)
-           chatMessageList.appendChild(newChatMessage);
-        }else{
-          const newChatMessage = createLeftMessage(pic1,message,sendTime);
+        console.log("보낸놈 이름", userid);
+        if (userid == username) {
+          const newChatMessage = createRightMessage(message, pic2, sendTime);
+          chatMessageList.appendChild(newChatMessage);
+        } else {
+          const newChatMessage = createLeftMessage(pic1, message, sendTime);
           chatMessageList.appendChild(newChatMessage);
         }
-        
-
-      })
+        scrollBottom();
+      });
       //이전 채팅 내용 가져오기(roomNumber => 현재 입장한 방 번호(UUID))
-      socket.on("roomNumber", (data) =>{
+      socket.on("roomNumber", (data) => {
         axios({
-          method :'POST',
-          url : "/preMessage",
-          data:{
-            roomNum:data,
-          }
-        }).then((res)=>{
+          method: "POST",
+          url: "/preMessage",
+          data: {
+            roomNum: data,
+          },
+        }).then((res) => {
           console.log("여기까지 잘 왓음!!", res);
           clear.innerHTML = "";
           const postMessage = res.data.chatMessage;
-          postMessage.forEach((row)=>{
-            if(row.send == username){
-              const newChatMessage = createRightMessage(row.message, pic2, row.createdAt);
+          postMessage.forEach((row) => {
+            if (row.send == username) {
+              const newChatMessage = createRightMessage(
+                row.message,
+                pic2,
+                row.createdAt
+              );
               chatMessageList.appendChild(newChatMessage);
-            }else{
-              const newChatMessage = createLeftMessage(pic1,row.message , row.createdAt);
+            } else {
+              const newChatMessage = createLeftMessage(
+                pic1,
+                row.message,
+                row.createdAt
+              );
               chatMessageList.appendChild(newChatMessage);
             }
-          })
-        })
-      })
+          });
+        });
+      });
       ///이전채팅내용 끝부분//////
 
       //타이핑중..
-      $("#message").on("input", function(){
+      $("#message").on("input", function () {
         const msgValue = $("#message").val();
         socket.emit("typing", username, msgValue);
       });
-      socket.on("type", (chatName, msgValue)=>{
+      socket.on("type", (chatName, msgValue) => {
         //타임아웃 제거해주는 함수
         clearTimeout(timer);
-        $("#messageStatus")[0].style.display = 'block';
+        $("#messageStatus")[0].style.display = "block";
         timer = setTimeout(() => {
-          $("#messageStatus")[0].style.display = 'none';
+          $("#messageStatus")[0].style.display = "none";
         }, 2000);
-        
-      })
+      });
     </script>
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
