@@ -29,8 +29,7 @@ exports.BoardDetail = (req,res) => {
     comment.findAll({
         include : [{
             model : board,
-            required : false
-        }]
+        }],where : {boardId:req.query.boardId}
     }).then(commentData => {
         res.render('CHA_boardDetail',{data : result,commentData,user,userid})
     })
