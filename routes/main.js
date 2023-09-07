@@ -23,7 +23,9 @@ router.post('/board/search', C_controller.BoardSearch);
 router.delete('/board/delete', C_controller.BoardDelete);
 
 //////Board Like
-router.patch('/board/like', C_controller.BoardLike);
+
+router.post("/board/like", C_controller.BoardLike);
+
 
 //////comment Write
 router.post('/comment/write', C_controller.CommentWrite);

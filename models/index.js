@@ -14,6 +14,7 @@ const sequelize = new Sequelize(
 //모델
 db.board = require('./Board')(sequelize);
 db.comment = require('./comment')(sequelize);
+db.like = require('./Like')(sequelize);
 db.User = require('./User')(sequelize);
 db.Chat = require('./Chat')(sequelize);
 db.participant = require('./participant')(sequelize);
@@ -30,6 +31,14 @@ db.comment.belongsTo(db.board, { foreignKey: 'BoardId' });
 ///////////게시글과 유저
 db.User.hasMany(db.board, { foreignKey: 'id' });
 db.board.belongsTo(db.User, { foreignKey: 'id' });
+
+//////////게시글과 좋아요
+db.board.hasMany(db.like, { foreignKey: 'BoardId' });
+db.like.belongsTo(db.board, { foreignKey: 'BoardId' });
+
+////////////유저와 좋아요
+db.User.hasMany(db.like, { foreignKey: 'id' });
+db.like.belongsTo(db.User, { foreignKey: 'id' });
 
 db.Desk.hasMany(db.Chosen);
 db.Chosen.belongsTo(db.Desk);
