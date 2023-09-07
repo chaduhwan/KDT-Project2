@@ -29,7 +29,10 @@ router.patch("/board/like", C_controller.BoardLike);
 router.post("/comment/write", C_controller.CommentWrite);
 
 //메인화면
-router.get("/", M_controller.main);
+
+router.get('/', M_controller.main);
+router.post('/', M_controller.post_main);
+
 
 //회원가입 페이지
 router.get("/join", M_controller.join);
