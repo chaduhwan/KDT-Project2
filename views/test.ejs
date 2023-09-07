@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Toast UI Editor -->
+    <link
+      rel="stylesheet"
+      href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"
+    />
+
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <style>
+      .for:hover {
+        background-color: white;
+        border-radius: 3px;
+        border-style: solid;
+        border-width: 1px;
+        box-sizing: border-box;
+        border-color: #e4e7ee;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="toastui-editor-tooltip" style="display: block">
+      <div class="arrow"></div>
+      <span class="text">하이</span>
+    </div>
+    <div id="editor"></div>
+    <button onclick="format()">작성</button>
+    <script>
+      const Editor = toastui.Editor;
+      const editor = new Editor({
+        el: document.querySelector('#editor'),
+        height: '500px',
+        initialEditType: 'markdown',
+        previewStyle: 'vertical',
+      });
+      let div = document.createElement('div');
+      let smallDiv = document.createElement('div');
+      div.style.cssText = `
+            width: 42px;
+            height: 45px;
+            color: black;
+            box-sizing: border-box;
+            display: flex;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        `;
+      smallDiv.style.cssText = `
+            width: 32px;
+            height: 32px;
+            color: black;
+            box-sizing: border-box;
+            display: flex;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        `;
+
+      div.classList.add('toast-editor-toolbar-group');
+      smallDiv.innerHTML = `<i class="fa-solid fa-location-dot" style="font-size: 20px; color: #333"></i>`;
+      smallDiv.classList.add('for');
+      div.appendChild(smallDiv);
+      div.addEventListener('mouseenter', () => {});
+      document
+        .querySelector('.toastui-editor-defaultUI-toolbar')
+        .appendChild(div);
+
+      console.log(document.querySelector('#editor').innerHTML);
+      //   function format() {
+      //     let text = document.querySelector('#editor').innerHTML;
+      //     let html = new DOMParser();
+      //     html = html.parseFromString(text, 'text/html');
+      //     let div = document.createElement('div');
+      //     div.innerHTML = `<i class="fa-solid fa-location-dot" style="font-size: 20px; color: #333"></i>`;
+      //     div.style.cssText = `
+      //         width: 42px;
+      //         height: 45px;
+      //         // background-color: red;
+      //         color: black;
+      //         box-sizing: border-box;
+      //         display: flex;
+      //         text-align: center;
+      //         justify-content: center;
+      //         align-items: center;
+      //     `;
+      //     div.classList.add('toast-editor-toolbar-group');
+      //     document
+      //       .querySelector('.toastui-editor-defaultUI-toolbar')
+      //       .appendChild(div);
+      //     console.log(html.querySelector('.toastui-editor-defaultUI-toolbar'));
+      //     // document.querySelector(".toast-editor-toolbar-group")
+      //   }
+    </script>
+  </body>
+</html>

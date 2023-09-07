@@ -91,9 +91,11 @@ router.get('/desk/reservation', T_controller.reservation);
 router.post('/desk/reservationConfirm', T_controller.reservationConfirm);
 router.patch('/desk/reservationEdit', T_controller.reservationEdit);
 
+router.get('/test', T_controller.test);
+
 //채팅방 render페이지
-router.get("/chat", S_controller.chat);
+router.get('/chat', S_controller.chat);
 //채팅 불러오기
-router.post("/preMessage", S_controller.preMessage);
+router.post('/preMessage', S_controller.preMessage);
 
 module.exports = router;

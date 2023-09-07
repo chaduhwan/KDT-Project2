@@ -246,7 +246,7 @@
           console.log(data);
           socket.emit('saveState', [data], nowMap);
           socket.emit('dataPush', data);
-          dbSave();
+          dbSave(1);
         }
       });
 
@@ -280,7 +280,9 @@
                   document.querySelector('.room').innerHTML,
                   nowMap,
                 );
+                dbSave(0);
                 socket.emit('saveState', [data], nowMap);
+                socket.emit('dataPush', data);
                 break;
               }
             }
@@ -290,7 +292,7 @@
         }
       };
 
-      const dbSave = async () => {
+      const dbSave = async (e) => {
         let proto = document.querySelector('.room').innerHTML;
         let title = nowMap;
         let data = saveSetting(proto, title);
@@ -300,9 +302,17 @@
           data: data,
         });
         if (res.data == '성공') {
-          alert('자리 예약에 성공하셨습니다');
+          if (e == 1) {
+            alert('자리 예약에 성공하셨습니다');
+          } else {
+            alert('예약 취소에 성공하셨습니다');
+          }
         } else {
-          alert('자리 예약에 실패하셨습니다');
+          if (e == 1) {
+            alert('자리 예약에 실패하셨습니다');
+          } else {
+            alert('예약 취소에 실패하셨습니다');
+          }
         }
       };
     </script>

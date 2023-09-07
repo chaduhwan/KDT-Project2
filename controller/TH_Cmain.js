@@ -1,6 +1,10 @@
 const { Desk, Position, Chosen } = require('../models');
 const { Op } = require('sequelize');
 
+exports.test = (req, res) => {
+  res.render('test');
+};
+
 exports.desk = (req, res) => {
   res.render('TH_desk');
 };
