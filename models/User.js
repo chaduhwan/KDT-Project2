@@ -32,8 +32,8 @@ const Model = (sequelize) =>{
             type: DataTypes.STRING(40),
             allowNull: true,
         },
-        provider: {
-            type: DataTypes.STRING(10),
+        profileImgPath: {
+            type: DataTypes.STRING(255),
             allowNull: true,
         }
     },

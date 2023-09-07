@@ -32,13 +32,80 @@ exports.login = (req, res) => {
     res.render("MA_login");
   }
 };
+exports.kakao_get_join = (req, res)=>{
+  res.redirect(
+    `https://kauth.kakao.com/oauth/authorize?client_id=${kakao.clientID}&redirect_uri=http://localhost:8000/auth/kakao/join/callback&response_type=code&scope=profile_nickname,account_email`
+  );
+}
 //카카오 로그인 요청
 exports.kakao_get = (req, res) => {
   res.redirect(
-    `https://kauth.kakao.com/oauth/authorize?client_id=${kakao.clientID}&redirect_uri=${kakao.redirectUri}&response_type=code&scope=profile_nickname,account_email`
+    `https://kauth.kakao.com/oauth/authorize?client_id=${kakao.clientID}&redirect_uri=http://localhost:8000/auth/kakao/login/callback&response_type=code&scope=profile_nickname,account_email`
   );
 };
-//카카오 로그인 응답받기
+//카카오 회원가입
+exports.kakao_join = async (req, res)=>{
+  try {
+    token = await axios({
+      method: "POST",
+      url: "https://kauth.kakao.com/oauth/token",
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+      },
+      data: {
+        grant_type: "authorization_code",
+        client_id: kakao.clientID,
+        redirectUri: kakao.redirectUri,
+        code: req.query.code,
+      },
+    });
+  } catch (err) {
+    res.json(err.data);
+  }
+  let user;
+  try {
+    // console.log('token:',token);//access정보를 가지고 또 요청해야 정보를 가져올 수 있음.
+    user = await axios({
+      method: "get",
+      url: "https://kapi.kakao.com/v2/user/me",
+      headers: {
+        Authorization: `Bearer ${token.data.access_token}`,
+      },
+    });
+  } catch (e) {
+    res.json(e.data);
+  }
+  try {
+    let nickname = user.data.properties.nickname;
+    let email = user.data.kakao_account.email;
+    const existCheck = await User.findOne({ where: { email } });
+    if (existCheck) {
+      //이메일 데이터가 존재하면
+      // await req.session.destroy();
+      req.session.isLogined = true; // 세션생성,
+      req.session.userId = existCheck.id;
+      req.session.userName = existCheck.name;
+      req.session.userType = existCheck.userType;
+      //프로필 페이지로 연결
+      res.send(`<script>alert('이미 가입되었습니다.'); document.location.href='/profile';</script>`);
+    } else {
+      //이메일이 없으면 db생성
+      await User.create({ email, name: nickname, snsId: "kakao", userType: `${req.session.joinType}` });
+      const user2 = await User.findOne({ where: { email } });
+      req.session.isLogined = true; //db생성후 세션생성
+      req.session.userId = user2.id;
+      req.session.userName = user2.name;
+      req.session.userType = user2.userType;
+      //프로필 페이지로 연결
+      res.send(`<script>alert('회원가입이 완료되었습니다!'); document.location.href='/profile';</script>`);
+    }
+  } catch (error) {
+    console.log("카카오 회원가입 error", error);
+    res.status(500).json({ result: false });
+  }
+}
+
+//카카오 로그인
 exports.kakao_callback = async (req, res) => {
   try {
     //access토큰을 받기 위한 코드
@@ -58,8 +125,6 @@ exports.kakao_callback = async (req, res) => {
   } catch (err) {
     res.json(err.data);
   }
-  // console.log('token.data: ',token)
-  //access토큰을 받아서 사용자 정보를 알기 위해 쓰는 코드
   let user;
   try {
     // console.log('token:',token);//access정보를 가지고 또 요청해야 정보를 가져올 수 있음.
@@ -88,17 +153,8 @@ exports.kakao_callback = async (req, res) => {
       //프로필 페이지로 연결
       res.redirect("/profile");
     } else {
-      //이메일이 없으면 db생성
-      await User.create({ email, name: nickname, snsId: "kakao", userType: `${req.session.joinType}` });
-      const user2 = await User.findOne({ where: { email } });
-      // await req.session.destroy();
-      req.session.isLogined = true; //db생성후 세션생성
-      req.session.userId = user2.id;
-      req.session.userName = user2.name;
-      req.session.userType = user2.userType;
-      console.log(req.session);
-      //프로필 페이지로 연결
-      res.redirect("/profile");
+      //이메일이 없으면 메인화면으로 이동
+      res.send(`<script>alert('가입되지 않은 사용자입니다.'); document.location.href='/';</script>`);
     }
   } catch (error) {
     console.log("카카오 회원가입 error", error);
@@ -110,31 +166,91 @@ exports.kakao_callback = async (req, res) => {
 const google = {
   clientID: process.env.GOOGLE_ID,
   client_secret: process.env.CLIENT_SECRET_GOOGLE,
-  redirectUri: "http://localhost:8000/auth/google/callback",
+};
+
+//구글 회원가입요청 
+exports.google_get_join = (req, res) => {
+  res.redirect(
+    `https://accounts.google.com/o/oauth2/v2/auth?client_id=${google.clientID}&redirect_uri=http://localhost:8000/auth/google/join/callback&response_type=code&scope=email profile`
+  );
+  console.log("로그인 요청 완료");
 };
 
 //구글 로그인 요청
 exports.google_get = (req, res) => {
   res.redirect(
-    `https://accounts.google.com/o/oauth2/v2/auth?client_id=${google.clientID}&redirect_uri=${google.redirectUri}&response_type=code&scope=email profile`
+    `https://accounts.google.com/o/oauth2/v2/auth?client_id=${google.clientID}&redirect_uri=http://localhost:8000/auth/google/login/callback&response_type=code&scope=email profile`
   );
   console.log("로그인 요청 완료");
 };
-exports.google_callback = async (req, res) => {
+//구글회원가입
+exports.google_join = async (req, res) => {
   const { code } = req.query;
   console.log("콜백왔다");
-  // console.log(`code: ${code}`);
 
   // access_token, refresh_token 등의 구글 토큰 정보 가져오기
   const res1 = await axios({
     method: "POST",
     url: "https://oauth2.googleapis.com/token",
-    // x-www-form-urlencoded(body)
     data: {
       code,
       client_id: google.clientID,
       client_secret: google.client_secret,
-      redirect_uri: google.redirectUri,
+      redirect_uri: 'http://localhost:8000/auth/google/join/callback',
+      grant_type: "authorization_code",
+    },
+  });
+  const user = await axios({
+    method: "get",
+    url: "https://www.googleapis.com/oauth2/v2/userinfo",
+    headers: {
+      Authorization: `Bearer ${res1.data.access_token}`,
+    },
+  });
+  try {
+    let name = user.data.name;
+    let email = user.data.email;
+    const existCheck = await User.findOne({ where: { email } });
+    if (existCheck) {
+      //이메일 데이터가 존재하면
+      req.session.isLogined = true; // 세션생성,
+      req.session.userId = existCheck.id;
+      req.session.userName = existCheck.name;
+      req.session.userType = existCheck.userType;
+      //프로필 페이지로 연결
+      res.send(`<script>alert('이미 가입되었습니다.'); document.location.href='/profile';</script>`);
+    } else {
+      //이메일이 없으면 db생성
+      await User.create({ email, name, snsId: "google" , userType: `${req.session.joinType}`});
+      const user2 = await User.findOne({ where: { email } });
+      // await req.session.destroy();
+      req.session.isLogined = true; // 세션생성,
+      req.session.userId = user2.id;
+      req.session.userName = user2.name;
+      req.session.userType = user2.userType;
+      //프로필 페이지로 연결
+      res.send(`<script>alert('회원가입이 완료되었습니다!'); document.location.href='/profile';</script>`);
+    }
+  } catch (error) {
+    console.log("구글 회원가입 error", error);
+    res.status(500).json({ result: false });
+  }
+};
+
+//구글 로그인
+exports.google_callback = async (req, res) => {
+  const { code } = req.query;
+  console.log("콜백왔다");
+
+  // access_token, refresh_token 등의 구글 토큰 정보 가져오기
+  const res1 = await axios({
+    method: "POST",
+    url: "https://oauth2.googleapis.com/token",
+    data: {
+      code,
+      client_id: google.clientID,
+      client_secret: google.client_secret,
+      redirect_uri: 'http://localhost:8000/auth/google/login/callback',
       grant_type: "authorization_code",
     },
   });
@@ -146,15 +262,12 @@ exports.google_callback = async (req, res) => {
       Authorization: `Bearer ${res1.data.access_token}`,
     },
   });
-  console.log(user.data);
-  console.log("왔다.");
   try {
     let name = user.data.name;
     let email = user.data.email;
     const existCheck = await User.findOne({ where: { email } });
     if (existCheck) {
       //이메일 데이터가 존재하면
-      // await req.session.destroy();
       req.session.isLogined = true; // 세션생성,
       req.session.userId = existCheck.id;
       req.session.userName = existCheck.name;
@@ -162,16 +275,8 @@ exports.google_callback = async (req, res) => {
       //프로필 페이지로 연결
       res.redirect("/profile");
     } else {
-      //이메일이 없으면 db생성
-      await User.create({ email, name, snsId: "google" , userType: `${req.session.joinType}`});
-      const user2 = await User.findOne({ where: { email } });
-      // await req.session.destroy();
-      req.session.isLogined = true; // 세션생성,
-      req.session.userId = user2.id;
-      req.session.userName = user2.name;
-      req.session.userType = user2.userType;
-      //프로필 페이지로 연결
-      res.redirect("/profile");
+      //이메일이 없으면 메인화면으로 이동
+      res.send(`<script>alert('가입되지 않은 사용자입니다.'); document.location.href='/';</script>`);
     }
   } catch (error) {
     console.log("구글 회원가입 error", error);
@@ -265,15 +370,27 @@ exports.post_login = async (req, res) => {
 };
 
 //프로필 사진
-exports.profileImg = (req, res) => {
+exports.profileImg = async (req, res) => {
+  console.log(req.file)
+  const profileImgPath = req.file.path.toString(); //경로를 string으로 변환
+  await User.update({ profileImgPath }, { where: { id: req.session.userId } });
   console.log(req.file); //userfile이 담김
+  console.log(profileImgPath)
   res.send(req.file);
 };
+
+//탈퇴하기
+exports.delete_user = async (req, res) =>{
+  console.log('탈퇴하러 왔다',req.body.id);
+  await User.destroy({ where: { id: req.body.id } });
+  console.log('탈퇴했다')
+  res.json({ result: true });
+}
 
 //////////////PATCH//////////////////////
 exports.edit_profile = async (req, res) => {
   const { id, email, name, phone } = req.body;
-  console.log(req.body);
+  console.log('수정중',req.body);
   const data = await User.update({ email, name, phone }, { where: { id } });
   console.log("update", data);
   res.json({ result: true, data });

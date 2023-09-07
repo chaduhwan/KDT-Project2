@@ -50,19 +50,19 @@
     <script>
       //소켓 설정
       const socket = io();
-
       async function registerEdit(id) {
         let email = $("#email"); // 이메일
         let name = $("#name"); //이름
         let phone = $("#phone"); //핸드폰번호
+        console.log(email.val(), name.val(), phone.val())
         const res = await axios({
           method: "PATCH",
           url: "/profile",
           data: {
             id: Number(id),
-            email: email.value,
-            name: name.value,
-            phone: phone.value,
+            email: email.val(),
+            name: name.val(),
+            phone: phone.val(),
           },
         });
         console.log("res", res.data);
@@ -91,11 +91,29 @@
               "Content-Type": "multipart/form-data",
             },
           });
-          console.log("res", res);
-          imgBox.innerHTML = `<img src = ${res.data.path}>`;
+          console.log("res", res.data.path);
+          imgBox.empty();
+          imgBox.append(`<img src=${res.data.path} style="width: 200px; height: 200px; border-radius: 50%;">`) 
         } catch (error) {
           console.log(error);
         }
+      }
+      async function deleteUser(id){
+        const res = await axios({
+          method: "POST",
+          url: 'profile/delete',
+          data: {
+            id: Number(id),
+          },
+        });
+        console.log('탈퇴중');
+        if (res.data.result) {
+          alert("성공");
+          window.location.replace('/');
+        }else{
+          alert('실패')
+        }
+
       }
     </script>
   </body>
