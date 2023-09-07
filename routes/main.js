@@ -79,6 +79,7 @@ router.post('/upload', upload.single('dynamic'), M_controller.profileImg);
 router.get('/logout', M_controller.logout);
 
 //////////////////상녕/////////////////
+
 router.get('/chat', S_controller.chat);
 
 //자리배치관련
@@ -89,5 +90,10 @@ router.post('/desk/delete_generator', T_controller.delete_generator);
 router.get('/desk/reservation', T_controller.reservation);
 router.post('/desk/reservationConfirm', T_controller.reservationConfirm);
 router.patch('/desk/reservationEdit', T_controller.reservationEdit);
+
+//채팅방 render페이지
+router.get("/chat", S_controller.chat);
+//채팅 불러오기
+router.post("/preMessage", S_controller.preMessage);
 
 module.exports = router;

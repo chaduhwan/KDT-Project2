@@ -8,7 +8,19 @@ const SocketIO = require('socket.io');
 const session = require('express-session');
 
 const server = http.createServer(app);
+
+//socket.io, session 옵션, 미들웨어 설정
+const sessionMiddleware = session({
+  secret: "ras",
+  resave: true,
+  secure: false,
+  saveUninitialized: false,
+});
+app.use(sessionMiddleware);
 const io = SocketIO(server);
+const wrap = middleware => (socket, next) => middleware(socket.request, {}, next);
+io.use(wrap(sessionMiddleware));
+
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
@@ -24,6 +36,7 @@ app.use(
     saveUninitialized: false,
   }),
 );
+
 
 //정적파일 설정
 app.use('/public', express.static(__dirname + '/public'));

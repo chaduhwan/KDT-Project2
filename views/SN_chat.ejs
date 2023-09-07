@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       href="https://fonts.googleapis.com/css?family=Raleway"
       rel="stylesheet"
@@ -13,7 +15,19 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.css"
     />
-    <link rel="stylesheet" href="../css/chat.css" />
+        <!-- 제이쿼리cdn -->
+        <script
+        src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+        crossorigin="anonymous"
+      ></script>
+    <!-- axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- 소켓io 경로 -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- <link rel="stylesheet" href="../css/chat.css" /> -->
+    <title>채팅방</title>
     <style>
       body {
         font-family: "Raleway", sans-serif;
@@ -307,13 +321,18 @@
       <div class="head-section">
         <div class="headLeft-section">
           <div class="headLeft-sub">
-            <input type="text" name="search" placeholder="친구목록검색" />
-            <button><i class="fa fa-search"></i></button>
+            <!-- 채팅방에 초대할 상대방 -->
+            <form id="room">
+            <input type="text" id="search" placeholder="방 번호 적기" />
+            <!-- <button><i class="fa fa-search"></i></button> -->
+            <button>초대하기</button>
+          </form>
+
           </div>
         </div>
         <div class="headRight-section">
           <div class="headRight-sub">
-            <h3>상대방 이름 입력하는 곳</h3>
+            <h3 id="OtherPerson1">상대방 이름 입력하는 곳</h3>
             <small>상태메시지 입력</small>
           </div>
         </div>
@@ -334,16 +353,18 @@
                 </div>
                 <div class="desc">
                   <small class="time">시간입력</small>
-                  <h5>상대방이름</h5>
+                  <h5 id="OtherPerson2">상대방이름</h5>
                   <small>미리보기 메시지 보여주는곳</small>
                 </div>
               </div>
             </li>
           </ul>
         </div>
+        <!-- 채팅창 section -->
         <div class="right-section">
-          <div class="message mCustomScrollbar" data-mcs-theme="minimal-dark">
-            <ul>
+          <div class="message"  style="overflow-y: scroll;">
+            <ul id="chat-messages" >
+              <!-- 상대방이 보낸 메시지 -->
               <li class="msg-left">
                 <div class="msg-left-sub">
                   <img
@@ -353,6 +374,7 @@
                   <small>시간입력</small>
                 </div>
               </li>
+              <!-- 내가보낸메시지 -->
               <li class="msg-right">
                 <div class="msg-left-sub">
                   <img
@@ -365,21 +387,213 @@
               <li class="msg-day"><small>날짜입력하는 곳</small></li>
             </ul>
           </div>
+          <!-- 채팅창 section 끝나는곳 -->
+          <!-- 메세지 보내는 곳 -->
           <div class="right-section-bottom">
             <form>
               <div class="upload-btn">
                 <button class="btn"><i class="fa fa-photo"></i></button>
                 <input type="file" name="myfile" />
               </div>
-              <input type="text" name="" placeholder="메시지 입력" />
-              <button class="btn-send"><i class="fa fa-send"></i></button>
+              <div id="messageStatus" style="display: none;">상대방이 입력중입니다..</div>
             </form>
+              <!-- <form id="chat">
+                메시지 입력<input type="text" id="message" placeholder="메시지입력~"/>
+                <button class="btn-send"><i class="fa fa-send"></i></button>
+              </form>               -->
+              <form id="chat">
+                <input type="text" id="message" />
+                <button>보내기</button>
+              </form>
+              <!-- 여기까지 -->
+            
           </div>
+          <!-- 메시지 보내는곳 끝 -->
         </div>
       </div>
     </div>
+    <script>
+      //소켓 설정
+      const socket = io();
 
-    <script></script>
+      //////////변수이름///////////////
+
+      //현재 접속한 유저 이름
+      let username;
+      
+      //메시지를 보내는 상대방 이름
+      let otherName;
+
+      //타이핑 타이머
+      let timer;
+
+      //사진1번, 2번 (이건 나중에 프로필사진 추가하면 삭제하기)
+      const pic1 = "https://t1.daumcdn.net/cfile/tistory/27738433597DCB1312"
+      const pic2 = "https://i3.ruliweb.com/img/20/03/16/170dee06b1347bc9f.jpg"
+      ////////////////////////////////
+
+      ////////////함수////////////////
+      //날짜 구하기 위한 함수
+      let now = new Date();
+      let hour = now.getHours();
+      let minute = now.getMinutes();
+      let sendTime = hour+":"+ minute
+      // 상대방이 출력하는 메시지 함수
+      function createLeftMessage(imageSrc, messageText, timestamp) {
+          const listItem = document.createElement("li");
+          listItem.classList.add("msg-left");
+
+          const messageContainer = document.createElement("div");
+          messageContainer.classList.add("msg-left-sub");
+
+          const image = document.createElement("img");
+          image.src = imageSrc;
+
+          const message = document.createElement("div");
+          message.classList.add("msg-desc");
+          message.textContent = messageText;
+
+          const time = document.createElement("small");
+          time.textContent = timestamp;
+
+          messageContainer.appendChild(image);
+          messageContainer.appendChild(message);
+          messageContainer.appendChild(time);
+
+          listItem.appendChild(messageContainer);
+
+          return listItem;
+        }
+
+        // 내가 출력하는 메시지 함수
+        function createRightMessage(msgText, imgUrl, timestamp) {
+            const listItem = document.createElement("li");
+            listItem.classList.add("msg-right");
+
+            const msgLeftSub = document.createElement("div");
+            msgLeftSub.classList.add("msg-left-sub");
+
+            const imgElement = document.createElement("img");
+            imgElement.src = imgUrl;
+
+            const msgDesc = document.createElement("div");
+            msgDesc.classList.add("msg-desc");
+            msgDesc.textContent = msgText;
+
+            const smallElement = document.createElement("small");
+            smallElement.textContent = timestamp;
+
+            msgLeftSub.appendChild(imgElement);
+            msgLeftSub.appendChild(msgDesc);
+            msgLeftSub.appendChild(smallElement);
+
+            listItem.appendChild(msgLeftSub);
+
+            return listItem;
+         }
+
+         //스크롤 다운 함수
+         function scrollBottom(){
+          chatMessageList.scrollTop = chatMessageList.scrollHeight;
+         }
+      ////////////////////////////////
+      //이름받기(지울거임ㅎ)
+      socket.on("sendName",(name)=>{
+        username = name;
+      })
+      //상대채팅생성하는 ul태그
+      const chatMessageList = document.getElementById("chat-messages")
+      //방 입력하는 form태그
+      const roomForm = document.querySelector("#room");
+      //방 번호 적는 form
+      const searchName = document.querySelector("#search");
+      //메시지 form태그
+      const messageForm = document.querySelector("#chat");
+      //채팅 리스트 지우는거
+      const clear = document.getElementById("chat-messages");
+      
+      //방 번호 정해서 들어가기
+      roomForm.addEventListener("submit", (e)=>{
+        e.preventDefault();
+        //상대방 방 번호(이름)
+        otherName = searchName.value
+
+        //create -> 방 만들기
+        socket.emit("create", otherName, username);
+        socket.on("true",()=>{
+          //원래 헤더만 바꿔야 되는데 일단은 이것만 바꾸고 나중에 수정하기
+          const OtherPerson1 = document.querySelector("#OtherPerson1");
+          const OtherPerson2 = document.querySelector("#OtherPerson2");
+          OtherPerson1.innerText = otherName;
+          OtherPerson2.innerText = otherName;
+          alert(`${otherName}님 방에 입장하였습니다.`)
+        })
+      })
+
+      //메시지 보내는 이벤트
+      messageForm.addEventListener("submit", (e)=>{
+        e.preventDefault();
+        //메시지 input
+        const message = document.querySelector("#message");
+        console.log(message.value)
+        socket.emit("sendMessage", message.value, username, otherName);
+        scrollBottom()
+        message.value="";
+      });
+      //보낸 메시지 받는 이벤트
+      socket.on("newMessage", (message,userid)=>{
+        console.log("보낸 메시지?", message);
+        console.log("보낸놈 이름", userid)
+        if(userid == username){
+          const newChatMessage = createRightMessage(message,pic2,sendTime)
+           chatMessageList.appendChild(newChatMessage);
+        }else{
+          const newChatMessage = createLeftMessage(pic1,message,sendTime);
+          chatMessageList.appendChild(newChatMessage);
+        }
+        
+
+      })
+      //이전 채팅 내용 가져오기(roomNumber => 현재 입장한 방 번호(UUID))
+      socket.on("roomNumber", (data) =>{
+        axios({
+          method :'POST',
+          url : "/preMessage",
+          data:{
+            roomNum:data,
+          }
+        }).then((res)=>{
+          console.log("여기까지 잘 왓음!!", res);
+          clear.innerHTML = "";
+          const postMessage = res.data.chatMessage;
+          postMessage.forEach((row)=>{
+            if(row.send == username){
+              const newChatMessage = createRightMessage(row.message, pic2, row.createdAt);
+              chatMessageList.appendChild(newChatMessage);
+            }else{
+              const newChatMessage = createLeftMessage(pic1,row.message , row.createdAt);
+              chatMessageList.appendChild(newChatMessage);
+            }
+          })
+        })
+      })
+      ///이전채팅내용 끝부분//////
+
+      //타이핑중..
+      $("#message").on("input", function(){
+        const msgValue = $("#message").val();
+        socket.emit("typing", username, msgValue);
+      });
+      socket.on("type", (chatName, msgValue)=>{
+        //타임아웃 제거해주는 함수
+        clearTimeout(timer);
+        $("#messageStatus")[0].style.display = 'block';
+        timer = setTimeout(() => {
+          $("#messageStatus")[0].style.display = 'none';
+        }, 2000);
+        
+      })
+    </script>
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- custom scrollbar plugin -->
