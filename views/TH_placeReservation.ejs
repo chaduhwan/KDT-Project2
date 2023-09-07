@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+      .main {
+        display: flex;
+        flex-direction: row;
+      }
+      .right-bar {
+        display: flex;
+        flex-direction: column;
+      }
+      .square {
+        width: 80px;
+        height: 80px;
+        background-color: red;
+        border-radius: 10px;
+        font-size: 15px;
+      }
+      .room {
+        width: 80%;
+        height: 800px;
+        background-color: lightgreen;
+      }
+      .chosen {
+        background-color: skyblue;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <div class="room"></div>
+      <div class="right-bar">
+        <button style="height: 50px" onclick="verify()">관리자</button>
+        <button style="height: 50px" onclick="verify()">비관리자</button>
+        <button style="height: 50px" onclick="verify()">비관리자2</button>
+        <button style="height: 50px" onclick="Unoccupate()">예약취소</button>
+        <!-- <button style="height: 50px" onclick="dbSave()">자리확정</button> -->
+        <a href="/desk" onclick="return confirm('페이지를 벗어나시겠습니까?');"
+          >돌아가기</a
+        >
+      </div>
+      <ul></ul>
+    </div>
+    <script>
+      let whoAmI = '이태희'; // db 연결하면 고쳐야할 부분
+      let nowMap = '';
+      const verify = () => {
+        if (event.target.innerText == '관리자') {
+          whoAmI = 'admin';
+        } else if (event.target.innerText == '비관리자') {
+          whoAmI = '이태희';
+        } else {
+          whoAmI = '김현승';
+        }
+      };
+      const socket = io();
+
+      axios({
+        method: 'GET',
+        url: '/desk/get_generator',
+      }).then((res) => {
+        socket.emit('basicSetting', res.data);
+        console.log('data', res.data);
+        let ul = document.querySelector('ul');
+        const { desk: data } = res.data;
+        ul.innerHTML = '';
+        if (!ul.hasChildNodes()) {
+          for (let i = 0; i < data.length; i++) {
+            let li = document.createElement('li');
+            li.innerText = data[i].name;
+            li.onclick = () => {
+              if (whoAmI == 'admin') {
+                console.log(data[i].name);
+                //   socket.emit('confirmed', data[i].data);
+                socket.emit('confirmed', data[i].name);
+              }
+            };
+            li.style.cursor = 'pointer';
+            ul.appendChild(li);
+          }
+        }
+      });
+
+      const chairGenerator = (dataBase, li) => {
+        console.log(dataBase);
+        let num = 0;
+        let specify = li;
+        for (let i = 0; i < dataBase.length; i++) {
+          //   let num = 0;
+          if (dataBase[i].name == specify) {
+            for (let j = 0; j < +dataBase[i].num; j++) {
+              let square = document.createElement('div');
+              let numbering = document.createElement('p');
+
+              //책상번호 만들어주기
+              num = dataBase[i].position[j].who.split('num')[1];
+              numbering.innerText = num;
+
+              //책상별 클래스 부여
+              square.classList.add('square', dataBase[i].position[j].who);
+              for (let a = 0; a < dataBase[i].chosen.length; a++) {
+                if (
+                  dataBase[i].chosen[a].which == dataBase[i].position[j].who
+                ) {
+                  square.classList.add('chosen');
+                  numbering.innerText = dataBase[i].chosen[a].owner;
+                }
+              }
+              numbering.style.marginTop = '-5px';
+              square.appendChild(numbering);
+
+              //포지션 부여
+              square.style.cssText = `
+                    top: ${dataBase[i].position[j].top}px;
+                    left: ${dataBase[i].position[j].left}px;
+                    position: absolute;
+                    color: white;
+                    font-size: 30px;
+                    `;
+              document.querySelector('.room').appendChild(square);
+            }
+          }
+        }
+      };
+
+      const saveSetting = (data, name) => {
+        let obj = {};
+        let html = new DOMParser();
+        html = html.parseFromString(data, 'text/html');
+        obj.num = 0;
+        obj.name = name;
+        let chairList = html.children[0].children[1].children;
+        chairList = Array.from(chairList);
+        let chosen = [];
+        let position = [];
+        chairList.forEach((element) => {
+          if (element.classList.contains('chosen')) {
+            let chosenOne = {};
+            chosenOne.name = name;
+            chosenOne.owner = element.children[0].innerText;
+            chosenOne.which = element.classList[1];
+            chosen.push(chosenOne);
+          }
+          let positionOne = {};
+          position.name = name;
+          positionOne.who = element.classList[1];
+          positionOne.top = element.style.top.slice(0, -2);
+          positionOne.left = element.style.left.slice(0, -2);
+          position.push(positionOne);
+          obj.num += 1;
+        });
+        obj.chosen = chosen;
+        obj.position = position;
+        console.log(obj);
+        return obj;
+      };
+
+      socket.on('show', (currentData, name) => {
+        console.log(currentData);
+        document.querySelector('.room').innerHTML = '';
+        chairGenerator(currentData, name);
+        nowMap = name;
+        let limit = document.querySelector('.room').children.length;
+        for (let j = 1; j <= limit; j++) {
+          if (document.querySelector(`.num${j}`)) {
+            let each = document.querySelector(`.num${j}`);
+            each.onclick = () => {
+              let selected = event.target.children[0].innerText;
+              let str = '' + document.querySelector('.room').innerHTML;
+              if (event.target.classList.contains('chosen') == false) {
+                // 예약되지 않은 자리
+                if (str.includes(whoAmI)) {
+                  // 내가 예약을 이미 한 상태일 때
+                  let confirm = window.confirm('해당 자리로 이동하시겠습니까?');
+                  if (confirm) {
+                    socket.emit('choose', selected, whoAmI);
+                  }
+                } else {
+                  // 내가 예약을 하지 않은 상태일 때
+                  console.log(selected);
+                  console.log(whoAmI);
+                  socket.emit('choose', selected, whoAmI);
+                }
+              } else {
+                // 예약된 자리
+                alert('해당자리는 이미 예약된 상태입니다');
+              }
+            };
+          } else {
+            limit++;
+          }
+        }
+      });
+
+      socket.on('confirmed', (data) => {
+        nowMap = data.name;
+        console.log('되나');
+        socket.emit('saveState', [data], data.name);
+      });
+
+      socket.on('occupate', (num, name) => {
+        if (whoAmI == name) {
+          let is = '' + document.querySelector('.room').innerHTML;
+          if (is.includes(name)) {
+            // 변경
+            for (
+              let i = 0;
+              i < document.querySelector('.room').children.length;
+              i++
+            ) {
+              if (
+                document
+                  .querySelector('.room')
+                  .children[i].children[0].innerText.includes(name)
+              ) {
+                let str =
+                  document.querySelector('.room').children[i].children[0]
+                    .innerText;
+                str = str.split(': ' + name)[0];
+                console.log(str);
+                document.querySelector('.room').children[
+                  i
+                ].children[0].innerText = str;
+                document
+                  .querySelector('.room')
+                  .children[i].classList.remove('chosen');
+                break;
+              }
+            }
+          }
+          console.log(num);
+          console.log(name);
+          let each = document.querySelector(`.num${num}`);
+          each.classList.add('chosen');
+          each.children[0].innerText += `: ${name}`;
+          let data = saveSetting(
+            document.querySelector('.room').innerHTML,
+            nowMap,
+          );
+          console.log(data);
+          socket.emit('saveState', [data], nowMap);
+          socket.emit('dataPush', data);
+          dbSave();
+        }
+      });
+
+      const Unoccupate = () => {
+        let is = '' + document.querySelector('.room').innerHTML;
+        if (is.includes(whoAmI)) {
+          const confirm = window.confirm('자리 예약을 취소하시겠습니까?');
+          if (confirm) {
+            for (
+              let i = 0;
+              i < document.querySelector('.room').children.length;
+              i++
+            ) {
+              if (
+                document
+                  .querySelector('.room')
+                  .children[i].children[0].innerText.includes(whoAmI)
+              ) {
+                let str =
+                  document.querySelector('.room').children[i].children[0]
+                    .innerText;
+                str = str.split(': ' + whoAmI)[0];
+                console.log(str);
+                document.querySelector('.room').children[
+                  i
+                ].children[0].innerText = str;
+                document
+                  .querySelector('.room')
+                  .children[i].classList.remove('chosen');
+                let data = saveSetting(
+                  document.querySelector('.room').innerHTML,
+                  nowMap,
+                );
+                socket.emit('saveState', [data], nowMap);
+                break;
+              }
+            }
+          }
+        } else {
+          alert('예약된 자리가 없습니다');
+        }
+      };
+
+      const dbSave = async () => {
+        let proto = document.querySelector('.room').innerHTML;
+        let title = nowMap;
+        let data = saveSetting(proto, title);
+        let res = await axios({
+          method: 'PATCH',
+          url: '/desk/reservationEdit',
+          data: data,
+        });
+        if (res.data == '성공') {
+          alert('자리 예약에 성공하셨습니다');
+        } else {
+          alert('자리 예약에 실패하셨습니다');
+        }
+      };
+    </script>
+  </body>
+</html>
