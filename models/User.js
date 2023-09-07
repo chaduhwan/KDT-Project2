@@ -24,6 +24,10 @@ const Model = (sequelize) =>{
             type: DataTypes.INTEGER(11),
             allowNull: true,
         },
+        userType:{
+            type: DataTypes.STRING(11),
+            allowNull: true,
+        },
         snsId: {
             type: DataTypes.STRING(40),
             allowNull: true,

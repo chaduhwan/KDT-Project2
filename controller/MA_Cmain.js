@@ -9,6 +9,8 @@ const kakao = {
 };
 
 /////////////////////GET///////////////////////
+
+
 exports.main = async (req, res) => {
   if (req.session.isLogined) {
     const data = await User.findOne({ where: { id: req.session.userId } });
@@ -78,18 +80,22 @@ exports.kakao_callback = async (req, res) => {
     const existCheck = await User.findOne({ where: { email } });
     if (existCheck) {
       //이메일 데이터가 존재하면
+      // await req.session.destroy();
       req.session.isLogined = true; // 세션생성,
       req.session.userId = existCheck.id;
       req.session.userName = existCheck.name;
+      req.session.userType = existCheck.userType;
       //프로필 페이지로 연결
       res.redirect("/profile");
     } else {
       //이메일이 없으면 db생성
-      await User.create({ email, name: nickname, snsId: "kakao" });
+      await User.create({ email, name: nickname, snsId: "kakao", userType: `${req.session.joinType}` });
       const user2 = await User.findOne({ where: { email } });
+      // await req.session.destroy();
       req.session.isLogined = true; //db생성후 세션생성
       req.session.userId = user2.id;
       req.session.userName = user2.name;
+      req.session.userType = user2.userType;
       console.log(req.session);
       //프로필 페이지로 연결
       res.redirect("/profile");
@@ -148,18 +154,22 @@ exports.google_callback = async (req, res) => {
     const existCheck = await User.findOne({ where: { email } });
     if (existCheck) {
       //이메일 데이터가 존재하면
+      // await req.session.destroy();
       req.session.isLogined = true; // 세션생성,
       req.session.userId = existCheck.id;
       req.session.userName = existCheck.name;
+      req.session.userType = existCheck.userType;
       //프로필 페이지로 연결
       res.redirect("/profile");
     } else {
       //이메일이 없으면 db생성
-      await User.create({ email, name, snsId: "google" });
+      await User.create({ email, name, snsId: "google" , userType: `${req.session.joinType}`});
       const user2 = await User.findOne({ where: { email } });
+      // await req.session.destroy();
       req.session.isLogined = true; // 세션생성,
       req.session.userId = user2.id;
       req.session.userName = user2.name;
+      req.session.userType = user2.userType;
       //프로필 페이지로 연결
       res.redirect("/profile");
     }
@@ -192,6 +202,15 @@ exports.logout = (req, res) => {
 
 /////////////////////////POST///////////////////
 
+//인트로
+exports.post_main = async (req, res)=>{
+  delete req.session.joinType;
+  console.log(req.body);
+  req.session.joinType = req.body.joinType;
+  result = req.session.joinType
+  res.json({result})
+}
+
 //회원가입
 exports.post_join = async (req, res) => {
   console.log(req.body);
@@ -205,7 +224,7 @@ exports.post_join = async (req, res) => {
       res.json({ result: false });
     } else {
       const hashPW = bcryptPassword(pw); //비밀번호 암호화
-      await User.create({ email, name, phone, pw: hashPW });
+      await User.create({ email, name, phone, pw: hashPW, userType: `${req.session.joinType}` });
       res.json({ result: true });
     }
   } catch (error) {
@@ -228,9 +247,11 @@ exports.post_login = async (req, res) => {
       const compare = comparePassword(pw, result.pw); //비밀번호 암호화
       if (compare) {
         console.log("로그인 성공");
+        // await req.session.destroy();
         req.session.isLogined = true; // 세션생성,
         req.session.userId = result.id;
         req.session.userName = result.name;
+        req.session.userType = result.userType;
         res.json({ result: true, userid: req.session.userId });
         // res.redirect('/profile')
       } else {
