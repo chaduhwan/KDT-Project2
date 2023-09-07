@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 부트스트랩 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
     <link
       href="https://fonts.googleapis.com/css?family=Raleway"
       rel="stylesheet"
@@ -164,7 +167,7 @@
         position: relative;
       }
       .left-section .chatList .desc h5 {
-        margin-top: 6px;
+        margin-top: 9px;
         line-height: 5px;
       }
       .left-section .chatList .desc .time {
@@ -324,9 +327,10 @@
           <div class="headLeft-sub">
             <!-- 채팅방에 초대할 상대방 -->
             <form id="room">
+              <i class="fa-solid fa-users-line" id="userList" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></i>
               <input type="text" id="search" placeholder="방 번호 적기" />
-              <!-- <button><i class="fa fa-search"></i></button> -->
-              <button>초대하기</button>
+              <button><i class="fa fa-search"></i></button>
+              <!-- <button>초대하기</button> -->
             </form>
           </div>
         </div>
@@ -346,15 +350,15 @@
             <li>
               <div class="chatList">
                 <div class="img">
-                  <i class="fa fa-circle" style="color: rgb(215, 215, 215)"></i>
+                  <i class="fa fa-circle" style="color: gray"></i>
                   <img
                     src="https://t1.daumcdn.net/cfile/tistory/27738433597DCB1312"
                   />
                 </div>
                 <div class="desc">
                   <small class="time">시간입력</small>
-                  <h5 id="OtherPerson2">상대방이름</h5>
-                  <small>미리보기 메시지 보여주는곳</small>
+                  <h5 id="OtherPerson2">단체 채팅방</h5>
+                  <small>ㅋㅋㅋㅋ ㅎㅇ</small>
                 </div>
               </div>
             </li>
@@ -365,7 +369,7 @@
           <div class="message" style="overflow-y: scroll">
             <ul id="chat-messages">
               <!-- 상대방이 보낸 메시지 -->
-              <li class="msg-left">
+              <!-- <li class="msg-left">
                 <div class="msg-left-sub">
                   <img
                     src="https://t1.daumcdn.net/cfile/tistory/27738433597DCB1312"
@@ -373,9 +377,9 @@
                   <div class="msg-desc">왼쪽내용 입력하는 곳!!</div>
                   <small>시간입력</small>
                 </div>
-              </li>
+              </li> -->
               <!-- 내가보낸메시지 -->
-              <li class="msg-right">
+              <!-- <li class="msg-right">
                 <div class="msg-left-sub">
                   <img
                     src="https://i3.ruliweb.com/img/20/03/16/170dee06b1347bc9f.jpg"
@@ -384,7 +388,7 @@
                   <small>시간입력</small>
                 </div>
               </li>
-              <li class="msg-day"><small>날짜입력하는 곳</small></li>
+              <li class="msg-day"><small>날짜입력하는 곳</small></li> -->
             </ul>
           </div>
           <!-- 채팅창 section 끝나는곳 -->
@@ -399,13 +403,9 @@
                 상대방이 입력중입니다..
               </div>
             </form>
-            <!-- <form id="chat">
-                메시지 입력<input type="text" id="message" placeholder="메시지입력~"/>
-                <button class="btn-send"><i class="fa fa-send"></i></button>
-              </form>               -->
             <form id="chat">
               <input type="text" id="message" />
-              <button>보내기</button>
+              <button class="btn-send"><i class="fa fa-send"></i></button>
             </form>
             <!-- 여기까지 -->
           </div>
@@ -413,10 +413,27 @@
         </div>
       </div>
     </div>
+      <!-- Modal -->
+      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">현재 접속자</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+              <button type="button" class="btn btn-primary">확인</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /////////////// -->
     <script>
       //소켓 설정
       const socket = io();
-
       //////////변수이름///////////////
 
       //현재 접속한 유저 이름
@@ -428,6 +445,9 @@
       //타이핑 타이머
       let timer;
 
+
+      //나한테 지금 만들어진 채팅방이름
+      let myRoomList = [];
       //사진1번, 2번 (이건 나중에 프로필사진 추가하면 삭제하기)
       const pic1 = "https://t1.daumcdn.net/cfile/tistory/27738433597DCB1312";
       const pic2 = "https://i3.ruliweb.com/img/20/03/16/170dee06b1347bc9f.jpg";
@@ -441,6 +461,7 @@
       let hour = now.getHours();
       let minute = now.getMinutes();
       let sendTime = hour + ":" + minute;
+
       // 상대방이 출력하는 메시지 함수
       function createLeftMessage(imageSrc, messageText, timestamp) {
         const listItem = document.createElement("li");
@@ -501,37 +522,38 @@
         previewMessage,
         imageUrl
       ) {
-        // 이미지를 포함한 div 요소 생성
         const imgDiv = document.createElement("div");
         imgDiv.className = "img";
 
-        // 이미지 아이콘 생성
         const imgIcon = document.createElement("i");
         imgIcon.className = "fa fa-circle";
+        imgIcon.id = otherPersonName;
 
-        // 이미지 요소 생성
         const imgElement = document.createElement("img");
         imgElement.src = imageUrl;
 
-        // desc div 요소 생성
         const descDiv = document.createElement("div");
         descDiv.className = "desc";
-
-        // 시간 요소 생성 및 설정
+        descDiv.addEventListener("click",function(){
+          //그 방으로 들어가게 함
+          otherName = otherPersonName;
+          //create -> 방 만들기
+          socket.emit("create", otherName, username);
+          socket.on("true", () => {
+            alert(`${otherName}님 방에 입장하였습니다.`);
+          });
+        })
         const timeElement = document.createElement("small");
         timeElement.className = "time";
         timeElement.textContent = time;
 
-        // 상대방 이름 요소 생성 및 설정
         const otherPersonElement = document.createElement("h5");
         otherPersonElement.id = "OtherPerson2";
         otherPersonElement.textContent = otherPersonName;
 
-        // 미리보기 메시지 요소 생성 및 설정
         const previewMessageElement = document.createElement("small");
         previewMessageElement.textContent = previewMessage;
 
-        // 생성한 요소들을 계층적으로 추가
         imgDiv.appendChild(imgIcon);
         imgDiv.appendChild(imgElement);
 
@@ -543,10 +565,32 @@
         chatContainer.appendChild(descDiv);
         return chatContainer;
       }
+
       //스크롤 다운 함수
       function scrollBottom() {
         messageList.scrollTo(0, messageList.scrollHeight);
       }
+
+      // 새로운 접속자를 추가하는 함수
+      function addVisitor(visitorName) {
+        var visitorElement = document.createElement('div');
+        visitorElement.textContent = visitorName;
+        visitorElement.id = visitorName;
+        visitorElement.addEventListener("click", function(){
+          //이름을 눌렀을 때 모달이 닫히게 하는 이벤트
+          $('#modal').modal("hide");
+          //그 방으로 들어가게 함
+          otherName = visitorName;
+
+          //create -> 방 만들기
+          socket.emit("create", otherName, username);
+          socket.on("true", () => {
+            alert(`${otherName}님 방에 입장하였습니다.`);
+          });
+        })
+        modalBody.appendChild(visitorElement);
+      }
+
       ////////////////////////////////
       //이름받기(지울거임ㅎ)
       socket.on("sendName", (name) => {
@@ -565,9 +609,36 @@
       const clear = document.getElementById("chat-messages");
       //채팅방 리스트
       const chatContainer = document.querySelector(".chatList");
+      //모달에 나오는 유저 리스트
+      var modalBody = document.querySelector('.modal-body');
 
+      // 현재 접속자 (모달화면) 갱신하는 거
+      socket.on("accessCheck",(roomList,username)=>{
+        modalBody.textContent="";
+        roomList.forEach(res=>{
+            addVisitor(res);          
+        })
+      })
+       
+      //현재 접속자 계속 찾아서 새로 생기면 불 바꾸기
+      //현재 접속자와 내 채팅방에 있는 사람이 같으면 초록불로 바꿔주기
+      socket.on("getAccess", (roomList)=>{
+        roomList.forEach(room=>{
+          myRoomList.forEach(myRoom=>{
+            if(room == myRoom){
+              console.log("방금 접속한사람?", myRoom);
+              document.querySelector(`#${myRoom}`).style.color = "green"
+            }
+          })
+        })
+      })
+
+      //나가면 회색으로 변하는 이벤트
+      socket.on("deleteList", (username)=>{
+        document.querySelector(`#${username}`).style.color = "gray"
+      })
       //내가 채팅하고 잇는 방 불러오고 -> 그 채팅방 미리보기 메시지까지 가져오는거
-      socket.on("chatList", async (username) => {
+      socket.on("chatList", async (username, roomList) => {
         //참여 채팅방 불러오기
         const listResult = await axios({
           method: "POST",
@@ -577,7 +648,6 @@
           },
           //각 방의 메세지 하나씩 불러오기
         });
-        console.log("????");
         for (const myMessage of listResult.data) {
           const messageResult = await axios({
             method: "POST",
@@ -586,19 +656,25 @@
               send: myMessage,
             },
           });
-          const preViewMessage = createMessageElement(
+          const preViewMessage = await createMessageElement(
             sendTime,
             messageResult.data.send,
             messageResult.data.message,
             pic3
           );
-          console.log("몇번왔다갔다 했는지 확인");
-          preViewMessage;
-          console.log(
-            `${messageResult.data.send}님의 메시지 : ${messageResult.data.message}`
-          );
+          //나랑 채팅방 만들어진 사람 배열에 저장해놓기
+          myRoomList.push(messageResult.data.send);
+          await preViewMessage;
+          //element만들고 접속자 icon 색상 바꾸기
+          for await (const currentList of roomList){
+            let changeElement = document.querySelector(`#${messageResult.data.send}`)
+            if(currentList == messageResult.data.send){
+              changeElement.style.color = "green"
+            }else{
+              changeElement.style.color = "gray"
+            }
+          }
         }
-        console.log("배열로 온 값은?", listResult.data);
       });
       //방 번호 정해서 들어가기
       roomForm.addEventListener("submit", (e) => {
@@ -623,15 +699,13 @@
         e.preventDefault();
         //메시지 input
         const message = document.querySelector("#message");
-        console.log(message.value);
         socket.emit("sendMessage", message.value, username, otherName);
         scrollBottom();
         message.value = "";
       });
+
       //보낸 메시지 받는 이벤트
       socket.on("newMessage", (message, userid) => {
-        console.log("보낸 메시지?", message);
-        console.log("보낸놈 이름", userid);
         if (userid == username) {
           const newChatMessage = createRightMessage(message, pic2, sendTime);
           chatMessageList.appendChild(newChatMessage);
@@ -639,8 +713,11 @@
           const newChatMessage = createLeftMessage(pic1, message, sendTime);
           chatMessageList.appendChild(newChatMessage);
         }
+        //메시지 받으면 입력중입니다. 문구 안 보이게 바로 삭제
+        $("#messageStatus")[0].style.display = "none";
         scrollBottom();
       });
+
       //이전 채팅 내용 가져오기(roomNumber => 현재 입장한 방 번호(UUID))
       socket.on("roomNumber", (data) => {
         axios({
@@ -650,7 +727,6 @@
             roomNum: data,
           },
         }).then((res) => {
-          console.log("여기까지 잘 왓음!!", res);
           clear.innerHTML = "";
           const postMessage = res.data.chatMessage;
           postMessage.forEach((row) => {
@@ -685,12 +761,16 @@
         $("#messageStatus")[0].style.display = "block";
         timer = setTimeout(() => {
           $("#messageStatus")[0].style.display = "none";
-        }, 2000);
+        }, 500);
       });
-    </script>
 
+    </script>
+    <!-- 폰트어썸 코드 -->
+<script src="https://kit.fontawesome.com/61baba42f5.js" crossorigin="anonymous"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- custom scrollbar plugin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+     <!-- 부트스트랩 -->
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
   </body>
 </html>

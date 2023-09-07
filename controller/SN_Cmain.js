@@ -18,7 +18,6 @@ exports.preMessage = async (req, res) => {
 
 //내가 들어가 있는 방의 배열을 출력함
 exports.myChatList = async (req, res) => {
-  console.log("???????왜안옴");
   let myJoinRoom = [];
 
   let myChatList = await participant.findAll({
@@ -39,16 +38,21 @@ exports.myChatList = async (req, res) => {
   }
 
   if (myChatList.length === myJoinRoom.length) {
-    console.log("보낸 값", myJoinRoom);
     res.send(myJoinRoom);
   }
 };
 
 exports.myMessage = async (req, res) => {
-  let preMessage = await Chat.findOne({
-    where: { send: req.body.send },
-    order: [["createdAt", "DESC"]],
-  });
-  console.log("premessage", preMessage.message);
-  res.send({ message: preMessage.message, send: preMessage.send });
+  try {
+    let preMessage = await Chat.findOne({
+      where: { send: req.body.send },
+      order: [["createdAt", "DESC"]],
+    });
+    res.send({ message: preMessage.message, send: preMessage.send });
+  } catch (error) { 
+    //만약에 상대방과 대화를 했는데 나만 대화를 걸고 상대방이 대화를 하지 않았을때
+    //PreMessage는 빈값이 오기 때문에 오류 처리를 해줫음
+    res.send({message: "아무것도없어요", send : req.body.send})
+  }
+
 };
