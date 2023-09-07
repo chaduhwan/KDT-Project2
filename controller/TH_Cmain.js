@@ -1,11 +1,17 @@
 const { Desk, Position, Chosen } = require('../models');
 const { Op } = require('sequelize');
 
+exports.test = (req, res) => {
+  res.render('test');
+};
+
 exports.desk = (req, res) => {
   res.render('TH_desk');
 };
 exports.generator = (req, res) => {
-  res.render('TH_deskGenerate');
+  let name = req.session.userName;
+  let userType = req.session.userType;
+  res.render('TH_deskGenerate', { name, userType });
 };
 
 exports.get_generator = async (req, res) => {
@@ -39,7 +45,9 @@ exports.get_generator = async (req, res) => {
 };
 
 exports.reservation = (req, res) => {
-  res.render('TH_placeReservation');
+  let name = req.session.userName;
+  let userType = req.session.userType;
+  res.render('TH_placeReservation', { name, userType });
 };
 
 exports.reservationConfirm = async (req, res) => {

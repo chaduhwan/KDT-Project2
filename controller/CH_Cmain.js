@@ -1,4 +1,4 @@
-const {board, comment} = require('../models')
+const {board, comment, like} = require('../models')
 const {Op} =require('sequelize')
 const Sequelize = require('sequelize')
 
@@ -13,9 +13,17 @@ exports.Mypage = (req,res) => {
 ///// 게시판 메인페이지
 exports.BoardMain = (req,res) => {
     const user = req.session.userName
-    console.log(user)
+    let likeArr =[];
+    // console.log(user)
     board.findAll().then(result=>{
-        res.render('CHA_boardMain',{data:result, user})
+        console.log(result.boardId)
+        for(let i=0; i<result.length ; i++) {
+            like.count({
+                where: result.boardId[i]
+            }).then(cou=>{})
+            console.log(cou)
+            res.render('CHA_boardMain',{data:result, user})
+        }
     })
 }
 
@@ -29,10 +37,13 @@ exports.BoardDetail = (req,res) => {
     comment.findAll({
         include : [{
             model : board,
-            required : false
-        }]
+        }],where : {boardId:req.query.boardId}
     }).then(commentData => {
-        res.render('CHA_boardDetail',{data : result,commentData,user,userid})
+        like.count({where:{
+            boardId : req.query.boardId
+        }}).then(likecount=>{
+            res.render('CHA_boardDetail',{data : result,commentData,user,userid,likecount})
+        })
     })
     // console.log(result)
 })
@@ -80,20 +91,12 @@ exports.BoardSearch = async (req, res) => {
 };
 
 //////////////좋아요 기능
-exports.BoardLike = async (req, res) => {
-    const { BoardId } = req.body;
-    const LikeupdateQuery = {
-        like: Sequelize.literal('`like` + 1'), // `like` 칼럼을 1 증가시킵니다.
-    };
-    board.update(LikeupdateQuery, {
-        where: { BoardId }
-    }).then(result => {
-        // 업데이트가 완료되면 업데이트된 데이터를 다시 조회합니다.
-        board.findOne({ where: { BoardId } }).then(updatedData => {
-            res.json({ data: updatedData });
-        });
-    });
-}
+exports.BoardLike = (req, res) => {
+    const { id,BoardId } = req.body;
+    console.log(req.body)
+    like.create({BoardId},id).then(result=>{
+    })
+    }
 
 //////////////댓글 작성
 exports.CommentWrite =(req,res) => {

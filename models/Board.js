@@ -23,13 +23,8 @@ const Model = (sequelize) => {
             defaultValue : 'userid' // 기본값
         },
         content: {
-            type : DataTypes.STRING(255),
+            type : DataTypes.STRING(3000),
             allowNull : false,
-        },
-        like : {
-            type : DataTypes.STRING(20),
-            allowNull : false,
-            defaultValue : '0'
         },
         tag : {
             type : DataTypes.STRING(20),

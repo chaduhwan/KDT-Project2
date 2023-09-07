@@ -431,6 +431,8 @@
       //사진1번, 2번 (이건 나중에 프로필사진 추가하면 삭제하기)
       const pic1 = "https://t1.daumcdn.net/cfile/tistory/27738433597DCB1312";
       const pic2 = "https://i3.ruliweb.com/img/20/03/16/170dee06b1347bc9f.jpg";
+      const pic3 =
+        "https://i.namu.wiki/i/sYSJY7DwDYvqCrRvxzAgqpbm7EQzxE6jKPBhRBJGLwRzWvA-uj3YEQjgAVfR1snu3tian_0NYAtv2b06664WkA.webp";
       ////////////////////////////////
 
       ////////////함수////////////////
@@ -543,8 +545,6 @@
       }
       //스크롤 다운 함수
       function scrollBottom() {
-        // console.log(messageList.scrollHeight);
-        // messageList.scrollTop = messageList.scrollHeight;
         messageList.scrollTo(0, messageList.scrollHeight);
       }
       ////////////////////////////////
@@ -567,7 +567,7 @@
       const chatContainer = document.querySelector(".chatList");
 
       //내가 채팅하고 잇는 방 불러오고 -> 그 채팅방 미리보기 메시지까지 가져오는거
-      socket.on("sendName", async (username) => {
+      socket.on("chatList", async (username) => {
         //참여 채팅방 불러오기
         const listResult = await axios({
           method: "POST",
@@ -577,6 +577,7 @@
           },
           //각 방의 메세지 하나씩 불러오기
         });
+        console.log("????");
         for (const myMessage of listResult.data) {
           const messageResult = await axios({
             method: "POST",
@@ -589,7 +590,7 @@
             sendTime,
             messageResult.data.send,
             messageResult.data.message,
-            pic2
+            pic3
           );
           console.log("몇번왔다갔다 했는지 확인");
           preViewMessage;
