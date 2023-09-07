@@ -18,6 +18,7 @@ exports.preMessage = async (req, res) => {
 
 //내가 들어가 있는 방의 배열을 출력함
 exports.myChatList = async (req, res) => {
+  console.log("???????왜안옴");
   let myJoinRoom = [];
 
   let myChatList = await participant.findAll({
