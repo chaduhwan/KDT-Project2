@@ -26,11 +26,6 @@ const Model = (sequelize) => {
             type : DataTypes.STRING(21000),
             allowNull : false,
         },
-        like : {
-            type : DataTypes.STRING(20),
-            allowNull : false,
-            defaultValue : '0'
-        },
         tag : {
             type : DataTypes.STRING(20),
             allowNull : true,

@@ -26,7 +26,7 @@
                  <span class="board-tag"> 태그 : <%=data.tag%></span>
                  <input type="text" id="board-id" value="<%=data.BoardId%>" hidden>
              </div>
-             <button type="button" class="boardLike" value="<%=data.BoardId%>" onclick="BoardLike(this)"><%=data.like%></button>
+             <button type="button" class="boardLike" value="<%=data.BoardId%>" onclick="BoardLike(this)"><%=likecount%></button>
      </main>
      <button class="board-delete" onclick="BoardDelete()">삭제하기</button>
 
@@ -95,9 +95,9 @@
         const buttonValue = button.value;
         console.log(`버튼의 value: ${buttonValue}`);
             axios({
-                method :'PATCH',
+                method :'POST',
                 url :'/board/like',
-                data : {BoardId : buttonValue}
+                data : {id : '<%=user%>',BoardId : buttonValue}
             }).then(res=> {
               button.innerText =`${res.data.data.like}`
         });
