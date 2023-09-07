@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+      .main {
+        display: flex;
+        flex-direction: row;
+      }
+      .right-bar {
+        display: flex;
+        flex-direction: column;
+      }
+      .square {
+        width: 80px;
+        height: 80px;
+        background-color: red;
+        border-radius: 10px;
+      }
+      .room {
+        width: 1200px;
+        height: 800px;
+        background-color: lightgreen;
+      }
+      .chosen {
+        background-color: skyblue;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <div class="room"></div>
+      <div class="right-bar">
+        <button onclick="createChair()">생성</button>
+        <button onclick="saveChair()">저장</button>
+        <button onclick="resetChairs()">리셋</button>
+        <a href="/desk" onclick="return confirm('페이지를 벗어나시겠습니까?');"
+          >돌아가기</a
+        >
+        <ul></ul>
+      </div>
+    </div>
+    <script>
+      const socket = io();
+      let db = [];
+      let dataBase = [];
+      axios({
+        method: 'GET',
+        url: '/desk/get_generator',
+      }).then((res) => {
+        console.log('data', res);
+        let ul = document.querySelector('ul');
+        ul.innerHTML = '';
+        console.log(res.data);
+        dataBase = res.data.desk;
+        const { desk: data } = res.data;
+        for (let i = 0; i < data.length; i++) {
+          let li = document.createElement('li');
+          li.classList.add(`${data[i].name}`);
+          li.innerHTML = `<p class="${data[i].name}" onclick="loadChairs2()">${data[i].name}</p>`;
+          li.oncontextmenu = deleteChair;
+          li.style.cursor = 'pointer';
+          ul.appendChild(li);
+        }
+      });
+      let arr = [];
+      let nemoNum = 0;
+      let nemoMuch = 0;
+      const createChair = () => {
+        nemoNum++;
+        nemoMuch++;
+        console.log(nemoNum);
+        let nemo = document.createElement('div');
+        let numbering = document.createElement('p');
+        numbering.style.marginTop = '-5px';
+        numbering.innerText = nemoNum;
+        nemo.appendChild(numbering);
+        nemo.classList.add('square');
+        nemo.classList.add(`num${nemoNum}`);
+        nemo.style.cssText = `
+        position: absolute;
+        color: white;
+        font-size: 30px;
+        `;
+        nemo.oncontextmenu = deleteChair;
+        document.querySelector('.room').appendChild(nemo);
+        arr.push(document.querySelector(`.num${nemoNum}`));
+        let copy = nemoNum;
+        arr.map((i) => {
+          i.addEventListener('mouseup', (e) => {
+            e.preventDefault();
+            garo(copy);
+            sero(copy);
+          });
+        });
+        $('.square').draggable();
+      };
+
+      const garo = (i) => {
+        let each = document.querySelector(`.num${i}`);
+        let standard = 80;
+        let half = (standard + 10) / 2;
+        let temp = each.style.left.slice(0, -2);
+        for (let j = 1; j <= 15; j++) {
+          let targetValue = standard * j + (j - 1) * 10;
+          if (
+            Math.abs(+temp - targetValue) < half &&
+            0 < Math.abs(+temp - targetValue)
+          ) {
+            each.style.left = `${targetValue}px`;
+            break;
+          }
+        }
+      };
+
+      const sero = (i) => {
+        let each = document.querySelector(`.num${i}`);
+        let standard = 80;
+        let half = (standard + 10) / 2;
+        let temp = each.style.top.slice(0, -2);
+        for (let j = 1; j <= 16; j++) {
+          let targetValue = standard * j + (j - 1) * 10;
+          if (
+            Math.abs(+temp - targetValue) < half &&
+            0 < Math.abs(+temp - targetValue)
+          ) {
+            each.style.top = `${targetValue}px`;
+            break;
+          }
+        }
+      };
+
+      const saveChair = async () => {
+        let prompt = window.prompt('이름을 설정해주세요');
+        if (prompt) {
+          let data = document.querySelector('.room').innerHTML;
+          let ul = document.querySelector('ul');
+          let chairData = {
+            name: prompt,
+            data: data,
+            num: nemoMuch,
+          };
+          db.push(chairData);
+          let one = saveSetting(data, prompt);
+          let res = await axios({
+            method: 'POST',
+            url: '/desk/reservationConfirm',
+            data: one,
+          });
+          if (res.data == '실패') {
+            alert('이미 같은 이름의 데이터가 저장돼있습니다');
+            return;
+          }
+          dataBase.push(one);
+          socket.emit('dataPush', one);
+          console.log(db);
+          console.log(dataBase);
+          let li = document.createElement('li');
+          li.classList.add(`${prompt}`);
+          li.innerHTML = `<p class="${prompt}" onclick="loadChairs2()">${prompt}</p>`;
+          li.oncontextmenu = deleteChair;
+          li.style.cursor = 'pointer';
+          ul.appendChild(li);
+        }
+      };
+
+      const loadChairs2 = () => {
+        if (document.querySelector('.room').hasChildNodes()) {
+          let confirm = window.confirm(
+            '현재 상태를 저장하지 않고 로드하시겠습니까?',
+          );
+          if (confirm) {
+            document.querySelector('.room').innerHTML = '';
+            chairGenerator(event.currentTarget.innerText);
+          }
+          $('.square').draggable();
+        } else {
+          chairGenerator(event.currentTarget.innerText);
+          $('.square').draggable();
+        }
+      };
+
+      const chairGenerator = (li) => {
+        let num = 0;
+        let specify = li;
+        for (let i = 0; i < dataBase.length; i++) {
+          //   let num = 0;
+          if (dataBase[i].name == specify) {
+            for (let j = 0; j < +dataBase[i].num; j++) {
+              let square = document.createElement('div');
+              let numbering = document.createElement('p');
+
+              //책상번호 만들어주기
+              num = dataBase[i].position[j].who.split('num')[1];
+              numbering.innerText = num;
+
+              //책상별 클래스 부여
+              square.classList.add(
+                'square',
+                dataBase[i].position[j].who,
+                'ui-draggable',
+                'ui-draggable-handle',
+              );
+              for (let a = 0; a < dataBase[i].chosen.length; a++) {
+                if (
+                  dataBase[i].chosen[a].which == dataBase[i].position[j].who
+                ) {
+                  square.classList.add('chosen');
+                  numbering.innerText = dataBase[i].chosen[a].name;
+                }
+              }
+              numbering.style.marginTop = '-5px';
+              square.appendChild(numbering);
+
+              //포지션 부여
+              square.style.cssText = `
+                    top: ${dataBase[i].position[j].top}px;
+                    left: ${dataBase[i].position[j].left}px;
+                    position: absolute;
+                    color: white;
+                    font-size: 30px;
+                    `;
+
+              // 리스너 부여
+              square.oncontextmenu = deleteChair;
+              document.querySelector('.room').appendChild(square);
+            }
+          }
+          nemoNum = num;
+          nemoMuch = +dataBase[i].num;
+        }
+        let limit = num;
+        for (let a = 1; a <= limit; a++) {
+          if (document.querySelector(`.num${a}`)) {
+            document
+              .querySelector(`.num${a}`)
+              .addEventListener('mouseup', (e) => {
+                e.preventDefault();
+                garo(a);
+                sero(a);
+              });
+          } else {
+            limit++;
+          }
+        }
+      };
+
+      const deleteChair = async (event) => {
+        event.preventDefault();
+        if (event.currentTarget.classList.contains('square')) {
+          let id = event.currentTarget.children[0].innerText;
+          let confirm = window.confirm('요소를 삭제하시겠습니까?');
+          if (confirm) {
+            jQuery('div').remove(`.num${id}`);
+            nemoMuch--;
+            console.log(nemoNum);
+          }
+        } else {
+          const liName = event.currentTarget.children[0].innerText;
+          let confirm = window.confirm('해당 데이터를 삭제하시겠습니까?');
+          if (confirm) {
+            let ul = document.querySelector('ul');
+            console.log(typeof ul);
+            let i = 0;
+            while (true) {
+              if (ul.childNodes[i].classList.contains(`${liName}`)) {
+                ul.childNodes[i].remove();
+                socket.emit('dataPop', liName);
+                let res = await axios({
+                  method: 'post',
+                  url: '/desk/delete_generator',
+                  data: { data: liName },
+                });
+                if (res.data == '성공') {
+                  alert('데이터를 삭제하셨습니다!');
+                } else {
+                  alert('데이터를 삭제하지 못했습니다');
+                }
+                return;
+              }
+              i++;
+            }
+          }
+        }
+      };
+
+      const resetChairs = () => {
+        let confirm = window.confirm(
+          '현재 상태를 저장하지 않고 다시 시작하시겠습니까?',
+        );
+        if (confirm) {
+          let parent = document.querySelector('.room');
+          while (parent.hasChildNodes()) {
+            parent.removeChild(parent.firstChild);
+            nemoMuch = 0;
+            nemoNum = 0;
+          }
+        }
+      };
+
+      const saveSetting = (data, name) => {
+        let obj = {};
+        let html = new DOMParser();
+        html = html.parseFromString(data, 'text/html');
+        obj.num = 0;
+        obj.name = name;
+        let chairList = html.children[0].children[1].children;
+        chairList = Array.from(chairList);
+        let chosen = [];
+        let position = [];
+        chairList.forEach((element) => {
+          if (element.classList.contains('chosen')) {
+            let chosenOne = {};
+            chosenOne.name = name;
+            chosenOne.owner = element.children[0].innerText;
+            chosenOne.which = element.classList[1];
+            chosen.push(chosenOne);
+          }
+          let positionOne = {};
+          obj.num += 1;
+          positionOne.name = name;
+          positionOne.who = element.classList[1];
+          positionOne.top = element.style.top.slice(0, -2);
+          positionOne.left = element.style.left.slice(0, -2);
+          position.push(positionOne);
+        });
+        obj.chosen = chosen;
+        obj.position = position;
+        console.log(obj);
+        return obj;
+      };
+    </script>
+  </body>
+</html>
