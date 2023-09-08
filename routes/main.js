@@ -93,6 +93,7 @@ router.get("/logout", M_controller.logout);
 //탈퇴
 router.post('/profile/delete', M_controller.delete_user)
 
+router.get('/bob', M_controller.bob);
 
 //////////////////상녕/////////////////
 
