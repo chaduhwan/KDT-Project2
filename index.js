@@ -1,17 +1,17 @@
-const express = require("express");
+const express = require('express');
 const app = express();
 const PORT = 8000;
-const db = require("./models");
+const db = require('./models');
 
-const http = require("http");
-const SocketIO = require("socket.io");
-const session = require("express-session");
+const http = require('http');
+const SocketIO = require('socket.io');
+const session = require('express-session');
 
 const server = http.createServer(app);
 
 //socket.io, session 옵션, 미들웨어 설정
 const sessionMiddleware = session({
-  secret: 'ras',
+  secret: "ras",
   resave: true,
   secure: false,
   saveUninitialized: false,
@@ -22,38 +22,38 @@ const wrap = (middleware) => (socket, next) =>
   middleware(socket.request, {}, next);
 io.use(wrap(sessionMiddleware));
 
-app.set('view engine', 'ejs');
+app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-require("dotenv").config();
+require('dotenv').config();
 
 //세션 설정
 app.use(
   session({
-    secret: "ras",
+    secret: 'ras',
     resave: true,
     secure: false,
     saveUninitialized: false,
-  })
+  }),
 );
 
 //정적파일 설정
-app.use("/public", express.static(__dirname + "/public"));
+app.use('/public', express.static(__dirname + '/public'));
 
 //router분리
-const router = require("./routes/main");
+const router = require('./routes/main');
 //라우터
-app.use("/", router);
+app.use('/', router);
 
 //socket.io 분리
-const socketRouter = require("./routes/SN_socket");
+const socketRouter = require('./routes/SN_socket');
 socketRouter(io);
-const socketRouter2 = require("./routes/TH_socket");
+const socketRouter2 = require('./routes/TH_socket');
 socketRouter2(io);
 
 //오류처리
-app.use("*", (req, res) => {
-  res.status(404).render("404");
+app.use('*', (req, res) => {
+  res.status(404).render('404');
 });
 
 db.sequelize.sync({ force: false }).then(() => {

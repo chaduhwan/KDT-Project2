@@ -9,7 +9,7 @@ exports.connection = (io, socket) => {
 
   //세션에 있는 내 아이디값 저장
   let userName = socket.request.session.userName;
-  
+
   //바로바로 내 방에 넣어주는거
   // if(userName != undefined){
   //   let coin = 0;
@@ -25,7 +25,7 @@ exports.connection = (io, socket) => {
   // }
 
   //접속자 체크해서 모달 갱신하는거
-  io.emit("accessCheck", roomList,userName);
+  io.emit("accessCheck", roomList, userName);
   //현재 접속자 계속 갱신하는거
   io.emit("getAccess", roomList);
   //진짜 입장하는 방 번호
@@ -64,7 +64,7 @@ exports.connection = (io, socket) => {
 
   //로그인이 성공하면 받는 이름
   socket.on("loginSuccess", async (e) => {
-    checkToken +=1
+    checkToken += 1;
     //id에서 이름 값 찾아서 저장하는거
     userName = await nameExtract(e);
     roomList.push(userName);

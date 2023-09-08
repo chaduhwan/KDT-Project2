@@ -25,6 +25,7 @@ db.room = require('./room')(sequelize);
 db.Desk = require('./Desk')(sequelize);
 db.Position = require('./Position')(sequelize);
 db.Chosen = require('./Chosen')(sequelize);
+db.File = require('./File')(sequelize);
 
 //모델 관계
 
@@ -39,7 +40,6 @@ db.Subject.belongsTo(db.Class, { foreignKey: 'ClassId' });
 /////////////주제와 게시글
 db.Subject.hasMany(db.board, { foreignKey: 'SubjectId' });
 db.board.belongsTo(db.Subject, { foreignKey: 'SubjectId' });
-
 
 ////////////게시글과 댓글
 db.board.hasMany(db.comment, { foreignKey: 'BoardId' });
