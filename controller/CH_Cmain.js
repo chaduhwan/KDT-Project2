@@ -11,20 +11,20 @@ exports.Mypage = (req,res) => {
 }
 
 ///// 게시판 메인페이지
-exports.BoardMain = (req,res) => {
+exports.BoardMain = async (req,res) => {
     const user = req.session.userName
+    const userid = req.session.userId
     let likeArr =[];
-    // console.log(user)
-    board.findAll().then(result=>{
-        console.log(result.boardId)
-        for(let i=0; i<result.length ; i++) {
-            like.count({
-                where: result.boardId[i]
-            }).then(cou=>{})
-            console.log(cou)
-            res.render('CHA_boardMain',{data:result, user})
-        }
-    })
+
+    const boards = await board.findAll()
+    for (const boardEle of boards) {
+        const cou = await like.count({
+            where: {BoardId : boardEle.BoardId}
+        })
+        likeArr.push(cou)
+    }
+    res.render('CHA_boardMain',{data:boards, user, userid, likeArr})
+  
 }
 
 ///////게시판 상세페이지
@@ -51,8 +51,8 @@ exports.BoardDetail = (req,res) => {
 
 ////////게시글 작성
 exports.BoardWrite = (req,res) => {
-    const {title, date, writer, content} = req.body
-    board.create({title, date, writer, content}).then(
+    const {title, date, writer, content, tag} = req.body
+    board.create({title, date, writer, content, tag}).then(
         res.json({result:true})
     )
 }
@@ -70,33 +70,63 @@ exports.BoardDelete = (req,res) => {
 /////////게시글 검색
 exports.BoardSearch = async (req, res) => {
     const { searchValue, searchBar } = req.body;
+    let likeArr =[];
+
         let result;
         if (searchValue === "title") {
             result = await board.findAll({
                 where: { title:{[Op.like]:"%"+searchBar+"%"} }
             })
+            for (const boardEle of result) {
+                const cou = await like.count({
+                    where: {BoardId : boardEle.BoardId}
+                })
+                likeArr.push(cou)
+            }
         } else if (searchValue === "tag") {
             result = await board.findAll({
                 where: { tag: {[Op.like]:"%"+searchBar+"%"}}
-            });
+            })
+            for (const boardEle of result) {
+                const cou = await like.count({
+                    where: {BoardId : boardEle.BoardId}
+                })
+                likeArr.push(cou)
+            }
         } else if (searchValue === "content") {
             result = await board.findAll({
                 where: { content: {[Op.like]:"%"+searchBar+"%"} }
-            });
+            })
+            for (const boardEle of result) {
+                const cou = await like.count({
+                    where: {BoardId : boardEle.BoardId}
+                })
+                likeArr.push(cou)
+            }
         } else {
             // 유효하지 않은 검색 조건일 때 처리
             return res.status(400).send("Invalid searchValue");
         }
-        res.send({data:result})
+        res.send({data:result,likeArr})
 };
 
 //////////////좋아요 기능
-exports.BoardLike = (req, res) => {
+exports.BoardLike = async (req, res) => {
     const { id,BoardId } = req.body;
-    console.log(req.body)
-    like.create({BoardId},id).then(result=>{
-    })
+    const check = await like.findAll({where:{
+        [Op.and]: [
+            { BoardId}, // 첫 번째 조건
+            { id} // 두 번째 조건
+          ]
+    }})
+    if(!(check.length > 0)) {
+            const result = await like.create({BoardId,id})
+            const cou = await like.count({where : {BoardId}})
+            res.json({result:true,cou})
+    } else {
+        res.json({result:false})
     }
+}
 
 //////////////댓글 작성
 exports.CommentWrite =(req,res) => {

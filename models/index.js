@@ -16,6 +16,8 @@ db.board = require('./Board')(sequelize);
 db.comment = require('./comment')(sequelize);
 db.like = require('./Like')(sequelize);
 db.User = require('./User')(sequelize);
+db.Class = require('./Class')(sequelize);
+db.Subject = require('./Subject')(sequelize);
 db.Chat = require('./Chat')(sequelize);
 db.participant = require('./participant')(sequelize);
 db.room = require('./room')(sequelize);
@@ -24,6 +26,20 @@ db.Position = require('./Position')(sequelize);
 db.Chosen = require('./Chosen')(sequelize);
 
 //모델 관계
+
+//////////// 유저와 클래스
+db.User.belongsTo(db.Class, { through: 'UserTakeClass' });
+db.Class.belongsTo(db.User, { through: 'UserTakeClass' });
+
+///////////// 클래스와 주제
+db.Class.hasMany(db.Subject, { foreignKey: 'ClassId' });
+db.Subject.belongsTo(db.Class, { foreignKey: 'ClassId' });
+
+/////////////주제와 게시글
+db.Subject.hasMany(db.board, { foreignKey: 'SubjectId' });
+db.board.belongsTo(db.Subject, { foreignKey: 'SubjectId' });
+
+
 ////////////게시글과 댓글
 db.board.hasMany(db.comment, { foreignKey: 'BoardId' });
 db.comment.belongsTo(db.board, { foreignKey: 'BoardId' });
@@ -40,6 +56,7 @@ db.like.belongsTo(db.board, { foreignKey: 'BoardId' });
 db.User.hasMany(db.like, { foreignKey: 'id' });
 db.like.belongsTo(db.User, { foreignKey: 'id' });
 
+//////////// 자리배치 관계
 db.Desk.hasMany(db.Chosen);
 db.Chosen.belongsTo(db.Desk);
 db.Desk.hasMany(db.Position);
