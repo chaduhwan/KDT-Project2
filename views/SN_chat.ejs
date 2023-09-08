@@ -560,10 +560,14 @@
         time,
         otherPersonName,
         previewMessage,
-        imageUrl
+        imageUrl,
+        notRead
       ) {
         const imgDiv = document.createElement("div");
         imgDiv.className = "img";
+
+        const addonDiv = document.createElement("div");
+        addonDiv.className = "addon";
 
         const imgIcon = document.createElement("i");
         imgIcon.className = "fa fa-circle";
@@ -583,6 +587,13 @@
           //create -> 방 만들기
           socket.emit("create", otherName, username);
         });
+        const previewMessageElement = document.createElement("small");
+        previewMessageElement.textContent = previewMessage;
+
+        const notReadMsg = document.createElement("small");
+        notReadMsg.textContent = notRead;
+
+        ///desc div 안에 있는 small, h5, small
         const timeElement = document.createElement("small");
         timeElement.className = "time";
         timeElement.textContent = time;
@@ -591,15 +602,16 @@
         otherPersonElement.id = "OtherPerson2";
         otherPersonElement.textContent = otherPersonName;
 
-        const previewMessageElement = document.createElement("small");
-        previewMessageElement.textContent = previewMessage;
+        ///
+        addonDiv.appendChild(previewMessageElement);
+        addonDiv.appendChild(notReadMsg);
 
         imgDiv.appendChild(imgIcon);
         imgDiv.appendChild(imgElement);
 
         descDiv.appendChild(timeElement);
         descDiv.appendChild(otherPersonElement);
-        descDiv.appendChild(previewMessageElement);
+        descDiv.appendChild(addonDiv);
 
         chatContainer.appendChild(imgDiv);
         chatContainer.appendChild(descDiv);
@@ -700,10 +712,10 @@
             username: username,
           },
           //방 불러올 때 내가 읽지 않은 채팅의 수를 가져옴
-
           //각 방의 메세지 하나씩 불러오기
         });
-        for (const myMessage of listResult.data) {
+        let i = 0;
+        for (const myMessage of listResult.data.myJoinRoom) {
           const messageResult = await axios({
             method: "POST",
             url: "/myMessage",
@@ -715,7 +727,8 @@
             formatTime(messageResult.data.row),
             messageResult.data.send,
             messageResult.data.message,
-            pic3
+            pic3,
+            listResult.data.notReadMessage[i]
           );
           //나랑 채팅방 만들어진 사람 배열에 저장해놓기
           myRoomList.push(messageResult.data.send);
@@ -731,6 +744,7 @@
               changeElement.style.color = "gray";
             }
           }
+          i++;
         }
       });
       //방 번호 정해서 들어가기

@@ -27,13 +27,30 @@ exports.preMessage = async (req, res) => {
 //내가 들어가 있는 방의 배열을 출력함
 exports.myChatList = async (req, res) => {
   let myJoinRoom = [];
-
+  let notReadMessage = [];
   let myChatList = await participant.findAll({
     where: { member_list: req.body.username },
   });
 
   for (const resItem of myChatList) {
+    //N값
+    let numN = 0;
+    //내 방 번호
     let myRoomNumber = resItem.roomNum;
+    console.log("방 번호 리스트", myRoomNumber);
+    //이 방 번호로 그 방 채팅의 N값을 가져옴
+    let checkList = await Chat.findAll({
+      where: { roomNum: myRoomNumber },
+    });
+    // 방 번호로 내 이름이랑 다른 N값을 가져옴
+    for (const checkItem of checkList) {
+      //내 이름이 아니면서 check된 값이 N인 경우 n에다 1더해줌
+      if (checkItem.send != req.body.username && checkItem.checked == "N") {
+        numN += 1;
+      }
+    }
+    notReadMessage.push(numN);
+    console.log("분류한 번호값", numN);
     let findName = await participant.findAll({
       where: { roomNum: myRoomNumber },
     });
@@ -46,7 +63,8 @@ exports.myChatList = async (req, res) => {
   }
 
   if (myChatList.length === myJoinRoom.length) {
-    res.send(myJoinRoom);
+    console.log("읽지않은 메시지", notReadMessage);
+    res.send({ myJoinRoom: myJoinRoom, notReadMessage: notReadMessage });
   }
 };
 
