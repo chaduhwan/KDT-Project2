@@ -9,12 +9,6 @@
     <title>Document</title>
 </head>
 <body>
-    <header class="board-hearder">
-        <h1>상세글</h1>
-        <button class="board-search">검색</button>
-        <button class="board-tag-search">태그검색</button>
-    </header>
-
     <main class="board-main">
              <div class="board-object">
                  <span id="borad-ID">등록번호 : <%=data.BoradId%></span>
@@ -97,9 +91,13 @@
             axios({
                 method :'POST',
                 url :'/board/like',
-                data : {id : '<%=user%>',BoardId : buttonValue}
+                data : {id : '<%=userid%>',BoardId : buttonValue}
             }).then(res=> {
-              button.innerText =`${res.data.data.like}`
+                if (res.data.result==true) {
+                    button.innerText =`${res.data.cou}`
+                } else {
+                    alert("이미 좋아요한 게시글입니다.!")
+                }
         });
         }
 
