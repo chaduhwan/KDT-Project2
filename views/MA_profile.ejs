@@ -47,8 +47,18 @@
       </button>
     </form>
     <a href="/logout">로그아웃</a>
+    <ul>
+     <% for(let i = 0; i<Classes.length; i++){ %>
+        <li><%=Classes[i]%></li>
+     <% } %>
+    </ul>
+
+
     <% if(data.userType == "leader" ){ %>
-      <button type="button" onclick="makeClass()">클래스 만들기</button>
+      <form name="ClassMake">
+        <input type="text" name="className" placeholder="className">
+        <button type="button" onclick="makeClass()">클래스 만들기</button>
+      </form>
     <% } %> 
 
     <script>
@@ -125,7 +135,20 @@
       
       //클래스만들기 함수
       async function makeClass(){
-        console.log('클래스만들기함수')
+        const form = document.forms['ClassMake']
+        const data = {
+          className : form.className.value,
+          leader : '<%= data.name %>'
+        }
+        const res = await axios({
+          method:'POST',
+          url : '/class/make',
+          data : data
+        })
+        if(res.data.res) {
+          alert("클래스 생성완료!")
+        }
+        window.location.reload()
       }
     </script>
   </body>
