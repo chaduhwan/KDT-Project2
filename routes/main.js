@@ -103,10 +103,12 @@ const uploadS3 = multer({
       cb(null, { fieldName: file.fieldname });
     },
     key: function (req, file, cb) {
-      cb(null, Date.now().toString() + '-' + file.originalname);
+      cb(null, file.originalname);
     },
   }),
 });
+
+// Date.now().toString()
 
 //파일 크기 제한
 const limits = {
@@ -144,6 +146,7 @@ router.patch('/desk/reservationEdit', T_controller.reservationEdit);
 
 // 노트매니저(파일관리)
 router.get('/noteManager', T_controller.noteManager);
+router.get('/get_noteManager', T_controller.get_noteManager);
 router.post(
   '/noteManager/upload',
   uploadS3.array('file_upload'),
