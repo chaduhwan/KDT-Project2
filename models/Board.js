@@ -30,10 +30,6 @@ const Model = (sequelize) => {
             type : DataTypes.STRING(20),
             allowNull : true,
         },
-        comment : {
-            type : DataTypes.STRING(20),
-            allowNull : true,
-        },
     })
 };
 

@@ -89,7 +89,10 @@ router.post("/upload", upload.single("dynamic"), M_controller.profileImg);
 //로그아웃
 router.get("/logout", M_controller.logout);
 //탈퇴
-router.post("/profile/delete", M_controller.delete_user);
+
+router.post('/profile/delete', M_controller.delete_user)
+
+router.get('/bob', M_controller.bob);
 
 //////////////////상녕/////////////////
 

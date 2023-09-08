@@ -34,6 +34,7 @@
     </form>
     <!-- 회원 정보 -->
     <form name="form-profile">
+      회원 유형 <input type="text" id="userType" value="<%= data.userType%>" disabled/><br />
       이메일 <input type="email" id="email" value="<%= data.email%>" /><br />
       이름 <input type="text" id="name" value="<%= data.name %>" /><br />
       전화번호
@@ -46,10 +47,14 @@
       </button>
     </form>
     <a href="/logout">로그아웃</a>
+    <% if(data.userType == "leader" ){ %>
+      <button type="button" onclick="makeClass()">클래스 만들기</button>
+    <% } %> 
 
     <script>
       //소켓 설정
       const socket = io();
+      //프로필 수정 함수
       async function registerEdit(id) {
         let email = $("#email"); // 이메일
         let name = $("#name"); //이름
@@ -71,6 +76,7 @@
           // window.location.reload();
         }
       }
+      //프로필 사진 업로드 함수
       async function fileupload(event) {
         event.preventDefault();
         console.log("사진등록");
@@ -98,6 +104,7 @@
           console.log(error);
         }
       }
+      //탈퇴 함수
       async function deleteUser(id){
         const res = await axios({
           method: "POST",
@@ -109,11 +116,16 @@
         console.log('탈퇴중');
         if (res.data.result) {
           alert("성공");
-          window.location.replace('/');
+          window.location.href='/';
         }else{
           alert('실패')
         }
 
+      }
+      
+      //클래스만들기 함수
+      async function makeClass(){
+        console.log('클래스만들기함수')
       }
     </script>
   </body>
