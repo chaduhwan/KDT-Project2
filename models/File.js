@@ -4,7 +4,6 @@ const File = (sequelize) => {
   const File = sequelize.define('file', {
     name: {
       type: DataTypes.STRING(20),
-      primaryKey: true,
       allowNull: false,
     },
     filename: {

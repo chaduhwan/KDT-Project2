@@ -5,34 +5,122 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>Document</title>
+    <style>
+      .result {
+        padding: 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+      .element {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100px;
+        height: 150px;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 5px;
+        border-color: #646464;
+        cursor: pointer;
+        margin: 20px;
+      }
+      .wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .element:hover {
+        border-color: blue;
+      }
+      .overflow {
+        display: flex;
+        justify-content: center;
+        width: 120px;
+        height: 48px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        text-decoration: none;
+        color: black;
+      }
+    </style>
   </head>
   <body>
-    <h1>동적 파일 업로드</h1>
     <form onsubmit="fileupload(event)">
       <input type="file" id="file_upload" multiple /> <br />
-      <input type="text" id="title" /> <br />
       <button type="submit">업로드</button>
     </form>
     <br />
     <div class="result"></div>
+
     <script>
-      let before = '<%= json %>';
-      before = before.split('&#34;');
-      before = before.join('');
-      console.log(before);
+      let picture = ['jpg', 'png', 'jpeg', 'webp', 'gif'];
+      let doc = {
+        ppt: '../public/default/ppt.png',
+        pptx: '../public/default/ppt.png',
+        pdf: '../public/default/pdf.png',
+        docx: '../public/default/word.png',
+        doc: '../public/default/word.png',
+        txt: '../public/default/txt.png',
+        hwp: '../public/default/word.png',
+        hwpx: '../public/default/word.png',
+        xls: '../public/default/xls.png',
+        zip: '../public/default/zip.png',
+      };
       const resultBox = document.querySelector('.result');
+      axios({
+        method: 'get',
+        url: '/get_noteManager',
+      }).then((res) => {
+        console.log(res.data.data);
+        for (let i = 0; i < res.data.data.length; i++) {
+          let div = document.createElement('div');
+          let div2 = document.createElement('a');
+          let div3 = document.createElement('div');
+          div2.href = res.data.data[i].location;
+          div.classList.add('element');
+          div3.classList.add('wrapper');
+          let ext = res.data.data[i].filename.split('.')[1];
+          if (picture.includes(ext)) {
+            let img = document.createElement('img');
+            img.src = res.data.data[i].location;
+            img.style.cssText = `
+              width: 100%;
+            `;
+            div.appendChild(img);
+          } else if (doc[ext]) {
+            let img = document.createElement('img');
+            img.src = doc[ext];
+            img.style.cssText = `
+              width: 70%;
+            `;
+            div.appendChild(img);
+          } else {
+            let img = document.createElement('img');
+            img.src = doc['file'];
+            img.style.cssText = `
+              width: 100%;
+            `;
+            div.appendChild(img);
+          }
+          div2.innerText = res.data.data[i].filename;
+          div2.classList.add('overflow');
+          div3.style.cursor = 'pointer';
+          div3.appendChild(div);
+          div3.appendChild(div2);
+          resultBox.appendChild(div3);
+        }
+      });
       const fileupload = async (event) => {
         event.preventDefault();
         console.log('file upload');
-        const title = document.querySelector('#title').value;
-
         const file = document.querySelector('#file_upload');
         console.log(file.files);
-        console.log(title);
 
         const formData = new FormData();
         for (let i = 0; i < file.files.length; i++) {
-          formData.append('title', title);
           formData.append('file_upload', file.files[i]);
         }
         console.log(formData);
@@ -46,8 +134,14 @@
           },
         });
 
-        console.log('res', res.data);
-        console.log(res.data[0].location);
+        if (res.data == '성공') {
+          alert('파일 업로드에 성공했습니다');
+          window.location.reload();
+        } else {
+          alert('파일 업로드에 실패했습니다');
+        }
+        // console.log('res', res.data);
+        // console.log(res.data[0].location);
         // res = Array.from(res)
         // res.data.forEach((element) => {
         //   let tag = document.createElement('img');

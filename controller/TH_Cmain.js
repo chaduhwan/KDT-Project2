@@ -33,6 +33,10 @@ exports.test = (req, res) => {
 };
 
 exports.noteManager = async (req, res) => {
+  res.render('TH_noteManager');
+};
+
+exports.get_noteManager = async (req, res) => {
   try {
     let data = await File.findAll();
     let arr = [];
@@ -48,7 +52,7 @@ exports.noteManager = async (req, res) => {
     console.log(json);
     // json = JSON.parse(json);
 
-    res.render('TH_noteManager', { json });
+    res.send({ data: arr });
   } catch (err) {
     console.log(err);
   }
@@ -64,9 +68,10 @@ exports.noteUpload = async (req, res) => {
         location: req.files[i].location,
       });
     }
-    res.send(req.files);
+    res.send('성공');
   } catch (err) {
     console.log(err);
+    res.send('실패');
   }
 };
 
