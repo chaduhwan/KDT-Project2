@@ -12,6 +12,7 @@ const kakao = {
 
 
 exports.main = async (req, res) => {
+
   if (req.session.isLogined) {
     const data = await User.findOne({ where: { id: req.session.userId } });
     // console.log('프로필', data)
@@ -301,9 +302,13 @@ exports.profile = async (req, res) => {
 exports.logout = (req, res) => {
   console.log(req.session.isLogined);
   req.session.destroy();
-  console.log(req.session);
   res.redirect("/?msg=logoutsuccess");
 };
+
+//밥집찾기
+exports.bob = (req, res) =>{
+  res.render('MA_bob2')
+}
 
 /////////////////////////POST///////////////////
 
@@ -383,6 +388,7 @@ exports.profileImg = async (req, res) => {
 exports.delete_user = async (req, res) =>{
   console.log('탈퇴하러 왔다',req.body.id);
   await User.destroy({ where: { id: req.body.id } });
+  req.session.destroy();
   console.log('탈퇴했다')
   res.json({ result: true });
 }
