@@ -1,4 +1,4 @@
-const { User } = require("../models/index");
+const { User, UserTakeClass, Class } = require("../models/index");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
 
@@ -291,8 +291,17 @@ exports.profile = async (req, res) => {
   if (req.session.isLogined) {
     //세션이 있는경우
     const data = await User.findOne({ where: { id: req.session.userId } });
+    const myClass = await UserTakeClass.findAll({where: { userid: req.session.userId } });//유저id 가 가지고 있는 클래스  row 반환
+    let Classes = [];
+    for(const ele of myClass) {
+      const myClassName = await Class.findOne({
+         where: { ClassId: ele.classClassId }, // 원하는 조건을 지정합니다.
+      });
+      console.log(myClassName)
+      Classes.push(myClassName.className)
+    }
     // console.log('프로필', data)
-    res.render("MA_profile", { data });
+    res.render("MA_profile", { data, Classes });
   } else {
     res.render("MA_login");
   }

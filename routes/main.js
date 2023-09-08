@@ -23,12 +23,13 @@ router.post('/board/search', C_controller.BoardSearch);
 router.delete('/board/delete', C_controller.BoardDelete);
 
 //////Board Like
-
 router.post("/board/like", C_controller.BoardLike);
-
 
 //////comment Write
 router.post('/comment/write', C_controller.CommentWrite);
+
+/////// class Make
+router.post('/class/make',C_controller.ClassMake);
 
 //메인화면
 

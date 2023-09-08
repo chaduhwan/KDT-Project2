@@ -18,6 +18,7 @@ db.like = require('./Like')(sequelize);
 db.User = require('./User')(sequelize);
 db.Class = require('./Class')(sequelize);
 db.Subject = require('./Subject')(sequelize);
+db.UserTakeClass = require('./UserTakeClass')(sequelize);
 db.Chat = require('./Chat')(sequelize);
 db.participant = require('./participant')(sequelize);
 db.room = require('./room')(sequelize);
@@ -28,8 +29,8 @@ db.Chosen = require('./Chosen')(sequelize);
 //모델 관계
 
 //////////// 유저와 클래스
-db.User.belongsTo(db.Class, { through: 'UserTakeClass' });
-db.Class.belongsTo(db.User, { through: 'UserTakeClass' });
+db.User.belongsToMany(db.Class, { through: 'UserTakeClass' });
+db.Class.belongsToMany(db.User, { through: 'UserTakeClass' });
 
 ///////////// 클래스와 주제
 db.Class.hasMany(db.Subject, { foreignKey: 'ClassId' });
