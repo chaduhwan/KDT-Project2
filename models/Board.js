@@ -26,6 +26,10 @@ const Model = (sequelize) => {
             type : DataTypes.STRING(3000),
             allowNull : false,
         },
+        place: {
+            type : DataTypes.STRING(255),
+            allowNull: true
+        },
         tag : {
             type : DataTypes.STRING(20),
             allowNull : true,
