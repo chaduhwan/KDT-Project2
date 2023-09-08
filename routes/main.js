@@ -6,6 +6,8 @@ const S_controller = require('../controller/SN_Cmain');
 const T_controller = require('../controller/TH_Cmain');
 const multer = require('multer');
 const path = require('path');
+const multerS3 = require('multer-s3');
+const aws = require('aws-sdk');
 
 ///////Board page
 router.get('/board', C_controller.BoardMain);
@@ -24,8 +26,7 @@ router.delete('/board/delete', C_controller.BoardDelete);
 
 //////Board Like
 
-router.post("/board/like", C_controller.BoardLike);
-
+router.post('/board/like', C_controller.BoardLike);
 
 //////comment Write
 router.post('/comment/write', C_controller.CommentWrite);
@@ -40,7 +41,7 @@ router.get('/join', M_controller.join);
 router.post('/join', M_controller.post_join);
 
 //카카오 회원가입
-router.get('/auth/kakao/join',M_controller.kakao_get_join)
+router.get('/auth/kakao/join', M_controller.kakao_get_join);
 router.get('/auth/kakao/join/callback', M_controller.kakao_join);
 
 //로그인 페이지
@@ -49,17 +50,16 @@ router.post('/login', M_controller.post_login);
 
 //카카오 로그인
 
-router.get("/auth/kakao", M_controller.kakao_get);
-router.get("/auth/kakao/login/callback", M_controller.kakao_callback);
+router.get('/auth/kakao', M_controller.kakao_get);
+router.get('/auth/kakao/login/callback', M_controller.kakao_callback);
 
 //구글 회원가입
-router.get('/auth/google/join',M_controller.google_get_join)
+router.get('/auth/google/join', M_controller.google_get_join);
 router.get('/auth/google/join/callback', M_controller.google_join);
 
 //구글 로그인
-router.get("/auth/google", M_controller.google_get);
-router.get("/auth/google/login/callback", M_controller.google_callback);
-
+router.get('/auth/google', M_controller.google_get);
+router.get('/auth/google/login/callback', M_controller.google_callback);
 
 //multer 설정(보통 설정 파일을 따로 만들어서 exports 해서 씀.)
 //diskStorage: 파일 저장 관련 설정 객체
@@ -76,6 +76,30 @@ const storage = multer.diskStorage({
   },
 });
 
+// aws설정
+aws.config.update({
+  accessKeyId: process.env.ACCESSKEYID,
+  secretAccessKey: process.env.SECRETACCESSKEY,
+  region: 'ap-northeast-2',
+});
+// aws s3 인스턴스 생성
+const s3 = new aws.S3();
+
+// multer 설정 - aws
+const uploadS3 = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: 'kdt9-thbr-test', // aws내에 존재하는 버킷 중에 지금 쓸거
+    acl: 'public-read', // 파일접근권한 (public-read로 해야 업로드된 파일이 공개)
+    metadata: function (req, file, cb) {
+      cb(null, { fieldName: file.fieldname });
+    },
+    key: function (req, file, cb) {
+      cb(null, Date.now().toString() + '-' + file.originalname);
+    },
+  }),
+});
+
 //파일 크기 제한
 const limits = {
   fileSize: 5 * 1024 * 1024,
@@ -89,9 +113,9 @@ router.patch('/profile', M_controller.edit_profile);
 router.post('/upload', upload.single('dynamic'), M_controller.profileImg);
 
 //로그아웃
-router.get("/logout", M_controller.logout);
+router.get('/logout', M_controller.logout);
 //탈퇴
-router.post('/profile/delete', M_controller.delete_user)
+router.post('/profile/delete', M_controller.delete_user);
 
 router.get('/bob', M_controller.bob);
 
@@ -107,6 +131,19 @@ router.post('/desk/delete_generator', T_controller.delete_generator);
 router.get('/desk/reservation', T_controller.reservation);
 router.post('/desk/reservationConfirm', T_controller.reservationConfirm);
 router.patch('/desk/reservationEdit', T_controller.reservationEdit);
+
+// 노트매니저(파일관리)
+router.get('/noteManager', T_controller.noteManager);
+router.post(
+  '/noteManager/upload',
+  uploadS3.array('file_upload'),
+  T_controller.noteUpload,
+);
+// router.post(
+//   '/noteManager/upload',
+//   upload.array('file_upload'),
+//   T_controller.noteUpload,
+// );
 
 router.get('/test', T_controller.test);
 //채팅방 render페이지

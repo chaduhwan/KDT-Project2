@@ -37,6 +37,7 @@
       <div class="room"></div>
       <div class="right-bar">
         <button style="height: 50px" onclick="Unoccupate()">예약취소</button>
+        <button style="height: 50px" onclick="reset()">리셋</button>
         <a href="/desk" onclick="return confirm('페이지를 벗어나시겠습니까?');"
           >돌아가기</a
         >
@@ -300,6 +301,17 @@
             alert('예약 취소에 실패하셨습니다');
           }
         }
+      };
+
+      const reset = () => {
+        document.querySelector('.room').innerHTML = '';
+        nowMap = '리셋';
+        let data = saveSetting(
+          document.querySelector('.room').innerHTML,
+          nowMap,
+        );
+        socket.emit('saveState', [data], nowMap);
+        socket.emit('dataPush', data);
       };
     </script>
   </body>

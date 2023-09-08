@@ -13,6 +13,7 @@ exports.connection2 = (io, socket) => {
   });
 
   socket.on('dataPush', (data) => {
+    console.log(data);
     let flag = 0;
     for (let i = 0; i < data2.length; i++) {
       if (data2[i].name == data.name) {
