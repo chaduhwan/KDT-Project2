@@ -131,6 +131,7 @@ router.get('/logout', M_controller.logout);
 router.post('/profile/delete', M_controller.delete_user);
 
 router.get('/bob', M_controller.bob);
+router.post('/bob/select', M_controller.bobSelect);
 
 //////////////////상녕/////////////////
 
