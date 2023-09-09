@@ -1,4 +1,4 @@
-const { User, Sequelize, Chat, participant } = require("../models");
+const { User, Sequelize, Chat, participant, calendar } = require("../models");
 const Op = Sequelize.Op;
 
 exports.chat = (req, res) => {
@@ -100,3 +100,26 @@ exports.userList = async (req, res) => {
     console.log(error);
   }
 };
+exports.calendar = (req,res)=>{
+  res.render('SN_calendar')
+}
+exports.post_calendar = async(req,res)=>{
+  await calendar.destroy({
+    where :{username : req.session.userName}
+  })
+  await req.body.forEach(res=>{
+    calendar.create({
+      username : req.session.userName,
+      title : res.title,
+      start : res.start,
+      end : res.end,
+      backgroundColor : res.backgroundColor,
+    })
+  })
+}
+exports.eventData = async (req,res)=>{
+  const modelData = await calendar.findAll({
+    where : {username : req.session.userName}
+  })
+  res.send(modelData);
+}

@@ -173,4 +173,8 @@ router.post("/myChatList", S_controller.myChatList);
 router.post("/myMessage", S_controller.myMessage);
 //가입되어 있는 사람 목록 불러오기
 router.post("/userList", S_controller.userList);
+//캘린더랜더
+router.get("/calendar", S_controller.calendar);
+router.post("/calendar", S_controller.post_calendar);
+router.post("/eventData", S_controller.eventData);
 module.exports = router;
