@@ -316,7 +316,7 @@ exports.logout = (req, res) => {
 
 //밥집찾기
 exports.bob = (req, res) =>{
-  res.render('MA_bob2')
+  res.render('MA_placeSearch')
 }
 
 /////////////////////////POST///////////////////
@@ -400,6 +400,15 @@ exports.delete_user = async (req, res) =>{
   req.session.destroy();
   console.log('탈퇴했다')
   res.json({ result: true });
+}
+
+//장소찾기
+exports.bobSelect = async (req, res)=>{
+  const {placeId, placeName, placeAddress} = req.body;
+  const place = `${placeId}|${placeName}|${placeAddress}`;
+  console.log(place)
+  // await Board.update({place}, {where: { BoardId : ? }}) //보드db에 추가하는 작업은 나중에
+  res.json(true)
 }
 
 //////////////PATCH//////////////////////
