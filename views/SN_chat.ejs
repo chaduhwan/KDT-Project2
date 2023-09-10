@@ -330,6 +330,17 @@
         padding-top: 10px;
         padding-bottom: 5px;
       }
+      .addon p {
+        margin-bottom: 0;
+        background: red;
+        color: white;
+        border-radius: 100%;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        font-weight: bold;
+        padding-top: 0;
+      }
     </style>
   </head>
   <body>
@@ -368,17 +379,15 @@
             <li>
               <div class="chatList">
                 <div class="img">
-                  <i class="fa fa-circle" style="color: gray"></i>
-                  <img
-                    src="https://t1.daumcdn.net/cfile/tistory/27738433597DCB1312"
-                  />
+                  <i class="fa fa-circle" style="color: green"></i>
+                  <img width="64" height="64" src="https://img.icons8.com/pastel-glyph/64/groups--v4.png" alt="groups--v4"/>
                 </div>
-                <div class="desc">
+                <div class="desc" id="groupChatRoom">
                   <small class="time">시간입력</small>
                   <h5 id="OtherPerson2">단체 채팅방</h5>
                   <div class="addon">
                     <small>ㅋㅋㅋㅋ ㅎㅇ</small>
-                    <small>12</small>
+                    <p>12</p>
                   </div>
                 </div>
               </div>
@@ -586,12 +595,17 @@
           alert(`${otherName}님 방에 입장하였습니다.`);
           //create -> 방 만들기
           socket.emit("create", otherName, username);
+          const pTag = document.querySelector(`#${otherName}msg`)
+          pTag.remove();
         });
-        const previewMessageElement = document.createElement("small");
+        //알람의 수(notRead)의 개수가 0이 아니면 p태그까지 출력
+        if(notRead != 0){
+          const previewMessageElement = document.createElement("small");
         previewMessageElement.textContent = previewMessage;
 
-        const notReadMsg = document.createElement("small");
+        const notReadMsg = document.createElement("p");
         notReadMsg.textContent = notRead;
+        notReadMsg.id = otherPersonName+"msg"
 
         ///desc div 안에 있는 small, h5, small
         const timeElement = document.createElement("small");
@@ -616,12 +630,51 @@
         chatContainer.appendChild(imgDiv);
         chatContainer.appendChild(descDiv);
         return chatContainer;
+        //알람의 개수가 0개면 p태그는 appendChild 하지 않음
+        } else{
+        const previewMessageElement = document.createElement("small");
+        previewMessageElement.textContent = previewMessage;
+
+        const notReadMsg = document.createElement("p");
+
+
+        ///desc div 안에 있는 small, h5, small
+        const timeElement = document.createElement("small");
+        timeElement.className = "time";
+        timeElement.textContent = time;
+
+        const otherPersonElement = document.createElement("h5");
+        otherPersonElement.id = "OtherPerson2";
+        otherPersonElement.textContent = otherPersonName;
+
+        ///
+        addonDiv.appendChild(previewMessageElement);
+
+        imgDiv.appendChild(imgIcon);
+        imgDiv.appendChild(imgElement);
+
+        descDiv.appendChild(timeElement);
+        descDiv.appendChild(otherPersonElement);
+        descDiv.appendChild(addonDiv);
+
+        chatContainer.appendChild(imgDiv);
+        chatContainer.appendChild(descDiv);
+        return chatContainer;
+        }
+
       }
 
       //스크롤 다운 함수
       function scrollBottom() {
         messageList.scrollTo(0, messageList.scrollHeight);
       }
+
+      socket.on("accessCheck", (roomList, username) => {
+        modalBody.textContent = "";
+        roomList.forEach((res) => {
+          addVisitor(res);
+        });
+      });
 
       // 새로운 접속자를 추가하는 함수
       function addVisitor(visitorName) {
@@ -630,13 +683,22 @@
         visitorElement.id = visitorName;
         visitorElement.addEventListener("click", function () {
           //이름을 눌렀을 때 모달이 닫히게 하는 이벤트
-          $("#modal").modal("hide");
+          $("#staticBackdrop").modal("hide");
+
           //그 방으로 들어가게 함
           otherName = visitorName;
-          OtherPerson1.innerText = otherName;
+          if(username == otherName){
+            alert("자신의 이름은 선택할 수 없습니다.")
+          }else{
+            OtherPerson1.innerText = otherName;
           alert(`${otherName}님 방에 입장하였습니다.`);
+
           //create -> 방 만들기
           socket.emit("create", otherName, username);
+          //그 방에 입장하면 p태그 삭제시켜버림(알람삭제)
+          const pTag = document.querySelector(`#${otherName}msg`)
+          pTag.remove();
+          }
         });
         modalBody.appendChild(visitorElement);
       }
@@ -678,12 +740,7 @@
       const OtherPerson1 = document.querySelector("#OtherPerson1");
       const OtherPerson2 = document.querySelector("#OtherPerson2");
       // 현재 접속자 (모달화면) 갱신하는 거
-      socket.on("accessCheck", (roomList, username) => {
-        modalBody.textContent = "";
-        roomList.forEach((res) => {
-          addVisitor(res);
-        });
-      });
+
 
       //현재 접속자 계속 찾아서 새로 생기면 불 바꾸기
       //현재 접속자와 내 채팅방에 있는 사람이 같으면 초록불로 바꿔주기
@@ -699,9 +756,9 @@
       });
 
       //나가면 회색으로 변하는 이벤트
-      socket.on("deleteList", (username) => {
-        document.querySelector(`#${username}`).style.color = "gray";
-      });
+      // socket.on("deleteList", (username) => {
+      //   document.querySelector(`#${username}`).style.color = "gray";
+      // });
       //내가 채팅하고 잇는 방 불러오고 -> 그 채팅방 미리보기 메시지까지 가져오는거
       socket.on("chatList", async (username, roomList) => {
         //참여 채팅방 불러오기
@@ -740,6 +797,7 @@
             );
             if (currentList == messageResult.data.send) {
               changeElement.style.color = "green";
+              break
             } else {
               changeElement.style.color = "gray";
             }
@@ -775,10 +833,14 @@
             // OtherPerson2.innerText = otherName;
           });
           alert(`${otherName}님 방에 입장하였습니다.`);
+          //방 들어가면 p태그 삭제시켜버려서 알람 없애기
+          const pTag = document.querySelector(`#${otherName}msg`)
+          pTag.remove();
         } else {
           //없으면 가입되지 않은 사람이라고 해줌
           alert("가입되지 않은 사용자 입니다.");
         }
+        
       });
 
       //메시지 보내는 이벤트
@@ -854,6 +916,7 @@
           $("#messageStatus")[0].style.display = "none";
         }, 500);
       });
+
     </script>
     <!-- 폰트어썸 코드 -->
     <script

@@ -13,8 +13,6 @@ exports.preMessage = async (req, res) => {
     for (const check of chatMessage) {
       //username이랑 send의 값이 다르면 checked 값을 Y로 바꾸기
       if (check.send != req.body.username) {
-        console.log("수정되었습니다.!!!!");
-        console.log("chatNum값", check.chatNum);
         Chat.update({ checked: "Y" }, { where: { chatNum: check.chatNum } });
       }
     }
@@ -37,7 +35,6 @@ exports.myChatList = async (req, res) => {
     let numN = 0;
     //내 방 번호
     let myRoomNumber = resItem.roomNum;
-    console.log("방 번호 리스트", myRoomNumber);
     //이 방 번호로 그 방 채팅의 N값을 가져옴
     let checkList = await Chat.findAll({
       where: { roomNum: myRoomNumber },
@@ -50,7 +47,6 @@ exports.myChatList = async (req, res) => {
       }
     }
     notReadMessage.push(numN);
-    console.log("분류한 번호값", numN);
     let findName = await participant.findAll({
       where: { roomNum: myRoomNumber },
     });
@@ -63,7 +59,6 @@ exports.myChatList = async (req, res) => {
   }
 
   if (myChatList.length === myJoinRoom.length) {
-    console.log("읽지않은 메시지", notReadMessage);
     res.send({ myJoinRoom: myJoinRoom, notReadMessage: notReadMessage });
   }
 };
@@ -74,7 +69,6 @@ exports.myMessage = async (req, res) => {
       where: { send: req.body.send },
       order: [["createdAt", "DESC"]],
     });
-    console.log("체크된 값 가져오는거", req.body.send);
     res.send({
       message: preMessage.message,
       send: preMessage.send,
