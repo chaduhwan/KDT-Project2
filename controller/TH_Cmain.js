@@ -11,11 +11,13 @@ exports.noteManager = async (req, res) => {
 
 exports.get_noteManager = async (req, res) => {
   try {
-    let data = await File.findAll();
+    // let data = await File.findAll();
+    let data = await File.findAll({ where: { userid: req.session.userId } });
     let arr = [];
     for (let i = 0; i < data.length; i++) {
       let sendingFile = {
         id: data[i].id,
+        userid: data[i].userid,
         name: data[i].name,
         filename: data[i].filename,
         isFolder: data[i].isFolder == 0 ? false : true,
@@ -37,12 +39,16 @@ exports.noteUpload = async (req, res) => {
     let data = await File.findAll();
     for (let i = 0; i < req.files.length; i++) {
       for (let j = 0; j < data.length; j++) {
-        if (data[j].filename == req.files[i].key) {
+        if (
+          data[j].filename == req.files[i].key &&
+          data[j].userid == req.session.userId
+        ) {
           res.send({ status: '중복' });
           return;
         }
       }
       const file = await File.create({
+        userid: req.session.userId,
         name: req.session.userName,
         filename: req.files[i].key,
         isFolder: false,
@@ -68,12 +74,16 @@ exports.noteUpload_folder = async (req, res) => {
   try {
     let data = await File.findAll();
     for (let j = 0; j < data.length; j++) {
-      if (data[j].filename == req.body.filename) {
+      if (
+        data[j].filename == req.body.filename &&
+        data[j].userid == req.session.userId
+      ) {
         res.send('중복');
         return;
       }
     }
     await File.create({
+      userid: req.session.userId,
       name: req.session.userName,
       filename: req.body.filename,
       isFolder: true,
@@ -89,9 +99,30 @@ exports.noteUpload_folder = async (req, res) => {
 
 exports.erase_files = async (req, res) => {
   try {
+    console.log(req.body);
     for (let i = 0; i < req.body.length; i++) {
-      await File.destroy({ where: { filename: req.body[i] } });
-      await File.destroy({ where: { parent: req.body[i] } });
+      let explorer = req.body[i];
+      let arr = [explorer];
+      let seq = [explorer];
+      while (seq.length !== 0) {
+        let isit = await File.findAll({
+          where: { userid: req.session.userId, parent: seq[0] },
+        });
+        console.log(isit.length);
+        if (isit.length > 0) {
+          for (let j = 0; j < isit.length; j++) {
+            arr.push(isit[j].dataValues.filename);
+            seq.push(isit[j].dataValues.filename);
+          }
+        }
+        seq.shift();
+      }
+      console.log(arr);
+      for (let a = 0; a < arr.length; a++) {
+        await File.destroy({
+          where: { userid: req.session.userId, filename: arr[a] },
+        });
+      }
     }
     res.send('성공');
   } catch (e) {
@@ -107,6 +138,7 @@ exports.patch_files = async (req, res) => {
         { parent: req.body.to },
         {
           where: {
+            userid: req.session.userId,
             filename: req.body.movers[i],
           },
         },
