@@ -6,11 +6,14 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>Document</title>
     <style>
+      body {
+        position: relative;
+      }
       .result {
         padding: 10px;
         display: flex;
-        flex-direction: row;
-        align-items: center;
+        flex-direction: column;
+        justify-content: center;
       }
       .element {
         display: flex;
@@ -24,6 +27,7 @@
         border-color: #646464;
         cursor: pointer;
         margin: 20px;
+        z-index: 1;
       }
       .wrapper {
         display: flex;
@@ -45,17 +49,64 @@
         text-decoration: none;
         color: black;
       }
+      .clicked {
+        background-color: blue;
+      }
+
+      .list_modal {
+        display: none;
+        justify-content: center;
+        /* align-items: center; */
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 10px;
+      }
+      .list_modal_center {
+        overflow: auto;
+        opacity: 100%;
+        width: 200px;
+        height: 150px;
+        border-style: solid;
+        border-color: #646464;
+        border-width: 0.5px;
+        border-radius: 5px;
+        padding: 10px;
+        background-color: whiite;
+        z-index: 2;
+      }
+      .pointer {
+        cursor: pointer;
+      }
+      .liner {
+        display: flex;
+        flex-direction: row;
+      }
     </style>
   </head>
   <body>
     <form onsubmit="fileupload(event)">
       <input type="file" id="file_upload" multiple /> <br />
-      <button type="submit">업로드</button>
+      폴더
+      <select id="folder_location" onchange="positionChange()">
+        <option value="root">root</option>
+      </select>
+      <br />
+      <button type="submit">업로드</button><br />
     </form>
-    <br />
+    <button type="button" onclick="folderCreate()">폴더생성</button> <br />
+    <button type="button" onclick="selectAll()">전체선택</button> <br />
+    <button type="button" onclick="erase()">삭제</button> <br />
+    <button type="button" onclick="move()">이동</button> <br />
+
+    <h1 class="currentPlace">root</h1>
     <div class="result"></div>
+    <div class="list_modal">
+      <div class="list_modal_center"></div>
+    </div>
 
     <script>
+      const resultBox = document.querySelector('.result');
       let picture = ['jpg', 'png', 'jpeg', 'webp', 'gif'];
       let doc = {
         ppt: '../public/default/ppt.png',
@@ -68,63 +119,175 @@
         hwpx: '../public/default/word.png',
         xls: '../public/default/xls.png',
         zip: '../public/default/zip.png',
+        folder: '../public/default/folder.png',
       };
-      const resultBox = document.querySelector('.result');
+      let database = [];
+      let lastnum = 0;
+      let useBox = [];
+      // {
+      //   filename: folderName,
+      //   fileLoca: fadeffwe,
+      //   files: [{
+      //     filename: ddefsd,
+      //     fileLoca: fadeffwe,
+      //     files: []
+      //     parent : wfewff,
+      //   }]
+      //   parent : wfewff
+      // }
+      const elementGenerator = (arr) => {
+        let where = document.querySelector('#folder_location');
+        let folderPlace = where.options[where.selectedIndex].value;
+        let wide = document.querySelector('.result');
+        wide.innerHTML = '';
+        useBox = [];
+        console.log(database);
+        document.querySelector('.currentPlace').innerText = folderPlace;
+        let line = document.createElement('div');
+        line.classList.add('liner');
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i].parent == folderPlace) {
+            let div = document.createElement('div');
+            let div2;
+            if (arr[i].filename.includes('.')) {
+              // 파일
+              div2 = document.createElement('a');
+              div2.innerText = arr[i].filename;
+              div2.href = arr[i].fileLoca;
+              div2.classList.add('overflow');
+              let ext = arr[i].filename.split('.')[1];
+              if (picture.includes(ext)) {
+                let img = document.createElement('img');
+                img.src = arr[i].fileLoca;
+                img.style.cssText = `
+              width: 100%;
+            `;
+                div.appendChild(img);
+              } else if (doc[ext]) {
+                let img = document.createElement('img');
+                img.src = doc[ext];
+                img.style.cssText = `
+              width: 70%;
+            `;
+                div.appendChild(img);
+              } else {
+                let img = document.createElement('img');
+                img.src = doc['file'];
+                img.style.cssText = `
+                    width: 100%;
+                  `;
+                div.appendChild(img);
+              }
+            } else {
+              // 폴더
+              div2 = document.createElement('div');
+              div2.innerText = arr[i].filename;
+              div2.onclick = (e) => {
+                e.preventDefault();
+                document.querySelector('.result').innerHTML = '';
+                where.value = arr[i].filename;
+                document.querySelector('.currentPlace').innerText =
+                  arr[i].filename;
+                elementGenerator(database);
+              };
+              div2.classList.add('overflow');
+              let img = document.createElement('img');
+              img.src = doc['folder'];
+              img.style.cssText = `
+                    width: 100%;
+                  `;
+              div.appendChild(img);
+            }
+            let div3 = document.createElement('div');
+            div.classList.add('element');
+            div.onclick = () => {
+              if (div.classList.contains('clicked')) {
+                div.classList.remove('clicked');
+                for (let j = 0; j < useBox.length; j++) {
+                  if (useBox[j] == arr[i].filename) {
+                    useBox.splice(j, 1);
+                    console.log(useBox);
+                  }
+                }
+              } else {
+                div.classList.add('clicked');
+                useBox.push(arr[i].filename);
+                console.log(useBox);
+              }
+            };
+            div3.classList.add('wrapper');
+            div3.style.cursor = 'pointer';
+            div3.appendChild(div);
+            div3.appendChild(div2);
+            if (line.children.length < 6) {
+              line.appendChild(div3);
+              console.log(line.children.length);
+            } else {
+              wide.appendChild(line);
+              console.log(wide);
+              line = document.createElement('div');
+              line.classList.add('liner');
+              line.appendChild(div3);
+            }
+          }
+        }
+        if (line.children.length !== 0) {
+          wide.appendChild(line);
+        }
+      };
+
+      // {
+      //   filename: folderName,
+      //   fileLoca: fadeffwe,
+      //   files: [{
+      //     filename: ddefsd,
+      //     fileLoca: fadeffwe,
+      //     files: []
+      //     parent : wfewff,
+      //   }]
+      //   parent : wfewff
+      //
+      // }
       axios({
         method: 'get',
         url: '/get_noteManager',
       }).then((res) => {
         console.log(res.data.data);
+        let list = document.querySelector('#folder_location');
+        let modal = document.querySelector('.list_modal_center');
+        modal.innerHTML += `<div class="pointer" onclick="move2()" value="root"> root </div>`;
         for (let i = 0; i < res.data.data.length; i++) {
-          let div = document.createElement('div');
-          let div2 = document.createElement('a');
-          let div3 = document.createElement('div');
-          div2.href = res.data.data[i].location;
-          div.classList.add('element');
-          div3.classList.add('wrapper');
-          let ext = res.data.data[i].filename.split('.')[1];
-          if (picture.includes(ext)) {
-            let img = document.createElement('img');
-            img.src = res.data.data[i].location;
-            img.style.cssText = `
-              width: 100%;
-            `;
-            div.appendChild(img);
-          } else if (doc[ext]) {
-            let img = document.createElement('img');
-            img.src = doc[ext];
-            img.style.cssText = `
-              width: 70%;
-            `;
-            div.appendChild(img);
-          } else {
-            let img = document.createElement('img');
-            img.src = doc['file'];
-            img.style.cssText = `
-              width: 100%;
-            `;
-            div.appendChild(img);
+          if (res.data.data[i].isFolder == true) {
+            list.innerHTML += `<option value="${res.data.data[i].filename}">${res.data.data[i].filename}</option>`;
+            modal.innerHTML += `<div class="pointer" onclick="move2()" value="${res.data.data[i].filename}"> ${res.data.data[i].filename} </div>`;
           }
-          div2.innerText = res.data.data[i].filename;
-          div2.classList.add('overflow');
-          div3.style.cursor = 'pointer';
-          div3.appendChild(div);
-          div3.appendChild(div2);
-          resultBox.appendChild(div3);
+          let obj = {
+            id: res.data.data[i].id,
+            filename: res.data.data[i].filename,
+            fileLoca: res.data.data[i].location,
+            files: [],
+            parent: res.data.data[i].parent,
+          };
+          database.push(obj);
         }
+        elementGenerator(database);
       });
-      const fileupload = async (event) => {
-        event.preventDefault();
-        console.log('file upload');
-        const file = document.querySelector('#file_upload');
-        console.log(file.files);
 
+      const fileupload = async (event) => {
+        let folder = document.querySelector('#folder_location');
+        let folderPlace = folder.options[folder.selectedIndex].value;
+        event.preventDefault();
+        const file = document.querySelector('#file_upload');
         const formData = new FormData();
+        if (file.files.length == 0) {
+          alert('파일을 선택해주세요');
+          return;
+        }
         for (let i = 0; i < file.files.length; i++) {
+          console.log(file.files[i]);
+          formData.append('folder_location', folderPlace);
           formData.append('file_upload', file.files[i]);
         }
-        console.log(formData);
-
         let res = await axios({
           method: 'POST',
           url: '/noteManager/upload',
@@ -133,25 +296,149 @@
             'Content-Type': 'multipart/form-data',
           },
         });
-
-        if (res.data == '성공') {
+        if (res.data.status == '성공') {
           alert('파일 업로드에 성공했습니다');
-          window.location.reload();
+          for (let i = 0; i < res.data.files.length; i++) {
+            let obj = {
+              filename: res.data.files[i].name,
+              fileLoca: res.data.files[i].location,
+              files: [],
+              parent: folderPlace,
+            };
+            database.push(obj);
+          }
+          elementGenerator(database);
+        } else if (res.data.status == '중복') {
+          alert('같은 이름의 파일이 존재합니다');
         } else {
           alert('파일 업로드에 실패했습니다');
         }
-        // console.log('res', res.data);
-        // console.log(res.data[0].location);
-        // res = Array.from(res)
-        // res.data.forEach((element) => {
-        //   let tag = document.createElement('img');
-        //   tag.src = element.location;
-        //   tag.style.cssText = `
-        //     width: 100px;
-        //     height: 100px;
-        //   `;
-        //   resultBox.appendChild(tag);
-        // });
+      };
+
+      const folderCreate = async () => {
+        let folder = document.querySelector('#folder_location');
+        let folderPlace = folder.options[folder.selectedIndex].value;
+        let prompt = window.prompt('폴더 이름을 지어주세요');
+        let obj = {
+          filename: prompt,
+          parent: folderPlace,
+        };
+        let res = await axios({
+          method: 'POST',
+          url: '/noteManager/upload_folder',
+          data: obj,
+        });
+        if (res.data == '성공') {
+          alert('폴더를 생성하였습니다');
+          let obj = {
+            filename: prompt,
+            fileLoca: null,
+            files: [],
+            parent: folderPlace,
+          };
+          database.push(obj);
+          let list = document.querySelector('#folder_location');
+          let modal = document.querySelector('.list_modal_center');
+          list.innerHTML += `<option value="${prompt}">${prompt}</option>`;
+          modal.innerHTML += `<div class="pointer" onclick="move2()" value="${prompt}">${prompt} </div>`;
+          folder.value = folderPlace;
+          elementGenerator(database);
+        } else if (res.data == '중복') {
+          alert('같은 이름의 폴더가 존재합니다');
+        } else {
+          alert('폴더 생성에 실패하였습니다');
+        }
+      };
+
+      const positionChange = () => {
+        elementGenerator(database);
+      };
+
+      const selectAll = () => {
+        let all = document.querySelector('.result');
+        let flag = 0;
+        for (let i = 0; i < all.children.length; i++) {
+          for (let j = 0; j < all.children[i].children.length; j++) {
+            if (
+              !all.children[i].children[j].children[0].classList.contains(
+                'clicked',
+              )
+            ) {
+              flag++;
+              all.children[i].children[j].children[0].classList.add('clicked');
+              useBox.push(all.children[i].children[j].children[1].innerText);
+            }
+          }
+        }
+        console.log(useBox);
+        if (flag == 0) {
+          for (let i = 0; i < all.children.length; i++) {
+            for (let j = 0; j < all.children[i].children.length; j++) {
+              all.children[i].children[j].children[0].classList.remove(
+                'clicked',
+              );
+              allClick = false;
+            }
+          }
+          useBox = [];
+          console.log(useBox);
+        }
+      };
+
+      const erase = async () => {
+        let res = await axios({
+          method: 'delete',
+          url: '/noteManager/erase_files',
+          data: useBox,
+        });
+        if (res.data == '성공') {
+          alert('선택된 파일이 삭제되었습니다');
+          for (let i = 0; i < database.length; i++) {
+            for (let j = 0; j < useBox.length; j++) {
+              if (database[i].filename == useBox[j]) {
+                database.splice(i, 1);
+              }
+            }
+          }
+          useBox = [];
+          window.location.reload();
+        } else {
+          alert('파일 삭제에 실패하였습니다');
+        }
+      };
+
+      const move = () => {
+        let arr = [];
+        let list = document.querySelector('#folder_location');
+        for (let i = 0; i < list.children.length; i++) {
+          arr.push(list.children[i].innerText);
+        }
+        document.querySelector('.list_modal').style.display = 'flex';
+        console.log(arr);
+      };
+
+      document.querySelector('.list_modal').addEventListener('click', (e) => {
+        if (e.target == e.currentTarget) {
+          document.querySelector('.list_modal').style.display = 'none';
+        }
+      });
+
+      const move2 = async () => {
+        let data = {
+          movers: useBox,
+          to: event.currentTarget.innerText,
+        };
+        let res = await axios({
+          method: 'patch',
+          url: '/noteManager/patch_files',
+          data: data,
+        });
+        if (res.data == '성공') {
+          alert('파일을 성공적으로 이동했습니다');
+          window.location.reload();
+        } else {
+          alert('파일 이동에 실패했습니다');
+        }
       };
     </script>
   </body>
