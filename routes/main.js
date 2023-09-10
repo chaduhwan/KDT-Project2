@@ -32,6 +32,9 @@ router.post('/board/like', C_controller.BoardLike);
 //////comment Write
 router.post('/comment/write', C_controller.CommentWrite);
 
+/////// class Make
+router.post('/class/make',C_controller.ClassMake);
+
 //메인화면
 
 router.get('/', M_controller.main);
@@ -127,6 +130,7 @@ router.get('/logout', M_controller.logout);
 router.post('/profile/delete', M_controller.delete_user);
 
 router.get('/bob', M_controller.bob);
+router.post('/bob/select', M_controller.bobSelect);
 
 //////////////////상녕/////////////////
 
@@ -157,7 +161,6 @@ router.post(
 // );
 
 router.post('/noteManager/upload_folder', T_controller.noteUpload_folder);
-
 router.delete('/noteManager/erase_files', T_controller.erase_files);
 router.patch('/noteManager/patch_files', T_controller.patch_files);
 
@@ -172,5 +175,11 @@ router.post('/myChatList', S_controller.myChatList);
 //내 참여방 미리보기 목록 불러오기
 router.post('/myMessage', S_controller.myMessage);
 //가입되어 있는 사람 목록 불러오기
-router.post('/userList', S_controller.userList);
+
+router.post("/userList", S_controller.userList);
+//캘린더랜더
+router.get("/calendar", S_controller.calendar);
+router.post("/calendar", S_controller.post_calendar);
+router.post("/eventData", S_controller.eventData);
+
 module.exports = router;

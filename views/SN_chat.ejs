@@ -34,302 +34,10 @@
     <!-- 소켓io 경로 -->
     <script src="/socket.io/socket.io.js"></script>
 
-    <!-- <link rel="stylesheet" href="../css/chat.css" /> -->
+    <link rel="stylesheet" href="/public/css/chat.css" />
     <title>채팅방</title>
     <style>
-      body {
-        font-family: "Raleway", sans-serif;
-        background-color: #accedc;
-        margin: 50px 0px;
-      }
-      .main-section small {
-        font-size: 12px;
-      }
-      .main-section h3,
-      .main-section h5 {
-        margin: 0px;
-      }
-      .main-section {
-        width: 960px;
-        background-color: #fff;
-        margin: auto;
-      }
-      .head-section {
-        border-bottom: 1px solid #e6e6e6;
-        clear: both;
-        overflow: hidden;
-        width: 100%;
-      }
-      .headLeft-section {
-        width: calc(30% - 1px);
-        float: left;
-        border-right: 1px solid #e6e6e6;
-      }
-      .headLeft-sub {
-        padding: 15px;
-        text-align: center;
-      }
-      .headLeft-sub input {
-        width: 60%;
-        border-radius: 0px;
-        border: 1px solid #e6e6e6;
-        padding: 7px;
-      }
-      .headLeft-sub button {
-        background: #009ef7;
-        color: #fff;
-        border: 1px solid #e6e6e6;
-        padding: 7px 15px;
-      }
-      .headRight-section {
-        width: 70%;
-        float: left;
-      }
-      .headRight-sub {
-        padding: 10px 15px 0px 15px;
-      }
-      .body-section {
-        clear: both;
-        overflow: hidden;
-        width: 100%;
-      }
-      .left-section {
-        width: calc(30% - 1px);
-        float: left;
-        height: 500px;
-        border-right: 1px solid #e6e6e6;
-        background-color: #fff;
-        z-index: 1;
-        position: relative;
-      }
-      .left-section ul {
-        padding: 0px;
-        margin: 0px;
-        list-style: none;
-      }
-      .left-section ul li {
-        padding: 15px 0px;
-        cursor: pointer;
-      }
-      .left-section ul li.active {
-        background: #009ef7;
-        color: #fff;
-        position: relative;
-      }
-      .mCustomScrollBox,
-      .mCSB_container {
-        overflow: unset !important;
-      }
-      .left-section ul li.active .desc .time {
-        color: #fff;
-      }
-      .left-section ul li.active:before {
-        position: absolute;
-        content: "";
-        right: -10px;
-        border: 5px solid #009ef7;
-        top: 0px;
-        bottom: 0px;
-        border-radius: 0px 3px 3px 0px;
-      }
-      .left-section ul li.active:after {
-        position: absolute;
-        content: "";
-        bottom: 0px;
-        right: 0px;
-        left: auto;
-        width: 100%;
-        top: 0px;
-        -webkit-box-shadow: -8px 4px 10px #a1a1a1;
-        -moz-box-shadow: -8px 4px 10px #a1a1a1;
-        box-shadow: -8px 4px 10px #a1a1a1;
-      }
-      .left-section .chatList {
-        overflow: hidden;
-      }
-      .left-section .chatList .img {
-        width: 60px;
-        float: left;
-        text-align: center;
-        position: relative;
-      }
-      .left-section .chatList .img img {
-        width: 30px;
-        height: 25px;
-        border-radius: 50%;
-      }
-      .left-section .chatList .img i {
-        position: absolute;
-        font-size: 10px;
-        color: #52e2a7;
-        border: 1px solid #fff;
-        border-radius: 50%;
-        left: 10px;
-      }
-      .left-section .chatList .desc {
-        width: calc(100% - 60px);
-        float: left;
-        position: relative;
-      }
-      .left-section .chatList .desc h5 {
-        margin-top: 9px;
-        line-height: 5px;
-      }
-      .left-section .chatList .desc .time {
-        position: absolute;
-        right: 15px;
-        color: #c1c1c1;
-      }
-      .right-section {
-        width: 70%;
-        float: left;
-        height: 500px;
-        background-color: #f6f6f6;
-        position: relative;
-      }
-      .message {
-        height: calc(100% - 68px);
-        font-family: sans-serif;
-      }
-      .message ul {
-        padding: 0px;
-        list-style: none;
-        margin: 0px auto;
-        width: 90%;
-        overflow: hidden;
-      }
-      .message ul li {
-        position: relative;
-        width: 80%;
-        padding: 15px 0px;
-        clear: both;
-      }
-      .message ul li.msg-left {
-        float: left;
-      }
-      .message ul li.msg-left img {
-        position: absolute;
-        width: 40px;
-        bottom: 30px;
-      }
-      .message ul li.msg-left .msg-desc {
-        margin-left: 70px;
-        font-size: 12px;
-        background: #e8e8e8;
-        padding: 5px 10px;
-        border-radius: 5px 5px 5px 0px;
-        position: relative;
-      }
-      .message ul li.msg-left .msg-desc:before {
-        position: absolute;
-        content: "";
-        border: 10px solid transparent;
-        border-bottom-color: #e8e8e8;
-        bottom: 0px;
-        left: -10px;
-      }
-      .message ul li.msg-left small {
-        float: right;
-        color: #c1c1c1;
-      }
-      .message ul li.msg-right {
-        float: right;
-      }
-      .message ul li.msg-right img {
-        position: absolute;
-        width: 40px;
-        right: 0px;
-        bottom: 30px;
-      }
-      .message ul li.msg-right .msg-desc {
-        margin-right: 70px;
-        font-size: 12px;
-        background: #cce5ff;
-        color: #004085;
-        padding: 5px 10px;
-        border-radius: 5px 5px 5px 0px;
-        position: relative;
-      }
-      .message ul li.msg-right .msg-desc:before {
-        position: absolute;
-        content: "";
-        border: 10px solid transparent;
-        border-bottom-color: #cce5ff;
-        bottom: 0px;
-        right: -10px;
-      }
-      .message ul li.msg-right small {
-        float: right;
-        color: #c1c1c1;
-        margin-right: 70px;
-      }
-      .message ul li.msg-day {
-        border-top: 1px solid #ebebeb;
-        width: 100%;
-        padding: 0px;
-        margin: 15px 0px;
-      }
-      .message ul li.msg-day small {
-        position: absolute;
-        top: -10px;
-        background: #f6f6f6;
-        color: #c1c1c1;
-        padding: 3px 10px;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      .right-section-bottom {
-        background: #fff;
-        width: 100%;
-        padding: 15px;
-        position: absolute;
-        bottom: 0px;
-        border-top: 1px solid #e6e6e6;
-        text-align: center;
-      }
-      .right-section-bottom input {
-        border: 0px;
-        padding: 8px 5px;
-        width: calc(100% - 150px);
-      }
-      .right-section-bottom .btn-send {
-        border: 0px;
-        padding: 8px 10px;
-        float: right;
-        margin-right: 30px;
-        color: #009ef7;
-        font-size: 18px;
-        background: #fff;
-        cursor: pointer;
-      }
-      .upload-btn {
-        position: relative;
-        overflow: hidden;
-        display: inline-block;
-        float: left;
-      }
-      .upload-btn .btn {
-        border: 0px;
-        padding: 8px 10px;
-        color: #009ef7;
-        font-size: 18px;
-        background: #fff;
-        cursor: pointer;
-      }
-      .upload-btn input[type="file"] {
-        font-size: 100px;
-        position: absolute;
-        left: 0;
-        top: 0;
-        opacity: 0;
-      }
-      .addon {
-        display: flex;
-        justify-content: space-between;
-        padding-right: 15px;
-        padding-top: 10px;
-        padding-bottom: 5px;
-      }
+
     </style>
   </head>
   <body>
@@ -368,17 +76,15 @@
             <li>
               <div class="chatList">
                 <div class="img">
-                  <i class="fa fa-circle" style="color: gray"></i>
-                  <img
-                    src="https://t1.daumcdn.net/cfile/tistory/27738433597DCB1312"
-                  />
+                  <i class="fa fa-circle" style="color: green"></i>
+                  <img width="64" height="64" src="https://img.icons8.com/pastel-glyph/64/groups--v4.png" alt="groups--v4"/>
                 </div>
-                <div class="desc">
-                  <small class="time">시간입력</small>
-                  <h5 id="OtherPerson2">단체 채팅방</h5>
+                <div class="desc" id="groupChatRoom">
+                  <small class="time"></small>
+                  <h5 id="OtherPerson2"></h5>
                   <div class="addon">
-                    <small>ㅋㅋㅋㅋ ㅎㅇ</small>
-                    <small>12</small>
+                    <small></small>
+                    <p></p>
                   </div>
                 </div>
               </div>
@@ -560,10 +266,14 @@
         time,
         otherPersonName,
         previewMessage,
-        imageUrl
+        imageUrl,
+        notRead
       ) {
         const imgDiv = document.createElement("div");
         imgDiv.className = "img";
+
+        const addonDiv = document.createElement("div");
+        addonDiv.className = "addon";
 
         const imgIcon = document.createElement("i");
         imgIcon.className = "fa fa-circle";
@@ -582,7 +292,19 @@
           alert(`${otherName}님 방에 입장하였습니다.`);
           //create -> 방 만들기
           socket.emit("create", otherName, username);
+          const pTag = document.querySelector(`#${otherName}msg`)
+          pTag.remove();
         });
+        //알람의 수(notRead)의 개수가 0이 아니면 p태그까지 출력
+        if(notRead != 0){
+          const previewMessageElement = document.createElement("small");
+        previewMessageElement.textContent = previewMessage;
+
+        const notReadMsg = document.createElement("p");
+        notReadMsg.textContent = notRead;
+        notReadMsg.id = otherPersonName+"msg"
+
+        ///desc div 안에 있는 small, h5, small
         const timeElement = document.createElement("small");
         timeElement.className = "time";
         timeElement.textContent = time;
@@ -591,25 +313,65 @@
         otherPersonElement.id = "OtherPerson2";
         otherPersonElement.textContent = otherPersonName;
 
-        const previewMessageElement = document.createElement("small");
-        previewMessageElement.textContent = previewMessage;
+        ///
+        addonDiv.appendChild(previewMessageElement);
+        addonDiv.appendChild(notReadMsg);
 
         imgDiv.appendChild(imgIcon);
         imgDiv.appendChild(imgElement);
 
         descDiv.appendChild(timeElement);
         descDiv.appendChild(otherPersonElement);
-        descDiv.appendChild(previewMessageElement);
+        descDiv.appendChild(addonDiv);
 
         chatContainer.appendChild(imgDiv);
         chatContainer.appendChild(descDiv);
         return chatContainer;
+        //알람의 개수가 0개면 p태그는 appendChild 하지 않음
+        } else{
+        const previewMessageElement = document.createElement("small");
+        previewMessageElement.textContent = previewMessage;
+
+        const notReadMsg = document.createElement("p");
+
+
+        ///desc div 안에 있는 small, h5, small
+        const timeElement = document.createElement("small");
+        timeElement.className = "time";
+        timeElement.textContent = time;
+
+        const otherPersonElement = document.createElement("h5");
+        otherPersonElement.id = "OtherPerson2";
+        otherPersonElement.textContent = otherPersonName;
+
+        ///
+        addonDiv.appendChild(previewMessageElement);
+
+        imgDiv.appendChild(imgIcon);
+        imgDiv.appendChild(imgElement);
+
+        descDiv.appendChild(timeElement);
+        descDiv.appendChild(otherPersonElement);
+        descDiv.appendChild(addonDiv);
+
+        chatContainer.appendChild(imgDiv);
+        chatContainer.appendChild(descDiv);
+        return chatContainer;
+        }
+
       }
 
       //스크롤 다운 함수
       function scrollBottom() {
         messageList.scrollTo(0, messageList.scrollHeight);
       }
+
+      socket.on("accessCheck", (roomList, username) => {
+        modalBody.textContent = "";
+        roomList.forEach((res) => {
+          addVisitor(res);
+        });
+      });
 
       // 새로운 접속자를 추가하는 함수
       function addVisitor(visitorName) {
@@ -618,13 +380,22 @@
         visitorElement.id = visitorName;
         visitorElement.addEventListener("click", function () {
           //이름을 눌렀을 때 모달이 닫히게 하는 이벤트
-          $("#modal").modal("hide");
+          $("#staticBackdrop").modal("hide");
+
           //그 방으로 들어가게 함
           otherName = visitorName;
-          OtherPerson1.innerText = otherName;
+          if(username == otherName){
+            alert("자신의 이름은 선택할 수 없습니다.")
+          }else{
+            OtherPerson1.innerText = otherName;
           alert(`${otherName}님 방에 입장하였습니다.`);
+
           //create -> 방 만들기
           socket.emit("create", otherName, username);
+          //그 방에 입장하면 p태그 삭제시켜버림(알람삭제)
+          const pTag = document.querySelector(`#${otherName}msg`)
+          pTag.remove();
+          }
         });
         modalBody.appendChild(visitorElement);
       }
@@ -666,12 +437,7 @@
       const OtherPerson1 = document.querySelector("#OtherPerson1");
       const OtherPerson2 = document.querySelector("#OtherPerson2");
       // 현재 접속자 (모달화면) 갱신하는 거
-      socket.on("accessCheck", (roomList, username) => {
-        modalBody.textContent = "";
-        roomList.forEach((res) => {
-          addVisitor(res);
-        });
-      });
+
 
       //현재 접속자 계속 찾아서 새로 생기면 불 바꾸기
       //현재 접속자와 내 채팅방에 있는 사람이 같으면 초록불로 바꿔주기
@@ -679,7 +445,6 @@
         roomList.forEach((room) => {
           myRoomList.forEach((myRoom) => {
             if (room == myRoom) {
-              console.log("방금 접속한사람?", myRoom);
               document.querySelector(`#${myRoom}`).style.color = "green";
             }
           });
@@ -687,11 +452,13 @@
       });
 
       //나가면 회색으로 변하는 이벤트
-      socket.on("deleteList", (username) => {
-        document.querySelector(`#${username}`).style.color = "gray";
-      });
+      // socket.on("deleteList", (username) => {
+      //   document.querySelector(`#${username}`).style.color = "gray";
+      // });
       //내가 채팅하고 잇는 방 불러오고 -> 그 채팅방 미리보기 메시지까지 가져오는거
       socket.on("chatList", async (username, roomList) => {
+        document.querySelector(".chatList").innerHTML = ""
+        myRoomList = [];
         //참여 채팅방 불러오기
         const listResult = await axios({
           method: "POST",
@@ -700,10 +467,10 @@
             username: username,
           },
           //방 불러올 때 내가 읽지 않은 채팅의 수를 가져옴
-
           //각 방의 메세지 하나씩 불러오기
         });
-        for (const myMessage of listResult.data) {
+        let i = 0;
+        for (const myMessage of listResult.data.myJoinRoom) {
           const messageResult = await axios({
             method: "POST",
             url: "/myMessage",
@@ -715,7 +482,8 @@
             formatTime(messageResult.data.row),
             messageResult.data.send,
             messageResult.data.message,
-            pic3
+            pic3,
+            listResult.data.notReadMessage[i]
           );
           //나랑 채팅방 만들어진 사람 배열에 저장해놓기
           myRoomList.push(messageResult.data.send);
@@ -727,10 +495,12 @@
             );
             if (currentList == messageResult.data.send) {
               changeElement.style.color = "green";
+              break
             } else {
               changeElement.style.color = "gray";
             }
           }
+          i++;
         }
       });
       //방 번호 정해서 들어가기
@@ -746,8 +516,6 @@
             myName: username,
           },
         });
-        console.log("현재 유저목록", nowUserList.data);
-        console.log(nowUserList.data.indexOf(otherName));
         //유저 리스트에 있는 사람들만 방에 초대할 수 있음
         if (otherName == username) {
           alert("다른 이름을 입력해주세요.");
@@ -761,10 +529,14 @@
             // OtherPerson2.innerText = otherName;
           });
           alert(`${otherName}님 방에 입장하였습니다.`);
+          //방 들어가면 p태그 삭제시켜버려서 알람 없애기
+          const pTag = document.querySelector(`#${otherName}msg`)
+          pTag.remove();
         } else {
           //없으면 가입되지 않은 사람이라고 해줌
           alert("가입되지 않은 사용자 입니다.");
         }
+        
       });
 
       //메시지 보내는 이벤트
@@ -772,9 +544,9 @@
         e.preventDefault();
         //메시지 input
         const message = document.querySelector("#message");
-        socket.emit("sendMessage", message.value, username, otherName);
-        scrollBottom();
-        message.value = "";
+          socket.emit("sendMessage", message.value, username, otherName);
+          scrollBottom();
+          message.value = "";
       });
 
       //보낸 메시지 받는 이벤트
@@ -805,7 +577,6 @@
           const postMessage = res.data.chatMessage;
           postMessage.forEach(async (row) => {
             //내가 보낸 메시지는 오른쪽에 출력
-            console.log("체크된 값은?", row.checked);
             if (row.send == username) {
               const newChatMessage = createRightMessage(
                 row.message,
@@ -840,6 +611,7 @@
           $("#messageStatus")[0].style.display = "none";
         }, 500);
       });
+
     </script>
     <!-- 폰트어썸 코드 -->
     <script

@@ -1,14 +1,10 @@
-const {board, comment, like} = require('../models')
+const {board, comment, like, Class} = require('../models')
 const {Op} =require('sequelize')
 const Sequelize = require('sequelize')
 
 exports.main = (req, res) => {
     res.render('index');
 };
-
-exports.Mypage = (req,res) => {
-    res.render('Mypage')
-}
 
 ///// 게시판 메인페이지
 exports.BoardMain = async (req,res) => {
@@ -135,4 +131,11 @@ exports.CommentWrite =(req,res) => {
         console.log(result)
         res.json({result:true})
     })
+}
+
+///////////////리더 클래스 생성
+exports.ClassMake = async (req,res) => {
+    const {className,leader} =req.body
+    const result = await Class.create({className,leader})
+    res.json({res:true,result})
 }
