@@ -116,6 +116,7 @@ body {
 }
 .left-section .chatList .img img {
   width: 30px;
+  height: 25px;
   border-radius: 50%;
 }
 .left-section .chatList .img i {
@@ -132,7 +133,7 @@ body {
   position: relative;
 }
 .left-section .chatList .desc h5 {
-  margin-top: 6px;
+  margin-top: 9px;
   line-height: 5px;
 }
 .left-section .chatList .desc .time {
@@ -282,4 +283,22 @@ body {
   left: 0;
   top: 0;
   opacity: 0;
+}
+.addon {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 15px;
+  padding-top: 10px;
+  padding-bottom: 5px;
+}
+.addon p {
+  margin-bottom: 0;
+  background: red;
+  color: white;
+  border-radius: 100%;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  font-weight: bold;
+  padding-top: 0;
 }
