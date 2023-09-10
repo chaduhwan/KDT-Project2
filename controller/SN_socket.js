@@ -31,8 +31,8 @@ exports.connection = (io, socket) => {
   //진짜 입장하는 방 번호
   let realNumber;
 
-  //접속할 때마다 계속 내 이름으로 된 방으로 들어감
-  // socket?.join(userName);
+  //접속할 때마다 계속 내 이름으로 된 방으로 들어감(알람 날리려고)
+  socket?.join(userName);
 
   //접속하면 내 채팅방 목록 불러와주는거(나중에 채팅방 눌렀을 때 이벤트로 바꾸기)
   socket.emit("chatList", userName, roomList);
@@ -120,6 +120,7 @@ exports.connection = (io, socket) => {
       //내가 들어간 방 리스트에 들어가려는 방이 있으면 join은 안함
       if (roomList.join("").includes(realNumber)) {
         console.log("이미있음");
+        socket.emit("reload");
         socket.join(realNumber);
       } else {
         //리스트에 없으면 방에 join 시켜줌
