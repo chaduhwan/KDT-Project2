@@ -16,6 +16,10 @@ const Model = (sequelize) => {
             type : DataTypes.STRING(255),
             allowNull : false,
         },
+        token : {
+            type : DataTypes.STRING(255),
+            allowNull : false,
+        }
     })
 };
 

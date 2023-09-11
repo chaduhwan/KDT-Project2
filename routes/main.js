@@ -1,14 +1,25 @@
 const express = require("express");
 const router = express.Router();
 
-const C_controller = require("../controller/CH_Cmain");
-const M_controller = require("../controller/MA_Cmain");
-const S_controller = require("../controller/SN_Cmain");
-const T_controller = require("../controller/TH_Cmain");
-const multer = require("multer");
-const path = require("path");
-const multerS3 = require("multer-s3");
-const aws = require("aws-sdk");
+
+const C_controller = require('../controller/CH_Cmain');
+const M_controller = require('../controller/MA_Cmain');
+const S_controller = require('../controller/SN_Cmain');
+const T_controller = require('../controller/TH_Cmain');
+const multer = require('multer');
+const path = require('path');
+const multerS3 = require('multer-s3');
+const aws = require('aws-sdk');
+
+///////Board Enter
+router.get("/enter/board",C_controller.BoardEnter)
+
+////////Subject Make
+router.post("/subject/make",C_controller.Subjectmake)
+
+/////////Subject Enter
+router.post("/subject/enter",C_controller.EnterSubject)
+
 
 ///////Board page
 router.get("/board", C_controller.BoardMain);
@@ -26,7 +37,6 @@ router.post("/board/search", C_controller.BoardSearch);
 router.delete("/board/delete", C_controller.BoardDelete);
 
 //////Board Like
-
 router.post("/board/like", C_controller.BoardLike);
 
 //////comment Write
@@ -34,6 +44,9 @@ router.post("/comment/write", C_controller.CommentWrite);
 
 /////// class Make
 router.post("/class/make", C_controller.ClassMake);
+
+/////// class Signin
+router.post('/class/signin',C_controller.ClassSignin)
 
 //메인화면
 router.get("/main", M_controller.classMain);
