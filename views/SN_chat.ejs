@@ -36,9 +36,7 @@
 
     <link rel="stylesheet" href="/public/css/chat.css" />
     <title>채팅방</title>
-    <style>
-
-    </style>
+    <style></style>
   </head>
   <body>
     <div class="main-section">
@@ -77,7 +75,12 @@
               <div class="chatList">
                 <div class="img">
                   <i class="fa fa-circle" style="color: green"></i>
-                  <img width="64" height="64" src="https://img.icons8.com/pastel-glyph/64/groups--v4.png" alt="groups--v4"/>
+                  <img
+                    width="64"
+                    height="64"
+                    src="https://img.icons8.com/pastel-glyph/64/groups--v4.png"
+                    alt="groups--v4"
+                  />
                 </div>
                 <div class="desc" id="groupChatRoom">
                   <small class="time"></small>
@@ -94,29 +97,7 @@
         <!-- 채팅창 section -->
         <div class="right-section">
           <div class="message" style="overflow-y: scroll">
-            <ul id="chat-messages">
-              <!-- 상대방이 보낸 메시지 -->
-              <!-- <li class="msg-left">
-                <div class="msg-left-sub">
-                  <img
-                    src="https://t1.daumcdn.net/cfile/tistory/27738433597DCB1312"
-                  />
-                  <div class="msg-desc">왼쪽내용 입력하는 곳!!</div>
-                  <small>시간입력</small>
-                </div>
-              </li> -->
-              <!-- 내가보낸메시지 -->
-              <!-- <li class="msg-right">
-                <div class="msg-left-sub">
-                  <img
-                    src="https://i3.ruliweb.com/img/20/03/16/170dee06b1347bc9f.jpg"
-                  />
-                  <div class="msg-desc">오른쪽 내용 입력</div>
-                  <small>시간입력</small>
-                </div>
-              </li>
-              <li class="msg-day"><small>날짜입력하는 곳</small></li> -->
-            </ul>
+            <ul id="chat-messages"></ul>
           </div>
           <!-- 채팅창 section 끝나는곳 -->
           <!-- 메세지 보내는 곳 -->
@@ -175,8 +156,30 @@
         </div>
       </div>
     </div>
+
+    <!-- <input type="file" id="fildUpload" multiple />올리기~
+    <button type="button" onclick="picadd()">사진보내기</button> -->
+
     <!-- /////////////// -->
     <script>
+      function picadd() {
+        let fileUpload = document.querySelector("#fildUpload");
+        let newFormData = new FormData();
+        newFormData.append("11", fileUpload.files[0]);
+        console.log("폼데이터전송", fileUpload.files[0]);
+        console.log("폼데이터전송", newFormData);
+        //req.files로 받는다.
+        axios({
+          method: "POST",
+          url: "/practice",
+          data: newFormData,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }).then((res) => {
+          console.log(res.data);
+        });
+      }
       //소켓 설정
       const socket = io();
       //////////변수이름///////////////
@@ -292,73 +295,71 @@
           alert(`${otherName}님 방에 입장하였습니다.`);
           //create -> 방 만들기
           socket.emit("create", otherName, username);
-          const pTag = document.querySelector(`#${otherName}msg`)
+          const pTag = document.querySelector(`#${otherName}msg`);
           pTag.remove();
         });
         //알람의 수(notRead)의 개수가 0이 아니면 p태그까지 출력
-        if(notRead != 0){
+        if (notRead != 0) {
           const previewMessageElement = document.createElement("small");
-        previewMessageElement.textContent = previewMessage;
+          previewMessageElement.textContent = previewMessage;
 
-        const notReadMsg = document.createElement("p");
-        notReadMsg.textContent = notRead;
-        notReadMsg.id = otherPersonName+"msg"
+          const notReadMsg = document.createElement("p");
+          notReadMsg.textContent = notRead;
+          notReadMsg.id = otherPersonName + "msg";
 
-        ///desc div 안에 있는 small, h5, small
-        const timeElement = document.createElement("small");
-        timeElement.className = "time";
-        timeElement.textContent = time;
+          ///desc div 안에 있는 small, h5, small
+          const timeElement = document.createElement("small");
+          timeElement.className = "time";
+          timeElement.textContent = time;
 
-        const otherPersonElement = document.createElement("h5");
-        otherPersonElement.id = "OtherPerson2";
-        otherPersonElement.textContent = otherPersonName;
+          const otherPersonElement = document.createElement("h5");
+          otherPersonElement.id = "OtherPerson2";
+          otherPersonElement.textContent = otherPersonName;
 
-        ///
-        addonDiv.appendChild(previewMessageElement);
-        addonDiv.appendChild(notReadMsg);
+          ///
+          addonDiv.appendChild(previewMessageElement);
+          addonDiv.appendChild(notReadMsg);
 
-        imgDiv.appendChild(imgIcon);
-        imgDiv.appendChild(imgElement);
+          imgDiv.appendChild(imgIcon);
+          imgDiv.appendChild(imgElement);
 
-        descDiv.appendChild(timeElement);
-        descDiv.appendChild(otherPersonElement);
-        descDiv.appendChild(addonDiv);
+          descDiv.appendChild(timeElement);
+          descDiv.appendChild(otherPersonElement);
+          descDiv.appendChild(addonDiv);
 
-        chatContainer.appendChild(imgDiv);
-        chatContainer.appendChild(descDiv);
-        return chatContainer;
-        //알람의 개수가 0개면 p태그는 appendChild 하지 않음
-        } else{
-        const previewMessageElement = document.createElement("small");
-        previewMessageElement.textContent = previewMessage;
+          chatContainer.appendChild(imgDiv);
+          chatContainer.appendChild(descDiv);
+          return chatContainer;
+          //알람의 개수가 0개면 p태그는 appendChild 하지 않음
+        } else {
+          const previewMessageElement = document.createElement("small");
+          previewMessageElement.textContent = previewMessage;
 
-        const notReadMsg = document.createElement("p");
+          const notReadMsg = document.createElement("p");
 
+          ///desc div 안에 있는 small, h5, small
+          const timeElement = document.createElement("small");
+          timeElement.className = "time";
+          timeElement.textContent = time;
 
-        ///desc div 안에 있는 small, h5, small
-        const timeElement = document.createElement("small");
-        timeElement.className = "time";
-        timeElement.textContent = time;
+          const otherPersonElement = document.createElement("h5");
+          otherPersonElement.id = "OtherPerson2";
+          otherPersonElement.textContent = otherPersonName;
 
-        const otherPersonElement = document.createElement("h5");
-        otherPersonElement.id = "OtherPerson2";
-        otherPersonElement.textContent = otherPersonName;
+          ///
+          addonDiv.appendChild(previewMessageElement);
 
-        ///
-        addonDiv.appendChild(previewMessageElement);
+          imgDiv.appendChild(imgIcon);
+          imgDiv.appendChild(imgElement);
 
-        imgDiv.appendChild(imgIcon);
-        imgDiv.appendChild(imgElement);
+          descDiv.appendChild(timeElement);
+          descDiv.appendChild(otherPersonElement);
+          descDiv.appendChild(addonDiv);
 
-        descDiv.appendChild(timeElement);
-        descDiv.appendChild(otherPersonElement);
-        descDiv.appendChild(addonDiv);
-
-        chatContainer.appendChild(imgDiv);
-        chatContainer.appendChild(descDiv);
-        return chatContainer;
+          chatContainer.appendChild(imgDiv);
+          chatContainer.appendChild(descDiv);
+          return chatContainer;
         }
-
       }
 
       //스크롤 다운 함수
@@ -384,17 +385,17 @@
 
           //그 방으로 들어가게 함
           otherName = visitorName;
-          if(username == otherName){
-            alert("자신의 이름은 선택할 수 없습니다.")
-          }else{
+          if (username == otherName) {
+            alert("자신의 이름은 선택할 수 없습니다.");
+          } else {
             OtherPerson1.innerText = otherName;
-          alert(`${otherName}님 방에 입장하였습니다.`);
+            alert(`${otherName}님 방에 입장하였습니다.`);
 
-          //create -> 방 만들기
-          socket.emit("create", otherName, username);
-          //그 방에 입장하면 p태그 삭제시켜버림(알람삭제)
-          const pTag = document.querySelector(`#${otherName}msg`)
-          pTag.remove();
+            //create -> 방 만들기
+            socket.emit("create", otherName, username);
+            //그 방에 입장하면 p태그 삭제시켜버림(알람삭제)
+            const pTag = document.querySelector(`#${otherName}msg`);
+            pTag.remove();
           }
         });
         modalBody.appendChild(visitorElement);
@@ -438,7 +439,6 @@
       const OtherPerson2 = document.querySelector("#OtherPerson2");
       // 현재 접속자 (모달화면) 갱신하는 거
 
-
       //현재 접속자 계속 찾아서 새로 생기면 불 바꾸기
       //현재 접속자와 내 채팅방에 있는 사람이 같으면 초록불로 바꿔주기
       socket.on("getAccess", (roomList) => {
@@ -457,7 +457,7 @@
       // });
       //내가 채팅하고 잇는 방 불러오고 -> 그 채팅방 미리보기 메시지까지 가져오는거
       socket.on("chatList", async (username, roomList) => {
-        document.querySelector(".chatList").innerHTML = ""
+        document.querySelector(".chatList").innerHTML = "";
         myRoomList = [];
         //참여 채팅방 불러오기
         const listResult = await axios({
@@ -495,7 +495,7 @@
             );
             if (currentList == messageResult.data.send) {
               changeElement.style.color = "green";
-              break
+              break;
             } else {
               changeElement.style.color = "gray";
             }
@@ -530,13 +530,12 @@
           });
           alert(`${otherName}님 방에 입장하였습니다.`);
           //방 들어가면 p태그 삭제시켜버려서 알람 없애기
-          const pTag = document.querySelector(`#${otherName}msg`)
+          const pTag = document.querySelector(`#${otherName}msg`);
           pTag.remove();
         } else {
           //없으면 가입되지 않은 사람이라고 해줌
           alert("가입되지 않은 사용자 입니다.");
         }
-        
       });
 
       //메시지 보내는 이벤트
@@ -544,9 +543,9 @@
         e.preventDefault();
         //메시지 input
         const message = document.querySelector("#message");
-          socket.emit("sendMessage", message.value, username, otherName);
-          scrollBottom();
-          message.value = "";
+        socket.emit("sendMessage", message.value, username, otherName);
+        scrollBottom();
+        message.value = "";
       });
 
       //보낸 메시지 받는 이벤트
@@ -611,7 +610,6 @@
           $("#messageStatus")[0].style.display = "none";
         }, 500);
       });
-
     </script>
     <!-- 폰트어썸 코드 -->
     <script

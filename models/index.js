@@ -42,6 +42,10 @@ db.Subject.belongsTo(db.Class, { foreignKey: 'ClassId' });
 db.Subject.hasMany(db.board, { foreignKey: 'SubjectId' });
 db.board.belongsTo(db.Subject, { foreignKey: 'SubjectId' });
 
+/////////////클래스와 게시글
+db.Class.hasMany(db.board, { foreignKey: 'ClassId' });
+db.board.belongsTo(db.Class, { foreignKey: 'ClassId' });
+
 ////////////게시글과 댓글
 db.board.hasMany(db.comment, { foreignKey: 'BoardId' });
 db.comment.belongsTo(db.board, { foreignKey: 'BoardId' });

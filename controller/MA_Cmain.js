@@ -11,6 +11,10 @@ const kakao = {
 
 /////////////////////GET///////////////////////
 
+exports.classMain = (req, res) => {
+  res.render("MA_classMain");
+};
+
 exports.main = async (req, res) => {
   if (req.session.isLogined) {
     const data = await User.findOne({ where: { id: req.session.userId } });
@@ -316,15 +320,21 @@ exports.profile = async (req, res) => {
       where: { userid: req.session.userId },
     }); //유저id 가 가지고 있는 클래스  row 반환
     let Classes = [];
-    for (const ele of myClass) {
+
+    let ClassesId = [];
+    for(const ele of myClass) {
+
       const myClassName = await Class.findOne({
         where: { ClassId: ele.classClassId }, // 원하는 조건을 지정합니다.
       });
-      console.log(myClassName);
-      Classes.push(myClassName.className);
+
+      console.log(myClassName)
+      Classes.push(myClassName.className)
+      ClassesId.push(myClassName.ClassId)
+
     }
     // console.log('프로필', data)
-    res.render("MA_profile", { data, Classes });
+    res.render("MA_profile", { data, Classes, ClassesId});
   } else {
     res.render("MA_login");
   }
