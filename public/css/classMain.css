@@ -1,21 +1,55 @@
-html {
+body {
   margin: 0;
-  padding: 5%;
+  /* padding: 20px; */
 }
-/* .main {
+.main {
   width: 100vw;
   height: 100vh;
-  background-color: #9ac5f4;
+  background-color: rgb(73, 147, 250, 0.6);
+  /* opacity: 0.6; */
   display: flex;
-  justify-content: center; 
-  align-items: center; 
+  justify-content: center;
+  align-items: center;
   margin: 0;
-} 
-*/
+}
 
-.container {
-  width: 95vw;
-  height: 95vh;
-  border-radius: 5%;
-  background-color: white;
+.class_container {
+  width: 94vw;
+  height: 97vh;
+  border-radius: 20px;
+  background-color: rgb(255, 255, 255);
+  padding: 0;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); /* 그림자 설정 */
+}
+
+.head1 {
+  display: flex;
+  padding: 10px;
+  border-radius: 20px 20px 0 0;
+  background-color: rgba(73, 147, 250);
+  align-items: center;
+  justify-content: space-between;
+}
+.head1-logo {
+  margin-left: 10px;
+  font-size: 20px;
+  color: white;
+  align-items: center;
+}
+.head1-logo > span {
+  color: white;
+}
+.head1-profile {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.nav {
+  opacity: 0.6;
+  /* display: flex; */
+  /* justify-content: space-between; */
+  justify-content: space-around;
+}
+.nav-link {
+  flex: 1;
 }
