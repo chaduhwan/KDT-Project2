@@ -5,18 +5,17 @@
   font-weight: 400;
   font-style: normal;
 }
+
 * {
   font-family: "Pretendard-Regular";
 }
 .logo-img {
   height: 28px;
 }
-
 .dark-mode .logo-img {
   filter: invert(100%);
 }
 .head {
-  /* background-color: yellow; */
   display: flex;
   justify-content: space-between;
   height: 40px;
@@ -25,11 +24,15 @@
 .head_image > img {
   width: 90px;
 }
-.login_banner {
+.join_banner {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 50px;
+  margin-top: 100px;
+}
+.modal-footer > button {
+  background-color: #000;
+  color: #fff;
 }
 .banner_icons {
   display: flex;
@@ -40,40 +43,40 @@
 .banner_icons > div {
   padding-left: 20px;
 }
-.login_banner > img {
+.join_banner > img {
   width: 250px;
-  background-color: #4993fa;
 }
-.login_email {
-  display: flex;
-  flex-direction: column;
-  padding-left: 15%;
-}
-.email_sub > a {
-  color: black;
-  text-decoration: none;
-}
-
-.login_password {
+.join_email,
+.join_name {
   display: flex;
   flex-direction: column;
   padding-left: 15%;
 }
 
-.login_email input {
+/* input{
+    outline-style: none;
+} */
+.join_password {
+  display: flex;
+  flex-direction: column;
+  /* padding-left: 15%; */
+}
+
+.join_email input,
+.join_name input {
   width: 83%;
   border-style: solid;
   border-width: 0px 0px 1px 0px;
   border-color: rgb(218, 217, 217);
 }
 
-.login_password input {
+.join_password input {
   width: 83%;
   border-style: solid;
   border-width: 0px 0px 1px 0px;
   border-color: rgb(218, 217, 217);
 }
-#loginBtn {
+.join {
   font-weight: bold;
 }
 .h3_email,
@@ -84,19 +87,26 @@
   line-height: 18px;
   padding-top: 10px;
 }
-.modal-footer > button {
-  background-color: #000;
-  color: #fff;
-}
-.login_par {
+.join_par {
   display: flex;
   width: 100%;
-  justify-content: center;
-  margin-top: 20px;
+  /* justify-content: center; */
+  margin-top: 15px;
 }
-#loginBtn {
+.joinTerms {
   display: flex;
-  width: 70%;
+  /* padding-left: 15%; */
+}
+.joinTerms2 > div {
+  margin-top: 10px;
+}
+.mola {
+  display: flex;
+  justify-content: center;
+}
+.join {
+  display: flex;
+  width: 83%;
   height: 50px;
   align-items: center;
   justify-content: center;
@@ -105,16 +115,15 @@
   border-radius: 10px;
   cursor: pointer;
 }
-.login_ul {
+.join_ul {
   list-style: none;
   display: flex;
   justify-content: space-evenly;
   padding-left: 0px;
   padding-top: 20px;
 }
-.login_ul > li {
-  font-size: 16px;
-  cursor: pointer;
+.join_ul > li {
+  font-size: 14px;
 }
 /* .email_sub::after{
     position: absolute;
@@ -128,14 +137,14 @@
     margin-left: 7%;
     color: rgb(218, 217, 217);
 } */
-.social_login {
+.social_join {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 20px;
 }
-.social_login > button {
+.social_join > button {
   width: 70%;
   height: 50px;
   border-radius: 10px;
@@ -145,18 +154,45 @@
   border: 1px solid rgb(218, 217, 217);
   font-weight: bold;
 }
-.social_login > button > img {
+.social_join > button > img {
   display: flex;
   position: absolute;
   width: 25px;
   height: 25px;
   border-top: 0px;
-  border-radius: 7px;
 }
 input:focus {
   outline: none;
   border-bottom: 2px solid black;
 }
+input[type="checkbox"] {
+  accent-color: black;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+/* 모달 */
+#agree {
+  background-color: white;
+  border: 0px;
+  color: black;
+  margin: 0px;
+  font-weight: bold;
+  padding: 0px 0px 3px 0px;
+  text-decoration: underline;
+}
+#exampleModalLabel {
+  font-weight: bold;
+}
+.modal-body {
+  max-height: 400px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.invalid {
+  border-color: red;
+}
+
 /* 패스워드, 이메일 맞는지 틀린지 */
 .errorPwCheck {
   color: red;
@@ -168,44 +204,32 @@ input:focus {
   font-size: 7px;
   font-weight: bold;
 }
-
-#backGround {
-  width: 500px;
-  height: 88vh;
-  border-radius: 20px;
-  background-color: rgb(255, 255, 255);
-  padding: 0;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); /* 그림자 설정 */
-}
-body {
-  margin: 0;
-  /* padding: 20px; */
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(73, 147, 250, 0.6);
-  /* opacity: 0.6; */
+.join_par #sociealLogin {
   display: flex;
-  justify-content: center;
+  width: 39.65%;
+  height: 50px;
   align-items: center;
-  margin: 0;
-  /* 작은 물고기 도트 이미지 URL 설정 */
-  background-image: url("/public/default/tile_background.png");
-  /* background-repeat: repeat; 이미지 반복 설정 (기본값은 repeat) */
-  /* background-size: 25px; 이미지 크기 설정 (도트 크기) */
+  justify-content: center;
+  background-color: white;
+  border: 1px solid rgb(218, 217, 217);
+  border-radius: 10px;
+  cursor: pointer;
+  margin-right: 20px;
 }
-body::before {
-  opacity: 0.6;
-}
-.main {
+#sociealLogin img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border-radius: 7px;
 }
 @media screen and (min-width: 770px) {
-  .login_container {
+  .join_container {
     display: flex;
     flex-direction: column;
     max-width: 500px;
     margin: 0 auto;
   }
-  .login_ul > li {
-    font-size: 16px;
+  .join_ul > li {
+    font-size: 12px;
   }
 }
