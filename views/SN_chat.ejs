@@ -196,10 +196,12 @@
       //나한테 지금 만들어진 채팅방이름
       let myRoomList = [];
       //사진1번, 2번 (이건 나중에 프로필사진 추가하면 삭제하기)
-      const pic1 = "https://t1.daumcdn.net/cfile/tistory/27738433597DCB1312";
-      const pic2 = "https://i3.ruliweb.com/img/20/03/16/170dee06b1347bc9f.jpg";
-      const pic3 =
-        "https://i.namu.wiki/i/sYSJY7DwDYvqCrRvxzAgqpbm7EQzxE6jKPBhRBJGLwRzWvA-uj3YEQjgAVfR1snu3tian_0NYAtv2b06664WkA.webp";
+      let mypic;  //내사진
+      // let otherpic="public/uploads/logo.png"; //상대방사진
+      // let otherpic = "https://t1.daumcdn.net/cfile/tistory/27738433597DCB1312";
+      let otherpic;
+      // const pic3 ="https://i.namu.wiki/i/sYSJY7DwDYvqCrRvxzAgqpbm7EQzxE6jKPBhRBJGLwRzWvA-uj3YEQjgAVfR1snu3tian_0NYAtv2b06664WkA.webp";
+      let pic3;
       ////////////////////////////////
 
       ////////////함수////////////////
@@ -296,7 +298,9 @@
           //create -> 방 만들기
           socket.emit("create", otherName, username);
           const pTag = document.querySelector(`#${otherName}msg`);
-          pTag.remove();
+          if(pTag){
+            pTag.remove();
+          }
         });
         //알람의 수(notRead)의 개수가 0이 아니면 p태그까지 출력
         if (notRead != 0) {
@@ -470,6 +474,7 @@
           //각 방의 메세지 하나씩 불러오기
         });
         let i = 0;
+        console.log("내 방 목록>>>", listResult.data.myJoinRoom);
         for (const myMessage of listResult.data.myJoinRoom) {
           const messageResult = await axios({
             method: "POST",
@@ -478,6 +483,14 @@
               send: myMessage,
             },
           });
+          const otherProfilePicture = await axios({
+            method : "POST",
+            url : '/myprofile',
+            data:{
+              username: myMessage,
+            }
+          });
+          pic3 = `${otherProfilePicture.data.picName}`; 
           const preViewMessage = await createMessageElement(
             formatTime(messageResult.data.row),
             messageResult.data.send,
@@ -551,10 +564,10 @@
       //보낸 메시지 받는 이벤트
       socket.on("newMessage", (message, userid) => {
         if (userid == username) {
-          const newChatMessage = createRightMessage(message, pic2, sendTime);
+          const newChatMessage = createRightMessage(message, mypic, sendTime);
           chatMessageList.appendChild(newChatMessage);
         } else {
-          const newChatMessage = createLeftMessage(pic1, message, sendTime);
+          const newChatMessage = createLeftMessage(otherpic, message, sendTime);
           chatMessageList.appendChild(newChatMessage);
         }
         //메시지 받으면 입력중입니다. 문구 안 보이게 바로 삭제
@@ -579,14 +592,14 @@
             if (row.send == username) {
               const newChatMessage = createRightMessage(
                 row.message,
-                pic2,
+                mypic,
                 formatTime(row)
               );
               chatMessageList.appendChild(newChatMessage);
             } else {
               //다른 사람이 보낸 메시지는 왼쪽에 출력
               const newChatMessage = createLeftMessage(
-                pic1,
+                otherpic,
                 row.message,
                 formatTime(row)
               );
@@ -596,7 +609,29 @@
         });
       });
       ///이전채팅내용 끝부분//////
+      //상대방 프로필 사진 불러오기
+      socket.on("otherprofile",async (otherRoom)=>{
+        console.log("??!!!!!!!!!!!!!!!!!!!!", otherRoom);
+        let otherprofile = await axios({
+          method :'POST',
+          url : '/otherprofile',
+          data:{otherRoom}
+        })
+        console.log("이건뭐죠", otherprofile.data.otherpicName);
+        otherpic = `${otherprofile.data.otherpicName}`;
+        console.log("다른사람 사진", otherpic)
+      })
 
+      //내 프로필 사진 불러오기
+      socket.on("myprofile", async (username)=>{
+        let myProfile = await axios({
+          method:'POST',
+          url : '/myprofile',
+          data: {username}
+        })
+        mypic = `${myProfile.data.picName}`
+        console.log("내사진", mypic)
+      })
       //타이핑중..
       $("#message").on("input", function () {
         const msgValue = $("#message").val();

@@ -41,51 +41,34 @@
               <img src="../public/default/logo-removebg.png" />
             </div>
           </div>
-          <form id="loginForm">
+          <form id="loginForm"></form>
             <div class="login_email">
               <h3 class="h3_email">이메일 주소</h3>
-              <input
-                type="email"
-                id="id"
-                placeholder="예) honggildong@gmail.com"
-              />
+              
+              <input type="email" id="email" placeholder="예) honggildong@gmail.com" />
               <div class="errorEmail"></div>
             </div>
             <div class="login_password">
               <h3 class="h3_password">비밀번호</h3>
               <input
-                type="password"
-                id="pw"
-                placeholder="비밀번호 최소 6자 이상 입력"
-              />
+                type="password" id="pw" placeholder="비밀번호 최소 6자 이상 입력"/>
+
               <div class="errorPassword"></div>
             </div>
             <div class="login_par">
-              <button
-                type="button"
-                id="loginBtn"
-                data-bs-target="#joinus2"
-                data-bs-toggle="modal"
-                disabled
-              >
+              <button type="button" id="loginBtn">
                 로그인
               </button>
+            
             </div>
           </form>
           <div>
             <ul class="login_ul">
-              <!-- <li class="email_sub">
-              <a href="">회원가입</a>
-            </li> -->
               <li class="email_find" onclick="crew()">크루로 회원가입</li>
               <li onclick="leader()">리더로 회원가입</li>
             </ul>
           </div>
           <div class="social_login">
-            <!-- <button type="button" class="naver_login">
-            <img src="../public/default/naver.ico" />
-            <span>네이버 로그인</span>
-          </button> -->
             <button type="button" class="google_login" onclick="goGoogle()">
               <img src="../public/default/google_logo.png" />
               <span>구글 로그인</span>
@@ -94,41 +77,6 @@
               <img src="../public/default/KakaoTalk_logo.svg.webp" />
               <span>카카오 로그인</span>
             </button>
-          </div>
-        </div>
-        <!-- 회원가입 버튼 눌렀을 때 나오는 모달창 -->
-        <div class="modal" tabindex="-1" id="joinus2">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5
-                  class="modal-title"
-                  style="font-weight: bold; font-size: 20px"
-                >
-                  로그인
-                </h5>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                  onclick="userLogin()"
-                ></button>
-              </div>
-              <div class="modal-body" style="font-weight: bold">
-                <p>로그인이 완료되었습니다.</p>
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                  id="joinCheck2"
-                >
-                  확인
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -218,7 +166,7 @@
         window.location.href = "/join";
       }
     </script>
-    <script type="text/javascript" src="../public/js/loginPage_js.js"></script>
+    <!-- <script type="text/javascript" src="../public/js/loginPage_js.js"></script> -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
