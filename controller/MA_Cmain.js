@@ -168,7 +168,7 @@ exports.kakao_callback = async (req, res) => {
     } else {
       //이메일이 없으면 메인화면으로 이동
       res.send(
-        `<script>alert('가입되지 않은 사용자입니다.'); document.location.href='/';</script>`
+        `<script>alert('가입되지 않은 사용자입니다.'); document.location.href='/login';</script>`
       );
     }
   } catch (error) {
@@ -301,7 +301,7 @@ exports.google_callback = async (req, res) => {
     } else {
       //이메일이 없으면 메인화면으로 이동
       res.send(
-        `<script>alert('가입되지 않은 사용자입니다.'); document.location.href='/';</script>`
+        `<script>alert('가입되지 않은 사용자입니다.'); document.location.href='/login';</script>`
       );
     }
   } catch (error) {

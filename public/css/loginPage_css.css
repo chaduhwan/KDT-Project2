@@ -1,0 +1,180 @@
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+* {
+  font-family: "Pretendard-Regular";
+}
+.logo-img {
+  height: 28px;
+}
+
+.dark-mode .logo-img {
+  filter: invert(100%);
+}
+.head {
+  /* background-color: yellow; */
+  display: flex;
+  justify-content: space-between;
+  height: 40px;
+  margin-top: 10px;
+}
+.head_image > img {
+  width: 90px;
+}
+.login_banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 100px;
+}
+.banner_icons {
+  display: flex;
+  flex-direction: row;
+  font-size: 25px;
+  margin-right: 20px;
+}
+.banner_icons > div {
+  padding-left: 20px;
+}
+.login_banner > img {
+  width: 250px;
+}
+.login_email {
+  display: flex;
+  flex-direction: column;
+  padding-left: 15%;
+}
+.email_sub > a {
+  color: black;
+  text-decoration: none;
+}
+
+.login_password {
+  display: flex;
+  flex-direction: column;
+  padding-left: 15%;
+}
+
+.login_email input {
+  width: 83%;
+  border-style: solid;
+  border-width: 0px 0px 1px 0px;
+  border-color: rgb(218, 217, 217);
+}
+
+.login_password input {
+  width: 83%;
+  border-style: solid;
+  border-width: 0px 0px 1px 0px;
+  border-color: rgb(218, 217, 217);
+}
+#loginBtn {
+  font-weight: bold;
+}
+.h3_email,
+.h3_password {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: inherit;
+  line-height: 18px;
+  padding-top: 10px;
+}
+.modal-footer > button {
+  background-color: #000;
+  color: #fff;
+}
+.login_par {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin-top: 20px;
+}
+#loginBtn {
+  display: flex;
+  width: 70%;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border: 1px solid rgb(218, 217, 217);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.login_ul {
+  list-style: none;
+  display: flex;
+  justify-content: space-evenly;
+  padding-left: 0px;
+  padding-top: 20px;
+}
+.login_ul > li {
+  font-size: 14px;
+  cursor: pointer;
+}
+/* .email_sub::after{
+    position: absolute;
+    margin-left: 6%;
+    content: "|";
+    color: rgb(218, 217, 217);
+}
+.email_find::after{
+    position: absolute;
+    content: "|";
+    margin-left: 7%;
+    color: rgb(218, 217, 217);
+} */
+.social_login {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+}
+.social_login > button {
+  width: 70%;
+  height: 50px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  background-color: white;
+  border-width: 1px;
+  border: 1px solid rgb(218, 217, 217);
+  font-weight: bold;
+}
+.social_login > button > img {
+  display: flex;
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  border-top: 0px;
+}
+input:focus {
+  outline: none;
+  border-bottom: 2px solid black;
+}
+/* 패스워드, 이메일 맞는지 틀린지 */
+.errorPwCheck {
+  color: red;
+  font-size: 7px;
+  font-weight: bold;
+}
+.correctPwCheck {
+  color: rgb(8, 211, 8);
+  font-size: 7px;
+  font-weight: bold;
+}
+
+@media screen and (min-width: 770px) {
+  .login_container {
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .login_ul > li {
+    font-size: 12px;
+  }
+}
