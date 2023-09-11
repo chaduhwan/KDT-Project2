@@ -441,7 +441,7 @@ exports.delete_user = async (req, res) => {
 
 //로그아웃
 exports.logout = (req, res) => {
-  console.log(req.session.isLogined);
+  console.log("로그아웃중");
   req.session.destroy();
   res.json({ result: true });
 };
