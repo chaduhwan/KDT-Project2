@@ -1,0 +1,21 @@
+html {
+  margin: 0;
+  padding: 5%;
+}
+/* .main {
+  width: 100vw;
+  height: 100vh;
+  background-color: #9ac5f4;
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  margin: 0;
+} 
+*/
+
+.container {
+  width: 95vw;
+  height: 95vh;
+  border-radius: 5%;
+  background-color: white;
+}
