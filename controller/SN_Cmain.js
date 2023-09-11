@@ -94,26 +94,30 @@ exports.userList = async (req, res) => {
     console.log(error);
   }
 };
-exports.calendar = (req,res)=>{
-  res.render('SN_calendar')
-}
-exports.post_calendar = async(req,res)=>{
+exports.calendar = (req, res) => {
+  res.render("SN_calendar");
+};
+exports.post_calendar = async (req, res) => {
   await calendar.destroy({
-    where :{username : req.session.userName}
-  })
-  await req.body.forEach(res=>{
+    where: { username: req.session.userName },
+  });
+  await req.body.forEach((res) => {
     calendar.create({
-      username : req.session.userName,
-      title : res.title,
-      start : res.start,
-      end : res.end,
-      backgroundColor : res.backgroundColor,
-    })
-  })
-}
-exports.eventData = async (req,res)=>{
+      username: req.session.userName,
+      title: res.title,
+      start: res.start,
+      end: res.end,
+      backgroundColor: res.backgroundColor,
+    });
+  });
+};
+exports.eventData = async (req, res) => {
   const modelData = await calendar.findAll({
-    where : {username : req.session.userName}
-  })
+    where: { username: req.session.userName },
+  });
   res.send(modelData);
-}
+};
+exports.practice = (req, res) => {
+  console.log("온 값은?????????", req.files[0]);
+  res.send(req.files[0].location);
+};

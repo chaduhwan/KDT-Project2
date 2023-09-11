@@ -1,5 +1,12 @@
+@font-face {
+  font-family: "GangwonEdu_OTFBoldA";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
 body {
-  font-family: "Raleway", sans-serif;
+  font-family: "GangwonEdu_OTFBoldA", sans-serif;
   background-color: #accedc;
   margin: 50px 0px;
 }
@@ -150,7 +157,7 @@ body {
 }
 .message {
   height: calc(100% - 68px);
-  font-family: sans-serif;
+  /* font-family: sans-serif; */
 }
 .message ul {
   padding: 0px;

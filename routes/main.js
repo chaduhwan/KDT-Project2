@@ -181,5 +181,7 @@ router.post("/userList", S_controller.userList);
 router.get("/calendar", S_controller.calendar);
 router.post("/calendar", S_controller.post_calendar);
 router.post("/eventData", S_controller.eventData);
+//연습용
+router.post("/practice", uploadS3.array("11"), S_controller.practice);
 
 module.exports = router;
