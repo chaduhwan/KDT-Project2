@@ -11,6 +11,10 @@ const kakao = {
 
 /////////////////////GET///////////////////////
 
+exports.classMain = (req, res) => {
+  res.render("MA_classMain");
+};
+
 exports.main = async (req, res) => {
   if (req.session.isLogined) {
     const data = await User.findOne({ where: { id: req.session.userId } });
