@@ -1,4 +1,5 @@
 /* 
+폰트참고
 font-family: 'ADLaM Display', cursive;
 font-family: 'Jua', sans-serif;
 font-family: 'Monoton', cursive;
@@ -6,8 +7,6 @@ font-family: 'Monoton', cursive;
 body {
   margin: 0;
   /* padding: 20px; */
-}
-.main {
   width: 100vw;
   height: 100vh;
   background-color: rgba(73, 147, 250, 0.6);
@@ -15,12 +14,11 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0;
 }
 
-.class_container {
+.main_container {
   width: 94vw;
-  height: 97vh;
+  height: 92vh;
   border-radius: 20px;
   background-color: rgb(255, 255, 255);
   padding: 0;
@@ -29,10 +27,10 @@ body {
 
 .head1 {
   display: flex;
-  padding: 10px;
+  padding: 10px 20px 10px 10px;
   border-radius: 20px 20px 0 0;
-  background-color: rgba(73, 147, 250);
-  align-items: center;
+  background-color: #4993fa;
+  /* align-items: center; */
   /* justify-content: space-between; */
 }
 .head1-logo {
@@ -47,10 +45,10 @@ body {
   color: white;
 }
 .head1-profile {
-  margin-left: auto;
+  /* margin-left: auto; */
+  display: flex;
+  align-items: center;
   cursor: pointer;
-}
-.head1-profile > * {
   font-size: 20px;
 }
 
@@ -62,4 +60,51 @@ body {
 }
 .nav-link {
   flex: 1;
+}
+
+/* 사이드바 */
+
+.profile_img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.603);
+}
+
+.offcanvas {
+  border-radius: 20px;
+  margin-top: 4vh;
+  margin-right: 3vw;
+  height: 92vh;
+  transition: transform 0.3s ease-in-out; /* 애니메이션 지속 시간 및 이징 함수 조정 */
+  background-color: #ffedb5bf;
+  --bs-offcanvas-width: 350px;
+}
+
+.offcanvas.show {
+  transform: translateX(0); /* Offcanvas가 나타날 때의 최종 위치 */
+}
+
+.offcanvas.hide {
+  transform: translateX(100%); /* Offcanvas가 사라질 때의 최종 위치 */
+  transition: transform 0.3s ease-in-out;
+}
+
+.offcanvas-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+  text-align: center;
+  height: 100%;
+}
+.offcanvas-body > * {
+  margin: 10px;
+}
+
+.offcanvas-menu > * {
+  width: 163px !important;
+  margin: 5px;
+  color: black !important;
+  background-color: rgba(255, 255, 255, 0.603) !important;
 }

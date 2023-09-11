@@ -1,4 +1,4 @@
-const { User, UserTakeClass, Class, board } = require("../models/index");
+const { User, UserTakeClass, Class, board, map } = require("../models/index");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
 const nodemailer = require("nodemailer");
@@ -322,19 +322,17 @@ exports.profile = async (req, res) => {
     let Classes = [];
 
     let ClassesId = [];
-    for(const ele of myClass) {
-
+    for (const ele of myClass) {
       const myClassName = await Class.findOne({
         where: { ClassId: ele.classClassId }, // 원하는 조건을 지정합니다.
       });
 
-      console.log(myClassName)
-      Classes.push(myClassName.className)
-      ClassesId.push(myClassName.ClassId)
-
+      console.log(myClassName);
+      Classes.push(myClassName.className);
+      ClassesId.push(myClassName.ClassId);
     }
     // console.log('프로필', data)
-    res.render("MA_profile", { data, Classes, ClassesId});
+    res.render("MA_profile", { data, Classes, ClassesId });
   } else {
     res.render("MA_login");
   }
@@ -444,9 +442,9 @@ exports.delete_user = async (req, res) => {
 //장소찾기
 exports.bobSelect = async (req, res) => {
   const { placeId, placeName, placeAddress } = req.body;
-  const place = `${placeId}|${placeName}|${placeAddress}`;
+  // const place = `${placeId}|${placeName}|${placeAddress}`;
   console.log(place);
-  await board.update({ place }, { where: { BoardId: "2" } }); //보드 db에 더미데이터 생성하고 실행해야함
+  // await board.update({ place }, { where: { BoardId: "2" } }); //보드 db에 더미데이터 생성하고 실행해야함
   res.json(true);
 };
 
