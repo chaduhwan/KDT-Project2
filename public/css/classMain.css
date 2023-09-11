@@ -1,3 +1,8 @@
+/* 
+font-family: 'ADLaM Display', cursive;
+font-family: 'Jua', sans-serif;
+font-family: 'Monoton', cursive;
+ */
 body {
   margin: 0;
   /* padding: 20px; */
@@ -5,7 +10,7 @@ body {
 .main {
   width: 100vw;
   height: 100vh;
-  background-color: rgb(73, 147, 250, 0.6);
+  background-color: rgba(73, 147, 250, 0.6);
   /* opacity: 0.6; */
   display: flex;
   justify-content: center;
@@ -28,20 +33,25 @@ body {
   border-radius: 20px 20px 0 0;
   background-color: rgba(73, 147, 250);
   align-items: center;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 }
 .head1-logo {
+  display: flex;
   margin-left: 10px;
   font-size: 20px;
   color: white;
   align-items: center;
+  font-family: "ADLaM Display", cursive;
 }
 .head1-logo > span {
   color: white;
 }
 .head1-profile {
-  margin-right: 10px;
+  margin-left: auto;
   cursor: pointer;
+}
+.head1-profile > * {
+  font-size: 20px;
 }
 
 .nav {
