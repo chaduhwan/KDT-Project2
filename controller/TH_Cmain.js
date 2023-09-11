@@ -1,32 +1,5 @@
 const { Desk, Position, Chosen, File } = require('../models');
 const { Op } = require('sequelize');
-// const multerS3 = require('multer-s3');
-// const aws = require('aws-sdk');
-
-// // multer 설정 - aws
-// const upload = multer({
-//   storage: multerS3({
-//     s3: s3,
-//     bucket: 'kdt9-thbr-test', // aws내에 존재하는 버킷 중에 지금 쓸거
-//     acl: 'public-read', // 파일접근권한 (public-read로 해야 업로드된 파일이 공개)
-//     metadata: function (req, file, cb) {
-//       cb(null, { fieldName: file.fieldname });
-//     },
-//     key: function (req, file, cb) {
-//       cb(null, Date.now().toString() + '-' + file.originalname);
-//     },
-//   }),
-// });
-
-// // aws설정
-// aws.config.update({
-//   accessKeyId: process.env.ACCESSKEYID,
-//   secretAccessKey: process.env.SECRETACCESSKEY,
-//   region: 'ap-northeast-2',
-// });
-
-// // aws s3 인스턴스 생성
-// const s3 = new aws.S3();
 
 exports.test = (req, res) => {
   res.render('test');
@@ -38,20 +11,22 @@ exports.noteManager = async (req, res) => {
 
 exports.get_noteManager = async (req, res) => {
   try {
-    let data = await File.findAll();
+    // let data = await File.findAll();
+    let data = await File.findAll({ where: { userid: req.session.userId } });
     let arr = [];
     for (let i = 0; i < data.length; i++) {
       let sendingFile = {
+        id: data[i].id,
+        userid: data[i].userid,
         name: data[i].name,
         filename: data[i].filename,
+        isFolder: data[i].isFolder == 0 ? false : true,
         location: data[i].location,
+        parent: data[i].parent,
       };
       arr.push(sendingFile);
     }
     let json = JSON.stringify(arr);
-    console.log(json);
-    // json = JSON.parse(json);
-
     res.send({ data: arr });
   } catch (err) {
     console.log(err);
@@ -60,17 +35,117 @@ exports.get_noteManager = async (req, res) => {
 
 exports.noteUpload = async (req, res) => {
   try {
-    console.log(req.files);
+    let fileSet = [];
+    let data = await File.findAll();
     for (let i = 0; i < req.files.length; i++) {
+      for (let j = 0; j < data.length; j++) {
+        if (
+          data[j].filename == req.files[i].key &&
+          data[j].userid == req.session.userId
+        ) {
+          res.send({ status: '중복' });
+          return;
+        }
+      }
       const file = await File.create({
+        userid: req.session.userId,
         name: req.session.userName,
         filename: req.files[i].key,
+        isFolder: false,
         location: req.files[i].location,
+        parent: req.body.folder_location,
       });
+      let obj = {
+        id: file.id,
+        name: req.files[i].key,
+        location: req.files[i].location,
+      };
+      console.log(obj);
+      fileSet.push(obj);
     }
+    res.send({ status: '성공', files: fileSet });
+  } catch (err) {
+    console.log(err);
+    res.send({ status: '실패' });
+  }
+};
+
+exports.noteUpload_folder = async (req, res) => {
+  try {
+    let data = await File.findAll();
+    for (let j = 0; j < data.length; j++) {
+      if (
+        data[j].filename == req.body.filename &&
+        data[j].userid == req.session.userId
+      ) {
+        res.send('중복');
+        return;
+      }
+    }
+    await File.create({
+      userid: req.session.userId,
+      name: req.session.userName,
+      filename: req.body.filename,
+      isFolder: true,
+      location: null,
+      parent: req.body.parent,
+    });
     res.send('성공');
   } catch (err) {
     console.log(err);
+    res.send('실패');
+  }
+};
+
+exports.erase_files = async (req, res) => {
+  try {
+    console.log(req.body);
+    for (let i = 0; i < req.body.length; i++) {
+      let explorer = req.body[i];
+      let arr = [explorer];
+      let seq = [explorer];
+      while (seq.length !== 0) {
+        let isit = await File.findAll({
+          where: { userid: req.session.userId, parent: seq[0] },
+        });
+        console.log(isit.length);
+        if (isit.length > 0) {
+          for (let j = 0; j < isit.length; j++) {
+            arr.push(isit[j].dataValues.filename);
+            seq.push(isit[j].dataValues.filename);
+          }
+        }
+        seq.shift();
+      }
+      console.log(arr);
+      for (let a = 0; a < arr.length; a++) {
+        await File.destroy({
+          where: { userid: req.session.userId, filename: arr[a] },
+        });
+      }
+    }
+    res.send('성공');
+  } catch (e) {
+    res.send('실패');
+  }
+};
+
+exports.patch_files = async (req, res) => {
+  console.log(req.body);
+  try {
+    for (let i = 0; i < req.body.movers.length; i++) {
+      let updated = await File.update(
+        { parent: req.body.to },
+        {
+          where: {
+            userid: req.session.userId,
+            filename: req.body.movers[i],
+          },
+        },
+      );
+    }
+    res.send('성공');
+  } catch (e) {
     res.send('실패');
   }
 };

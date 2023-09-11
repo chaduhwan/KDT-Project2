@@ -26,6 +26,7 @@ db.Desk = require('./Desk')(sequelize);
 db.Position = require('./Position')(sequelize);
 db.Chosen = require('./Chosen')(sequelize);
 db.File = require('./File')(sequelize);
+db.calendar =require('./calendar')(sequelize);
 
 //모델 관계
 
