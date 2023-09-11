@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "user",
-    "password": "asdasd123123!!",
+    "username": "admin",
+    "password": "12345678",
     "database": "kdt9",
-    "host": "127.0.0.1",
+    "host": "kdt9-test.ctdfkovdwqhh.ap-northeast-2.rds.amazonaws.com",
     "dialect": "mysql",
     "timezone": "+09:00"
   },
