@@ -206,7 +206,7 @@ input[type="checkbox"] {
 }
 .join_par #sociealLogin {
   display: flex;
-  width: 39.65%;
+  width: 39%;
   height: 50px;
   align-items: center;
   justify-content: center;
@@ -221,6 +221,30 @@ input[type="checkbox"] {
   height: 20px;
   margin-right: 10px;
   border-radius: 7px;
+}
+body {
+  margin: 0;
+  /* padding: 20px; */
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(73, 147, 250, 0.6);
+  /* opacity: 0.6; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  /* 작은 물고기 도트 이미지 URL 설정 */
+  background-image: url("/public/default/tile_background2.png");
+  /* background-repeat: repeat; 이미지 반복 설정 (기본값은 repeat) */
+  /* background-size: 25px; 이미지 크기 설정 (도트 크기) */
+}
+.join_container_par{
+    width: 500px;
+    height: 88vh;
+    border-radius: 20px;
+    background-color: rgb(255, 255, 255);
+    padding: 0;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); /* 그림자 설정 */
 }
 @media screen and (min-width: 770px) {
   .join_container {
