@@ -43,6 +43,7 @@
 .login_banner > img {
   width: 250px;
   background-color: #4993fa;
+  border-radius: 40px;
 }
 .login_email {
   display: flex;
@@ -189,14 +190,9 @@ body {
   align-items: center;
   margin: 0;
   /* 작은 물고기 도트 이미지 URL 설정 */
-  background-image: url("/public/default/tile_background.png");
+  background-image: url("/public/default/tile_background2.png");
   /* background-repeat: repeat; 이미지 반복 설정 (기본값은 repeat) */
   /* background-size: 25px; 이미지 크기 설정 (도트 크기) */
-}
-body::before {
-  opacity: 0.6;
-}
-.main {
 }
 @media screen and (min-width: 770px) {
   .login_container {
