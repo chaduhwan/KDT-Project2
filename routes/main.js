@@ -197,5 +197,8 @@ router.post("/calendar", S_controller.post_calendar);
 router.post("/eventData", S_controller.eventData);
 //연습용
 router.post("/practice", uploadS3.array("11"), S_controller.practice);
-
+//내 프로필 사진 불러오기
+router.post("/myprofile", S_controller.myprofile);
+//상대방 프로필 사진 불러오기
+router.post("/otherprofile", S_controller.otherprofile);
 module.exports = router;
