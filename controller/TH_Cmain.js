@@ -4,6 +4,9 @@ const { Op } = require('sequelize');
 exports.test = (req, res) => {
   res.render('test');
 };
+exports.test2 = (req, res) => {
+  res.render('test2');
+};
 
 exports.noteManager = async (req, res) => {
   res.render('TH_noteManager');
