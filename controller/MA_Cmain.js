@@ -439,6 +439,13 @@ exports.delete_user = async (req, res) => {
   res.json({ result: true });
 };
 
+//로그아웃
+exports.logout = (req, res) => {
+  console.log(req.session.isLogined);
+  req.session.destroy();
+  res.json({ result: true });
+};
+
 //장소찾기
 exports.bobSelect = async (req, res) => {
   const { placeId, placeName, placeAddress } = req.body;
