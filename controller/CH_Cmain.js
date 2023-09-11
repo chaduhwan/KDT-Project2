@@ -1,26 +1,89 @@
-const {board, comment, like, Class} = require('../models')
+const {board, comment, like, Class, UserTakeClass, Subject} = require('../models')
 const {Op} =require('sequelize')
 const Sequelize = require('sequelize')
+const sequelize = require('sequelize')
+const jwt = require('jsonwebtoken')
+const SECRET = 'condingon'
 
 exports.main = (req, res) => {
     res.render('index');
 };
 
-///// 게시판 메인페이지
-exports.BoardMain = async (req,res) => {
+///////////// 클래스 별 게시판 들어가기
+exports.BoardEnter = async (req,res) => {
+    const classId = req.query.classId
+    req.session.classId = classId;
+    res.json({result:true})
+    
+}
+
+////////////게시판 주제만들기
+exports.Subjectmake = async (req,res) => {
+    const {subjectTitle} = req.body
+    const ClassId = req.session.classId
+    Subject.create({subjectTitle,ClassId})
+}
+
+////////////게시판 들어가기
+exports.EnterSubject = async (req,res) => {
     const user = req.session.userName
     const userid = req.session.userId
+    const classId = req.session.classId
+    const {SubjectId} = req.body
+    req.session.subjectId = SubjectId
+
+    console.log(req.session.subjectId)
+
+    let subjectId = [];
+    let subjectTitle = [];
+    const subject = await Subject.findAll({where:{classId}})
+    
+    for (const ele of subject) {
+        subjectId.push(ele.SubjectId)
+        subjectTitle.push(ele.subjectTitle)
+    }
+
     let likeArr =[];
 
-    const boards = await board.findAll()
+    const boards = await board.findAll({where:{SubjectId:req.session.subjectId}})
     for (const boardEle of boards) {
         const cou = await like.count({
             where: {BoardId : boardEle.BoardId}
         })
         likeArr.push(cou)
     }
-    res.render('CHA_boardMain',{data:boards, user, userid, likeArr})
-  
+    res.send({data:boards,likeArr})
+}
+
+
+///// 게시판 메인페이지
+exports.BoardMain = async (req,res) => {
+    const user = req.session.userName
+    const userid = req.session.userId
+    const classId = req.session.classId
+
+    console.log(req.session.classId)
+
+    let subjectId = [];
+    let subjectTitle = [];
+    const subject = await Subject.findAll({where:{classId}})
+    
+    for (const ele of subject) {
+        subjectId.push(ele.SubjectId)
+        subjectTitle.push(ele.subjectTitle)
+    }
+
+    console.log(subject)
+    let likeArr =[];
+
+    const boards = await board.findAll({where:{ClassId : classId}})
+    for (const boardEle of boards) {
+        const cou = await like.count({
+            where: {BoardId : boardEle.BoardId}
+        })
+        likeArr.push(cou)
+    }
+    res.render('CHA_boardMain',{data:boards, user, userid, likeArr, subjectId, subjectTitle})
 }
 
 ///////게시판 상세페이지
@@ -46,12 +109,25 @@ exports.BoardDetail = (req,res) => {
 }
 
 ////////게시글 작성
-exports.BoardWrite = (req,res) => {
+exports.BoardWrite = async (req,res) => {
     const {title, date, writer, content, tag} = req.body
-    board.create({title, date, writer, content, tag}).then(
-        res.json({result:true})
-    )
+    let likeArr = [];
+    const  newboard = await board.create({title, date, writer, content, tag, SubjectId : req.session.subjectId, ClassId : req.session.classId,
+        id : req.session.userid
+    })
+    const result = await board.findOne({
+        attributes: [[sequelize.fn('max', sequelize.col('BoardId')), 'maxBoardId']],
+      })
+    const maxBoardId = result.get('maxBoardId')
+    const boardnew = await board.findAll({where:{BoardId : maxBoardId}})
+
+    const cou = await like.count({where:{
+        boardId : maxBoardId
+    }})
+    likeArr.push(cou)
+    res.json({data:boardnew,likeArr})
 }
+
 
 ////////게시글 삭제
 exports.BoardDelete = (req,res) => {
@@ -136,6 +212,19 @@ exports.CommentWrite =(req,res) => {
 ///////////////리더 클래스 생성
 exports.ClassMake = async (req,res) => {
     const {className,leader} =req.body
-    const result = await Class.create({className,leader})
-    res.json({res:true,result})
+    const token =jwt.sign({className,leader},SECRET);
+    const result = await Class.create({className,leader,token})
+    res.json({res:true,result,token})
+}
+
+////////////////클래스 가입
+exports.ClassSignin = async (req,res) => {
+    const {token} =req.body
+    const result = await Class.findOne({where : { token}})
+    if(result) {
+        const signin = await UserTakeClass.create({userId : req.session.userId,classClassId : result.ClassId})
+        res.json({success:true})
+    } else {
+        res.json({success:false})
+    }
 }

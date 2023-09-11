@@ -47,11 +47,10 @@
       </button>
     </form>
     <a href="/logout">로그아웃</a>
-    <ul>
+
      <% for(let i = 0; i<Classes.length; i++){ %>
-        <li><%=Classes[i]%></li>
+        <div data-class-id="<%=ClassesId[i]%>" onclick="enterClass(this)"><%=Classes[i]%></div>
      <% } %>
-    </ul>
 
 
     <% if(data.userType == "leader" ){ %>
@@ -60,6 +59,11 @@
         <button type="button" onclick="makeClass()">클래스 만들기</button>
       </form>
     <% } %> 
+
+      <form name="ClassSignin">
+        <input type="text" name="token" placeholder="token">
+        <button type="button" onclick="signinClass()">클래스 가입하기</button>
+      </form>
 
     <script>
       //소켓 설정
@@ -146,10 +150,49 @@
           data : data
         })
         if(res.data.res) {
-          alert("클래스 생성완료!")
+          alert(`클래스 생성완료! 클래스 공유 코드입니다 외부유출에 조심하세요 : ${res.data.token}`)
         }
         window.location.reload()
       }
+      //클래스 들어가기 함수
+       async function signinClass(){
+        const form = document.forms['ClassSignin']
+        const data = {
+          token : form.token.value
+        }
+        const res = await axios({
+          method : 'POST',
+          url : '/class/signin',
+          data : data
+        })
+        if(res) {
+          alert("가입성공!")
+          window.location.reload()
+        } else {
+          alert('가입실패!')
+        }
+      }
+
+      async function enterClass(element) {
+    const classid = element.getAttribute('data-class-id');
+    try {
+        const result = await axios({
+            method: 'GET',
+            url: '/enter/board',
+            params: {
+                classId: classid
+            }
+        });
+        // AJAX 요청이 완료된 후에 이동하도록 처리
+        if (result.status === 200) {
+            document.location.href = '/board';
+        } else {
+            console.error('요청이 실패했습니다.');
+        }
+    } catch (error) {
+        console.error('오류 발생: ', error);
+    }
+}
     </script>
   </body>
 </html>
