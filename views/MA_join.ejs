@@ -1,38 +1,38 @@
 <!DOCTYPE html>
 <html lang="ko">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>회원가입</title>
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
-        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
     <!-- axios cdn -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
 
-</head>
-
-<body>
+  <body>
     <a href="/auth/google/join">구글 계정으로 가입하기</a>
     <a href="/auth/kakao/join">카카오톡 계정으로 가입하기</a>
     <br />
-    <form id="loginIDPW" >
-        <input type="email" id="email" placeholder="이메일" /> <button type="button" onclick="authMail()">인증번호 전송</button><br />
-        <input type="number" id="authNumber" style="display: none;"><br />
-        <input type="text" id="name" placeholder="이름" /><br />
-        <input type="number" id="phone" placeholder="핸드폰 번호" /><br />
-        <input type="password" id="pw" placeholder="비밀번호"><br />
-        <span class="rule">비밀번호: 8~16자의 영문 대/소문자,숫자, 특수문자를 사용해 주세요. </span><br />
-        <input type="password" id="pwVal" placeholder="비밀번호 확인" /><br />
-        <span class="pwSame" style="visibility: hidden;">비밀번호가 일치하지 않습니다.</span><br />
-        <button class="joinBtn" type="button">회원가입</button>
-
+    <form id="loginIDPW">
+      <input type="email" id="email" placeholder="이메일" />
+      <!-- <button type="button" onclick="authMail()">인증번호 전송</button><br /> -->
+      <!-- <input type="number" id="authNumber" style="display: none;"><br /> -->
+      <input type="text" id="name" placeholder="이름" /><br />
+      <input type="number" id="phone" placeholder="핸드폰 번호" /><br />
+      <input type="password" id="pw" placeholder="비밀번호" /><br />
+      <span class="rule"
+        >비밀번호: 8~16자의 영문 대/소문자,숫자, 특수문자를 사용해 주세요. </span
+      ><br />
+      <input type="password" id="pwVal" placeholder="비밀번호 확인" /><br />
+      <span class="pwSame" style="visibility: hidden"
+        >비밀번호가 일치하지 않습니다.</span
+      ><br />
+      <button class="joinBtn" type="button">회원가입</button>
     </form>
     <script src="/public/join.js"></script>
-
-
-
-
-</body>
-
+  </body>
 </html>
