@@ -1,6 +1,7 @@
 const { User, UserTakeClass, Class } = require("../models/index");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
+const nodemailer = require('nodemailer');
 
 //카카오 rest api활용
 const kakao = {
@@ -351,6 +352,8 @@ exports.post_join = async (req, res) => {
     res.status(500).json({ result: false });
   }
 };
+
+ 
 
 //로그인
 exports.post_login = async (req, res) => {
