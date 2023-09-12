@@ -20,7 +20,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <!-- 부트스트랩cdn -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"rel="stylesheet"integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"crossorigin="anonymous"/>
-    <link rel="stylesheet" href="/public/css/classMain.css" />
+    <link rel="stylesheet" href="/public/css/classMain2.css" />
     <style>
       .main {
         display: flex;
@@ -28,76 +28,53 @@
         height: 100%;
       }
       .right-bar {
+        width: 200px;
+        border-style: solid;
+        border-radius: 5px;
+        border-color: white;
+        border-width: 0.4px;
+        padding: 10px;
+        /* right: 10px; */
+        margin-left: 1190px;
+        margin-top: 430px;
+        position: absolute;
         display: flex;
         flex-direction: column;
-        width: 15%;
-        height: 85%;
       }
       .square {
         width: 60px;
         height: 60px;
-        /* width: 5vw;
-        height: 5vw; */
-        background-color: red;
+        background-color: #A7ECEE;
         border-radius: 10px;
         margin: 1vw;
       }
       .room {
-        width: 85%;
-        background-color: lightgreen;
+        width: 100%;
+        background-color: #FFE5B8;
+        border-radius: 0 0 20px 20px;
       }
       .chosen {
-        background-color: skyblue;
+        background-color: #4993FA;
       }
       .hide {
         margin : 1vw;
         display: none;
       }
-
-      @media screen and (max-width : 500px){
-        .room {
-        height: 300%;
-        width: 100%;
-        background-color: lightgreen;
-      }
-        .main {
-        display: flex;
-        flex-direction: column;
-        /* height: 15%; */
-        }
-
-        .square {
-        width: 30px;
-        height: 30px;
-        /* width: 5vw;
-        height: 5vw; */
-        background-color: red;
+      .btn-custom{
+        border-style: none;
         border-radius: 5px;
-        margin: 1vw;
+        background-color: white;
+        padding: 6px;
+        margin: 5px;
       }
-
-      .right-bar {
-        display: flex;
-        flex-direction: row;
-        width: 15%;
-        height: 85%;
-      }
-
-      .button-place{
-        display: flex;
-        flex-direction: row;
-      }
-
-      .button-place button{
-        width: 50px;
-        height: 40px;
-      }
-
+      #data-list2{
+        border-radius: 5px;
+        margin: 10px;
+        border-style: none;
       }
     </style>
   </head>
   <body>
-
     <div id="hide" class="square hide"></div>
     <div class="main_container">
       <div class="head1 d-flex justify-content-between">
@@ -125,11 +102,13 @@
           <div class="room"></div>
           <div class="right-bar">
             <div class="button-place">
-              <button onclick="createChair()">생성</button>
-              <button onclick="saveChair()">저장</button>
-              <button onclick="resetChairs()">리셋</button>
+              <button class="btn-custom" onclick="createChair()">생성</button>
+              <button class="btn-custom" onclick="saveChair()">저장</button>
+              <button class="btn-custom" onclick="resetChairs()">리셋</button>
             </div>
-            <ul class="data-list"></ul>
+            <!-- <ul class="data-list"></ul> -->
+            <select id="data-list2" onchange="positionChange()">
+            </select>
           </div>
         </div>
       </div>
@@ -162,23 +141,22 @@
     </div>
 
     <script>
-      console.log(window.innerWidth)
-      // let sensitive = document.querySelector("#hide");
-      // let compute = window.getComputedStyle(sensitive)
-      // let elementWidth = compute.getPropertyValue("width")
-      // let numeric = parseFloat(elementWidth)
-      // console.log(numeric)
-      window.addEventListener(`resize`, () => {
-        // for(let i = 1; i <= Math.max(...numArr); i++){
-        //   let each = document.querySelector(`.num${i}`);
-        //   if(document.querySelector(`.num${i}`)){
-        //   }
-        // }
-
-        if(window.innerWidth < 500){
-          console.log("예아")
-        }
-      })
+      $(".right-bar").draggable()
+      // if(window.innerWidth < 1200){
+      //     document.querySelector(".warn").style.display = "flex";
+      //   }
+      //   else{
+      //     document.querySelector(".warn").style.display = "none";
+      //   }
+      // window.addEventListener('resize', (e) => {
+      //   console.log(window.innerWidth)
+      //   if(window.innerWidth < 1200){
+      //     document.querySelector(".warn").style.display = "flex";
+      //   }
+      //   else{
+      //     document.querySelector(".warn").style.display = "none";
+      //   }
+      // })
       let whoAmI = '<%= name %>';
       let myType = '<%= userType %>';
       if (myType != 'leader') {
@@ -186,6 +164,7 @@
         window.history.back();
       }
       const socket = io();
+      let nowData;
       let db = [];
       let dataBase = [];
       axios({
@@ -193,20 +172,31 @@
         url: '/desk/get_generator',
       }).then((res) => {
         console.log('data', res);
-        let ul = document.querySelector('.data-list');
-        ul.innerHTML = '';
+        let select = document.querySelector("#data-list2")
+        select.innerHTML = "";
+        let defaultOne = document.createElement('option');
+        defaultOne.innerText = "데이터 선택"
+        select.appendChild(defaultOne);
         console.log(res.data);
         dataBase = res.data.desk;
         const { desk: data } = res.data;
         for (let i = 0; i < data.length; i++) {
-          let li = document.createElement('li');
-          li.classList.add(`${data[i].name}`);
-          li.innerHTML = `<p class="${data[i].name}" onclick="loadChairs2()">${data[i].name}</p>`;
-          li.oncontextmenu = deleteChair;
-          li.style.cursor = 'pointer';
-          ul.appendChild(li);
+          let op = document.createElement('option');
+          op.classList.add(`${data[i].name}`);
+          op.innerHTML = `<p class="${data[i].name}">${data[i].name}</p>`;
+          op.oncontextmenu = deleteChair;
+          op.style.cursor = 'pointer';
+          select.appendChild(op);
         }
       });
+
+      const positionChange = () => {
+        let which = event.currentTarget
+        if(which.options[which.selectedIndex].innerText !== "데이터 선택"){
+          loadChairs2()
+        }
+      }
+
       let arr = [];
       let numArr = [];
       let nemoNum = 0;
@@ -218,7 +208,8 @@
         console.log(nemoNum);
         let nemo = document.createElement('div');
         let numbering = document.createElement('p');
-        numbering.style.marginTop = '-5px';
+        numbering.style.marginTop = '5px';
+        numbering.style.marginLeft = '5px';
         numbering.innerText = nemoNum;
         nemo.appendChild(numbering);
         nemo.classList.add('square');
@@ -226,7 +217,7 @@
         nemo.style.cssText = `
         position: absolute;
         color: white;
-        font-size: 2vw;
+        font-size: 10px;
         `;
         nemo.oncontextmenu = deleteChair;
         document.querySelector('.room').appendChild(nemo);
@@ -301,7 +292,8 @@
         let prompt = window.prompt('이름을 설정해주세요');
         if (prompt) {
           let data = document.querySelector('.room').innerHTML;
-          let ul = document.querySelector('.data-list');
+          let select = document.querySelector("#data-list2")
+          // let ul = document.querySelector('.data-list');
           let chairData = {
             name: prompt,
             data: data,
@@ -319,15 +311,15 @@
             return;
           }
           dataBase.push(one);
-          socket.emit('dataPush', one);
+          // socket.emit('dataPush', one);
           console.log(db);
           console.log(dataBase);
-          let li = document.createElement('li');
-          li.classList.add(`${prompt}`);
-          li.innerHTML = `<p class="${prompt}" onclick="loadChairs2()">${prompt}</p>`;
-          li.oncontextmenu = deleteChair;
-          li.style.cursor = 'pointer';
-          ul.appendChild(li);
+          let op = document.createElement('option');
+          op.classList.add(`${prompt}`);
+          op.innerHTML = `<p class="${prompt}" onclick="loadChairs2()">${prompt}</p>`;
+          op.oncontextmenu = deleteChair;
+          op.style.cursor = 'pointer';
+          select.appendChild(op);
         }
       };
 
@@ -338,18 +330,23 @@
           );
           if (confirm) {
             document.querySelector('.room').innerHTML = '';
-            chairGenerator(event.currentTarget.innerText);
+            let which = event.currentTarget
+            let whichOne = which.options[which.selectedIndex].children[0].innerText;
+            chairGenerator(whichOne);
+            $('.square').draggable();
           }
-          $('.square').draggable();
+          else{
+            let which = event.currentTarget
+            which.options[0].selected = true
+          }
         } else {
-          chairGenerator(event.currentTarget.innerText);
+          let which = event.currentTarget
+          let whichOne = which.options[which.selectedIndex].children[0].innerText;
+          chairGenerator(whichOne);
           $('.square').draggable();
         }
       };
 
-      const resizer = () => {
-
-      }
 
       const chairGenerator = (li) => {
         let num = 0;
@@ -380,7 +377,8 @@
                   numbering.innerText = dataBase[i].chosen[a].owner;
                 }
               }
-              numbering.style.marginTop = '-5px';
+              numbering.style.marginTop = '5px';
+              numbering.style.marginLeft = '5px';
               square.appendChild(numbering);
 
               //포지션 부여
@@ -389,7 +387,7 @@
                     left: ${dataBase[i].position[j].left}px;
                     position: absolute;
                     color: white;
-                    font-size: 2vw;
+                    font-size: 10px;
                     `;
 
               // 리스너 부여
@@ -420,6 +418,9 @@
         event.preventDefault();
         if (event.currentTarget.classList.contains('square')) {
           let id = event.currentTarget.children[0].innerText;
+          if(id.includes(":")){
+            id = id.split(":")[0]
+          }
           let confirm = window.confirm('요소를 삭제하시겠습니까?');
           if (confirm) {
             jQuery('div').remove(`.num${id}`);
@@ -436,7 +437,7 @@
             while (true) {
               if (ul.childNodes[i].classList.contains(`${liName}`)) {
                 ul.childNodes[i].remove();
-                socket.emit('dataPop', liName);
+                // socket.emit('dataPop', liName);
                 let res = await axios({
                   method: 'post',
                   url: '/desk/delete_generator',

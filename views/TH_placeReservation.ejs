@@ -20,7 +20,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <!-- 부트스트랩cdn -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"rel="stylesheet"integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"crossorigin="anonymous"/>
-    <link rel="stylesheet" href="/public/css/classMain.css" />
+    <link rel="stylesheet" href="/public/css/classMain2.css" />
     <script src="/public/js/header.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -31,23 +31,54 @@
         height: 100%;
       }
       .right-bar {
+        /* position: absolute;
+        display: flex;
+        flex-direction: column; */
+        /* width: 200px; */
+        border-style: solid;
+        border-radius: 5px;
+        border-color: white;
+        border-width: 0.4px;
+        padding: 10px;
+        /* right: 10px; */
+        margin-left: 1160px;
+        margin-top: 430px;
+        position: absolute;
         display: flex;
         flex-direction: column;
       }
       .square {
         width: 60px;
         height: 60px;
-        background-color: red;
+        background-color: #A7ECEE;
         border-radius: 10px;
         font-size: 15px;
       }
       .room {
         width: 100%;
-        /* height: 100%; */
-        background-color: lightgreen;
+        background-color: #FFE5B8;
+        border-radius: 0 0 20px 20px;
+      }
+      .btn-custom{
+        border-style: none;
+        border-radius: 5px;
+        background-color: white;
+        padding: 6px;
+        margin: 5px;
       }
       .chosen {
-        background-color: skyblue;
+        background-color: #4993FA;
+      }
+      .button-place{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+      #data-list2{
+        border-radius: 5px;
+        margin: 10px;
+        border-style: none;
       }
     </style>
   </head>
@@ -79,13 +110,13 @@
         <div class="main">
           <div class="room"></div>
           <div class="right-bar">
-            <button style="height: 50px" onclick="Unoccupate()">예약취소</button>
-            <button style="height: 50px" onclick="reset()">리셋</button>
-            <a href="/desk" onclick="return confirm('페이지를 벗어나시겠습니까?');"
-              >돌아가기</a
-            >
+            <div class="button-place">
+              <button class="btn-custom" onclick="Unoccupate()">예약취소</button>
+              <button class="btn-custom" onclick="reset()">리셋</button>
+            </div>
+            <select id="data-list2" onchange="positionChange()"></select>
           </div>
-          <ul class="data-list"></ul>
+          
         </div>
       </div>
     </div>
@@ -130,6 +161,7 @@
       <ul></ul>
     </div> -->
     <script>
+      $(".right-bar").draggable()
       let whoAmI = '<%= name %>';
       let myType = '<%= userType %>';
       console.log(myType);
@@ -143,21 +175,36 @@
         }).then((res) => {
           socket.emit('basicSetting', res.data);
           console.log('data', res.data);
-          let ul = document.querySelector('.data-list');
+          let select = document.querySelector("#data-list2")
+          select.innerHTML = "";
+          let defaultOne = document.createElement('option');
+          defaultOne.innerText = "데이터 선택"
+          select.appendChild(defaultOne);
           const { desk: data } = res.data;
-          ul.innerHTML = '';
-          if (!ul.hasChildNodes()) {
-            for (let i = 0; i < data.length; i++) {
-              let li = document.createElement('li');
-              li.innerText = data[i].name;
-              li.onclick = () => {
-                socket.emit('confirmed', data[i].name);
-              };
-              li.style.cursor = 'pointer';
-              ul.appendChild(li);
+          for (let i = 0; i < data.length; i++) {
+              let op = document.createElement('option');
+              op.classList.add(`${data[i].name}`);
+              op.innerHTML = `<p class="${data[i].name}">${data[i].name}</p>`;
+              // op.oncontextmenu = deleteChair;
+              op.style.cursor = 'pointer';
+              select.appendChild(op);
             }
-          }
         });
+      }
+      else{
+        document.querySelector("#data-list2").style.display = "none"
+      }
+
+      const socketOn = (i) => {
+        socket.emit('confirmed', data[i].name);
+      }
+
+      const positionChange = () => {
+        let which = event.currentTarget
+        console.log(which.options[which.selectedIndex])
+        if(which.options[which.selectedIndex].innerText !== "데이터 선택"){
+          socket.emit('confirmed', which.options[which.selectedIndex].children[0].innerText);
+        }
       }
 
       const chairGenerator = (dataBase, li) => {
@@ -184,7 +231,8 @@
                   numbering.innerText = dataBase[i].chosen[a].owner;
                 }
               }
-              numbering.style.marginTop = '-5px';
+              numbering.style.marginTop = '5px';
+              numbering.style.marginLeft = '5px';
               square.appendChild(numbering);
 
               //포지션 부여
@@ -193,7 +241,7 @@
                     left: ${dataBase[i].position[j].left}px;
                     position: absolute;
                     color: white;
-                    font-size: 30px;
+                    font-size: 10px;
                     `;
               document.querySelector('.room').appendChild(square);
             }
