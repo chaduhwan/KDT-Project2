@@ -17,7 +17,7 @@ router.get("/enter/board", C_controller.BoardEnter);
 router.post("/subject/make", C_controller.Subjectmake);
 
 /////////Subject Enter
-router.post("/subject/enter", C_controller.EnterSubject);
+router.post("/subject/enter",C_controller.EnterSubject);
 
 ///////Board page
 router.get("/board", C_controller.BoardMain);
@@ -39,6 +39,9 @@ router.post("/board/like", C_controller.BoardLike);
 
 //////comment Write
 router.post("/comment/write", C_controller.CommentWrite);
+
+//////comment Delete
+router.post("/comment/delete",C_controller.CommentDelete)
 
 /////// class Make
 router.post("/class/make", C_controller.ClassMake);

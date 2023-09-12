@@ -130,13 +130,17 @@ exports.BoardWrite = async (req,res) => {
 
 
 ////////게시글 삭제
-exports.BoardDelete = (req,res) => {
+exports.BoardDelete  =async (req,res) => {
     const {BoardId} = req.body
-    console.log(req.body)
-    board.destroy({
-        where : {BoardId}
-    }).then(
-        res.send({result:true}))
+    const find = await board.findOne({where:{BoardId}})
+    if(find.writer == req.session.userName) {
+        board.destroy({
+            where : {BoardId}
+        })
+        res.json({result:true})
+    } else {
+        res.json({result:false})
+    }
 }
 
 /////////게시글 검색
@@ -207,6 +211,18 @@ exports.CommentWrite =(req,res) => {
         console.log(result)
         res.json({result:true})
     })
+}
+
+////////////댓글 삭제
+exports.CommentDelete = async (req,res) => {
+    const {commentId}= req.body
+    const find = await comment.findOne({where :{commentId} })
+    if(find.writer == req.session.userName) {
+        comment.destroy({where: {commentId}})
+        res.json({result : true})
+    } else {
+        res.json({result:false})
+    }
 }
 
 ///////////////리더 클래스 생성

@@ -22,7 +22,7 @@
              </div>
              <button type="button" class="boardLike" value="<%=data.BoardId%>" onclick="BoardLike(this)"><%=likecount%></button>
      </main>
-     <button class="board-delete" onclick="BoardDelete()">삭제하기</button>
+     <button type="button" class="board-delete" onclick="BoardDelete(this)">삭제하기</button>
 
      <main class="comment-main">
            <% for (let i = 0; i < commentData.length; i++) { %>
@@ -31,11 +31,9 @@
                     <span class="comment-date"> <%=commentData[i].date%></span>
                     <span class="comment-content"><%=commentData[i].content%></span>
                 </div>
-                <button value="<%=commentData.commentId%>">삭제하기</button>
+                <button type="button" value="<%=commentData[i].commentId%>" onclick="deleteComment(this)">삭제하기</button>
            <% } %>
      </main>
-
-
 
     <footer class="board-comment">
         <form name="comment-Write">
@@ -79,10 +77,34 @@
                     BoardId : boardid,
                 },
             }).then((res)=>{
-                if(res.data.result){
+                if(res.data.result==true){
                     window.location.href='/board';
+                } else {
+                    alert("다른 작성자의 글입니다!")
                 }
             })
+        }
+
+        async function deleteComment(button) {
+            const commentId = button.value
+            console.log(commentId)
+            // if(!confirm('삭제하시겠습니까?')){
+            //     return;
+            // } 
+            const result = await axios({
+                method:"POST",
+                url:"/comment/delete",
+                data : {
+                    commentId
+                }
+            })
+            if (result===true) {
+                alert('댓글이 삭제되었습니다!')
+                window.location.reload()
+            } else{
+                alert('다른 사람이 쓴 댓글입니다!')
+            }
+      
         }
         
         function BoardLike(button) {
