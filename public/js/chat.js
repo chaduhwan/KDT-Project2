@@ -295,6 +295,7 @@ socket.on("getAccess", (roomList) => {
 socket.on("deleteList", (username) => {
   document.querySelector(`#${username}`).style.color = "gray";
 });
+
 //내가 채팅하고 잇는 방 불러오고 -> 그 채팅방 미리보기 메시지까지 가져오는거
 socket.on("chatList", async (username, roomList) => {
   document.querySelector(".chatList").innerHTML = "";
@@ -350,6 +351,7 @@ socket.on("chatList", async (username, roomList) => {
     i++;
   }
 });
+
 //방 번호 정해서 들어가기
 roomForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -370,21 +372,22 @@ roomForm.addEventListener("submit", async (e) => {
     //리스트 검사해서 그 사람이 있으면 방 만들어줌
     // create -> 방 만들기
     socket.emit("create", otherName, username);
-    socket.on("true", () => {
-      //원래 헤더만 바꿔야 되는데 일단은 이것만 바꾸고 나중에 수정하기
-      OtherPerson1.innerText = otherName;
-      // OtherPerson2.innerText = otherName;
-    });
     alert(`${otherName}님 방에 입장하였습니다.`);
     //방 들어가면 p태그 삭제시켜버려서 알람 없애기
     const pTag = document.querySelector(`#${otherName}msg`);
-    pTag.remove();
+    if(pTag){
+      pTag.remove();
+    }
   } else {
     //없으면 가입되지 않은 사람이라고 해줌
     alert("가입되지 않은 사용자 입니다.");
   }
 });
-
+socket.on("true", () => {
+  //원래 헤더만 바꿔야 되는데 일단은 이것만 바꾸고 나중에 수정하기
+  OtherPerson1.innerText = otherName;
+  // OtherPerson2.innerText = otherName;
+});
 //메시지 보내는 이벤트
 messageForm.addEventListener("submit", (e) => {
   e.preventDefault();
