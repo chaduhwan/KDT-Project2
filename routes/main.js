@@ -1,24 +1,23 @@
 const express = require("express");
 const router = express.Router();
 
-
-const C_controller = require('../controller/CH_Cmain');
-const M_controller = require('../controller/MA_Cmain');
-const S_controller = require('../controller/SN_Cmain');
-const T_controller = require('../controller/TH_Cmain');
-const multer = require('multer');
-const path = require('path');
-const multerS3 = require('multer-s3');
-const aws = require('aws-sdk');
+const C_controller = require("../controller/CH_Cmain");
+const M_controller = require("../controller/MA_Cmain");
+const S_controller = require("../controller/SN_Cmain");
+const T_controller = require("../controller/TH_Cmain");
+const multer = require("multer");
+const path = require("path");
+const multerS3 = require("multer-s3");
+const aws = require("aws-sdk");
 
 ///////Board Enter
-router.get("/enter/board",C_controller.BoardEnter)
+router.get("/enter/board", C_controller.BoardEnter);
 
 ////////Subject Make
-router.post("/subject/make",C_controller.Subjectmake)
+router.post("/subject/make", C_controller.Subjectmake);
 
 /////////Subject Enter
-router.post("/subject/enter",C_controller.EnterSubject)
+router.post("/subject/enter",C_controller.EnterSubject);
 
 ///////Board page
 router.get("/board", C_controller.BoardMain);
@@ -48,7 +47,7 @@ router.post("/comment/delete",C_controller.CommentDelete)
 router.post("/class/make", C_controller.ClassMake);
 
 /////// class Signin
-router.post('/class/signin',C_controller.ClassSignin)
+router.post("/class/signin", C_controller.ClassSignin);
 
 //메인화면
 router.get("/main", M_controller.classMain);
@@ -140,6 +139,7 @@ router.post("/upload", upload.single("dynamic"), M_controller.profileImg);
 
 //로그아웃
 router.get("/logout", M_controller.logout);
+router.post("/header/logout", M_controller.logout);
 //탈퇴
 
 router.post("/profile/delete", M_controller.delete_user);
@@ -180,6 +180,7 @@ router.delete("/noteManager/erase_files", T_controller.erase_files);
 router.patch("/noteManager/patch_files", T_controller.patch_files);
 
 router.get("/test", T_controller.test);
+router.get("/test2", T_controller.test2);
 
 //채팅방 render페이지
 router.get("/chat", S_controller.chat);
@@ -193,10 +194,14 @@ router.post("/myMessage", S_controller.myMessage);
 
 router.post("/userList", S_controller.userList);
 //캘린더랜더
+
 router.get("/calendar", S_controller.calendar);
 router.post("/calendar", S_controller.post_calendar);
 router.post("/eventData", S_controller.eventData);
 //연습용
 router.post("/practice", uploadS3.array("11"), S_controller.practice);
-
+//내 프로필 사진 불러오기
+router.post("/myprofile", S_controller.myprofile);
+//상대방 프로필 사진 불러오기
+router.post("/otherprofile", S_controller.otherprofile);
 module.exports = router;

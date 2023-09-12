@@ -6,6 +6,7 @@
       rel="stylesheet"
       href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"
     />
+
     <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <link
       rel="stylesheet"
@@ -21,36 +22,12 @@
         border-color: #e4e7ee;
         cursor: pointer;
       }
-      .basicDiv {
-        width: 42px;
-        height: 45px;
-        color: black;
-        box-sizing: border-box;
-        display: flex;
-        text-align: center;
-        justify-content: center;
-        align-items: center;
-      }
-      .basicSmallDiv {
-        width: 32px;
-        height: 32px;
-        color: black;
-        box-sizing: border-box;
-        display: flex;
-        text-align: center;
-        justify-content: center;
-        align-items: center;
-      }
     </style>
   </head>
 
   <body>
-    <div class="switch" style="display: none">
-      <div id="editor"></div>
-    </div>
-    <button class="switcher" type="button" onclick="showWriter()">
-      글쓰기
-    </button>
+    <div id="editor"></div>
+    <button onclick="format()">작성</button>
     <script>
       const Editor = toastui.Editor;
       const editor = new Editor({
@@ -61,14 +38,34 @@
       });
       let div = document.createElement('div');
       let smallDiv = document.createElement('div');
-      div.classList.add('basicDiv');
-      smallDiv.classList.add('basicSmallDiv');
+      div.style.cssText = `
+            width: 42px;
+            height: 45px;
+            color: black;
+            box-sizing: border-box;
+            display: flex;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        `;
+      smallDiv.style.cssText = `
+            width: 32px;
+            height: 32px;
+            color: black;
+            box-sizing: border-box;
+            display: flex;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        `;
+
       div.classList.add('toast-editor-toolbar-group');
-      smallDiv.innerHTML = `<i class="fa-solid fa-location-dot" style="font-size: 17px; color: #333"></i>`;
+      smallDiv.innerHTML = `<i class="fa-solid fa-location-dot" style="font-size: 20px; color: #333"></i>`;
       smallDiv.classList.add('for');
       div.appendChild(smallDiv);
+
       smallDiv.addEventListener('mouseenter', () => {
-        smallDiv.innerHTML += `<div class="toastui-editor-tooltip" style="display: block; top: 45px; margin-left: 15px">
+        smallDiv.innerHTML += `<div class="toastui-editor-tooltip" style="display: block; top: 45px;">
       <div class="arrow"></div>
       <span class="text">Map</span>
     </div>`;
@@ -76,26 +73,11 @@
       smallDiv.addEventListener('mouseleave', () => {
         smallDiv.innerHTML = space;
       });
-      console.log(div);
       document
         .querySelector('.toastui-editor-defaultUI-toolbar')
-        .insertBefore(
-          div,
-          document.querySelector('.toastui-editor-defaultUI-toolbar')
-            .firstChild,
-        );
+        .appendChild(div);
       let space = smallDiv.innerHTML;
       console.log(document.querySelector('#editor').innerHTML);
-
-      const showWriter = () => {
-        if (document.querySelector('.switch').style.display == 'none') {
-          document.querySelector('.switch').style.display = 'block';
-          document.querySelector('.switcher').innerText = '취소';
-        } else {
-          document.querySelector('.switch').style.display = 'none';
-          document.querySelector('.switcher').innerText = '글쓰기';
-        }
-      };
     </script>
   </body>
 </html>

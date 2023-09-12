@@ -58,6 +58,20 @@ exports.connection = (io, socket) => {
 
   //방 생성하는 create문, roomName : 상대방이름, username 내이름
   socket.on("create", async (roomName, username) => {
+    console.log("현재 방은? 시작부분", realNumber);
+    if(realNumber != undefined){
+    //연결이 끊어지면 그 방에서 나감
+    socket.leave(realNumber);
+    //방에서 나가면 map에서 realNumber 키의 value값에 해당하는 내 이름(username)을 빼줌
+    //그래야지 위에 메시지를 보낼 때 checked 값이 'N'으로 감
+    if(map.get(realNumber)){
+      const index = map.get(realNumber).indexOf(userName);
+      if(index !== -1){
+        map.get(realNumber).splice(index, 1);
+      }
+    }
+    console.log("나갔을 때 ", map);
+    }
     //findall해서 내가 입장하려는 방이랑 내 닉네임으로 만들어진 곳이 있는지 찾아보기
     const userFind1 = await room.findAll({
       where: {
@@ -98,31 +112,47 @@ exports.connection = (io, socket) => {
         member_list: roomName,
       });
       realNumber = createRoom.roomNum;
+      console.log("현재 방은?", realNumber);
       socket.join(realNumber);
+      socket.emit("chatList",username, roomList)  //방 만들어지면 왼쪽section 초기화
     } else {
       //만약에 방이 있으면 그냥 채팅만 불러오기
       console.log("============방있으면 오는곳=================");
       //내가 들어간 방 리스트에 들어가려는 방이 있으면 join은 안함
       if (roomList.join("").includes(realNumber)) {
-        socket.emit("reload");
         socket.join(realNumber);
+        socket.emit("chatList",username, roomList)  //방 만들어지면 왼쪽section 초기화
       } else {
         //리스트에 없으면 방에 join 시켜줌
         socket.join(realNumber);
+        socket.emit("chatList",username, roomList)  //방 만들어지면 왼쪽section 초기화
       }
-      //방 번호 프론트로 보내기
+      //상대방 프로필 사진 불러오기
+      socket.emit("otherprofile", roomName);
+      //내 프로필 사진 불러오기(내이름, 상대방이름);
+      socket.emit("myprofile", username);
+      //방 번호 프론트로 보내서 이전채팅 불러오기
       socket.emit("roomNumber", realNumber);
 
-      //각 방마다 접속자
-      if(!(map.has(realNumber))){
-        participantRoom =[];
+      //방이 없으면? -> 새로 만들어서 넣어줌
+      if (!(map.has(realNumber))) {
+        participantRoom.push(username);
+        map.set(realNumber, participantRoom);
+        participantRoom = [];
+        console.log("participantRoom", participantRoom);
+        console.log("방이 없을 때 ", map);
+      } else {
+        // 방이 이미 있으면 새 배열을 만들어 할당
+        const existingRoom = map.get(realNumber);
+        const newRoom = existingRoom.concat(username); // 또는 [...existingRoom, username]
+        map.set(realNumber, newRoom);
+        console.log("participantRoom", participantRoom);
+        console.log("방이 있을 때 ", map);
       }
-      participantRoom.push(username);
-      map.set(realNumber, participantRoom); //key : 방 고유번호, val : 참가자배열
-
     }
+    console.log("현재 방은(끝부분)?", realNumber);
     //socket.room에 방 이름 저장시키기
-    socket.room = realNumber;
+    socket.room = realNumber;                                                         
     //값을 제대로 불러오면 상대방 이름 적용시키는거
     socket.emit("true");
   });
@@ -162,6 +192,7 @@ exports.connection = (io, socket) => {
         map.get(realNumber).splice(index, 1);
       }
     }
+    console.log("나갔을 때 ", map);
   })
 };
 //////////connection 끝////////////

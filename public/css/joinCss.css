@@ -1,0 +1,259 @@
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+* {
+  font-family: "Pretendard-Regular";
+}
+.logo-img {
+  height: 28px;
+}
+.dark-mode .logo-img {
+  filter: invert(100%);
+}
+.head {
+  display: flex;
+  justify-content: space-between;
+  height: 40px;
+  margin-top: 10px;
+}
+.head_image > img {
+  width: 90px;
+}
+.join_banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 100px;
+}
+.modal-footer > button {
+  background-color: #000;
+  color: #fff;
+}
+.banner_icons {
+  display: flex;
+  flex-direction: row;
+  font-size: 25px;
+  margin-right: 20px;
+}
+.banner_icons > div {
+  padding-left: 20px;
+}
+.join_banner > img {
+  width: 250px;
+}
+.join_email,
+.join_name {
+  display: flex;
+  flex-direction: column;
+  padding-left: 15%;
+}
+
+/* input{
+    outline-style: none;
+} */
+.join_password {
+  display: flex;
+  flex-direction: column;
+  /* padding-left: 15%; */
+}
+
+.join_email input,
+.join_name input {
+  width: 83%;
+  border-style: solid;
+  border-width: 0px 0px 1px 0px;
+  border-color: rgb(218, 217, 217);
+}
+
+.join_password input {
+  width: 83%;
+  border-style: solid;
+  border-width: 0px 0px 1px 0px;
+  border-color: rgb(218, 217, 217);
+}
+.join {
+  font-weight: bold;
+}
+.h3_email,
+.h3_password {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: inherit;
+  line-height: 18px;
+  padding-top: 10px;
+}
+.join_par {
+  display: flex;
+  width: 100%;
+  /* justify-content: center; */
+  margin-top: 15px;
+}
+.joinTerms {
+  display: flex;
+  /* padding-left: 15%; */
+}
+.joinTerms2 > div {
+  margin-top: 10px;
+}
+.mola {
+  display: flex;
+  justify-content: center;
+}
+.join {
+  display: flex;
+  width: 83%;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border: 1px solid rgb(218, 217, 217);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.join_ul {
+  list-style: none;
+  display: flex;
+  justify-content: space-evenly;
+  padding-left: 0px;
+  padding-top: 20px;
+}
+.join_ul > li {
+  font-size: 14px;
+}
+/* .email_sub::after{
+    position: absolute;
+    margin-left: 6%;
+    content: "|";
+    color: rgb(218, 217, 217);
+}
+.email_find::after{
+    position: absolute;
+    content: "|";
+    margin-left: 7%;
+    color: rgb(218, 217, 217);
+} */
+.social_join {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+}
+.social_join > button {
+  width: 70%;
+  height: 50px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  background-color: white;
+  border-width: 1px;
+  border: 1px solid rgb(218, 217, 217);
+  font-weight: bold;
+}
+.social_join > button > img {
+  display: flex;
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  border-top: 0px;
+}
+input:focus {
+  outline: none;
+  border-bottom: 2px solid black;
+}
+input[type="checkbox"] {
+  accent-color: black;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+/* 모달 */
+#agree {
+  background-color: white;
+  border: 0px;
+  color: black;
+  margin: 0px;
+  font-weight: bold;
+  padding: 0px 0px 3px 0px;
+  text-decoration: underline;
+}
+#exampleModalLabel {
+  font-weight: bold;
+}
+.modal-body {
+  max-height: 400px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.invalid {
+  border-color: red;
+}
+
+/* 패스워드, 이메일 맞는지 틀린지 */
+.errorPwCheck {
+  color: red;
+  font-size: 7px;
+  font-weight: bold;
+}
+.correctPwCheck {
+  color: rgb(8, 211, 8);
+  font-size: 7px;
+  font-weight: bold;
+}
+.join_par #sociealLogin {
+  display: flex;
+  width: 39%;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border: 1px solid rgb(218, 217, 217);
+  border-radius: 10px;
+  cursor: pointer;
+  margin-right: 20px;
+}
+#sociealLogin img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border-radius: 7px;
+}
+body {
+  margin: 0;
+  /* padding: 20px; */
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(73, 147, 250, 0.6);
+  /* opacity: 0.6; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  /* 작은 물고기 도트 이미지 URL 설정 */
+  background-image: url("/public/default/tile_background2.png");
+  /* background-repeat: repeat; 이미지 반복 설정 (기본값은 repeat) */
+  /* background-size: 25px; 이미지 크기 설정 (도트 크기) */
+}
+.join_container_par{
+    width: 500px;
+    height: 88vh;
+    border-radius: 20px;
+    background-color: rgb(255, 255, 255);
+    padding: 0;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); /* 그림자 설정 */
+}
+@media screen and (min-width: 770px) {
+  .join_container {
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .join_ul > li {
+    font-size: 12px;
+  }
+}

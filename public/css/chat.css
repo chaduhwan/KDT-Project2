@@ -178,6 +178,7 @@ body {
 .message ul li.msg-left img {
   position: absolute;
   width: 40px;
+  height : 35px;
   bottom: 30px;
 }
 .message ul li.msg-left .msg-desc {
@@ -206,6 +207,7 @@ body {
 .message ul li.msg-right img {
   position: absolute;
   width: 40px;
+  height: 35px;
   right: 0px;
   bottom: 30px;
 }
@@ -308,4 +310,11 @@ body {
   text-align: center;
   font-weight: bold;
   padding-top: 0;
+}
+/* 오른쪽 부분 사진 */
+.msg-left-sub img{
+  border-radius: 50%;
+}
+.msg-right-sub img{
+  border-radius: 50%;
 }
