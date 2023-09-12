@@ -3,196 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- jquery cdn -->
-    <script
-      src="https://code.jquery.com/jquery-3.7.0.min.js"
-      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://kit.fontawesome.com/1a34eeff0c.js"crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous" ></script>
+    <!-- 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&family=Jua&family=Monoton&display=swap" rel="stylesheet">
+    <!-- axios cdn -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- 부트스트랩cdn -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"rel="stylesheet"integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"crossorigin="anonymous"/>
+    <link rel="stylesheet" href="/public/css/classMain.css" />
     <!-- 소켓io 경로 -->
     <script src="/socket.io/socket.io.js"></script>
-
+    <link rel="stylesheet" href="/public/css/profile.css">
     <title>Document</title>
   </head>
 
   <body>
-    <h1>내 회원 정보</h1>
-    <!-- 프로필 사진 -->
-    <div
-      id="profile_img"
-      style="
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        background-color: grey;
-      "
-    ></div>
-    <form onsubmit="fileupload(event)" name="form-upload">
-      <input type="file" id="dynamic" /><br />
-      <button type="submit">프로필 사진 등록</button>
-    </form>
-    <!-- 회원 정보 -->
-    <form name="form-profile">
-      회원 유형 <input type="text" id="userType" value="<%= data.userType%>" disabled/><br />
-      이메일 <input type="email" id="email" value="<%= data.email%>" /><br />
-      이름 <input type="text" id="name" value="<%= data.name %>" /><br />
-      전화번호
-      <input type="number" id="phone" value="<%= data.phone %>" /><br />
-      <button type="button" onclick="registerEdit(`<%= data.id %>`)">
-        수정
-      </button>
-      <button type="button" onclick="deleteUser(`<%= data.id %>`)">
-        탈퇴하기
-      </button>
-    </form>
-    <a href="/logout">로그아웃</a>
-
+    <div class="main_container">
+      <div class="head1 d-flex justify-content-between">
+        <div class="head1-logo "><img src="/public/default/logo-removebg.png" style="width: 30px; height: 30px;"></img><span>CLAVI</span></div>
+        
+      </div>
+      <div class="main_content">
+        <div class="class_list">
+          <div id="class-munu">참여한 클래스</div>
+        </div>
+        <div class="userInfo"></div>
+      </div>
+    </div>
     
-     <% for(let i = 0; i<Classes.length; i++){ %>
-        <div data-class-id="<%=ClassesId[i]%>" onclick="enterClass(this)"><%=Classes[i]%></div>
-     <%} %>
 
-    <% if(data.userType == "leader" ){ %>
-      <form name="ClassMake">
-        <input type="text" name="className" placeholder="className">
-        <button type="button" onclick="makeClass()">클래스 만들기</button>
-      </form>
-    <% } %> 
-
-      <form name="ClassSignin">
-        <input type="text" name="token" placeholder="token">
-        <button type="button" onclick="signinClass()">클래스 가입하기</button>
-      </form>
-
-    <script>
-      //소켓 설정
-      const socket = io();
-      //프로필 수정 함수
-      async function registerEdit(id) {
-        let email = $("#email"); // 이메일
-        let name = $("#name"); //이름
-        let phone = $("#phone"); //핸드폰번호
-        console.log(email.val(), name.val(), phone.val())
-        const res = await axios({
-          method: "PATCH",
-          url: "/profile",
-          data: {
-            id: Number(id),
-            email: email.val(),
-            name: name.val(),
-            phone: phone.val(),
-          },
-        });
-        console.log("res", res.data);
-        if (res.data.result) {
-          alert("성공");
-          // window.location.reload();
-        }
-      }
-      //프로필 사진 업로드 함수
-      async function fileupload(event) {
-        event.preventDefault();
-        console.log("사진등록");
-        const imgBox = $("#profile_img");
-        const file = document.querySelector("#dynamic");
-        // const file = $('#dynamic');
-        console.log(file);
-        // console.log(file[0].files);
-
-        const formData = new FormData();
-        formData.append("dynamic", file.files[0]);
-        try {
-          const res = await axios({
-            method: "POST",
-            url: "/upload",
-            data: formData,
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
-          console.log("res", res.data.path);
-          imgBox.empty();
-          imgBox.append(`<img src=${res.data.path} style="width: 200px; height: 200px; border-radius: 50%;">`) 
-        } catch (error) {
-          console.log(error);
-        }
-      }
-      //탈퇴 함수
-      async function deleteUser(id){
-        const res = await axios({
-          method: "POST",
-          url: 'profile/delete',
-          data: {
-            id: Number(id),
-          },
-        });
-        console.log('탈퇴중');
-        if (res.data.result) {
-          alert("성공");
-          window.location.href='/';
-        }else{
-          alert('실패')
-        }
-
-      }
-      
-      //클래스만들기 함수
-      async function makeClass(){
-        const form = document.forms['ClassMake']
-        const data = {
-          className : form.className.value,
-          leader : '<%= data.name %>'
-        }
-        const res = await axios({
-          method:'POST',
-          url : '/class/make',
-          data : data
-        })
-        if(res.data.res) {
-          alert(`클래스 생성완료! 클래스 공유 코드입니다 외부유출에 조심하세요 : ${res.data.token}`)
-        }
-        window.location.reload()
-      }
-      //클래스 들어가기 함수
-       async function signinClass(){
-        const form = document.forms['ClassSignin']
-        const data = {
-          token : form.token.value
-        }
-        const res = await axios({
-          method : 'POST',
-          url : '/class/signin',
-          data : data
-        })
-        if(res) {
-          alert("가입성공!")
-          window.location.reload()
-        } else {
-          alert('가입실패!')
-        }
-      }
-
-      async function enterClass(element) {
-    const classid = element.getAttribute('data-class-id');
-    try {
-        const result = await axios({
-            method: 'GET',
-            url: '/enter/board',
-            params: {
-                classId: classid
-            }
-        });
-        // AJAX 요청이 완료된 후에 이동하도록 처리
-        if (result.status === 200) {
-            document.location.href = '/board';
-        } else {
-            console.error('요청이 실패했습니다.');
-        }
-    } catch (error) {
-        console.error('오류 발생: ', error);
-    }
-}
-    </script>
+    <script src="/public/js/profile.js"></script>
+    <script src="/public/js/header.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

@@ -1,159 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"
+    />
     <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <title>Document</title>
-</head>
-<body>
-    <main class="board-main">
-             <div class="board-object">
-                 <span id="borad-ID">등록번호 : <%=data.BoradId%></span>
-                 <span class="board-title"> 제목 : <%=data.title%></span>
-                 <span class="board-date"> 날짜 : <%=data.date%></span>
-                 <img class="board-writer-img" src="">
-                 <span class="board-writer"> 작성자 : <%=data.writer%></span>
-                 <span class="board-content"> <%=data.content%></span>
-                 <span class="board-tag"> 태그 : <%=data.tag%></span>
-                 <input type="text" id="board-id" value="<%=data.BoardId%>" hidden>
-             </div>
-             <button type="button" class="boardLike" value="<%=data.BoardId%>" onclick="BoardLike(this)"><%=likecount%></button>
-     </main>
-     <button type="button" class="board-delete" onclick="BoardDelete(this)">삭제하기</button>
+  </head>
+  <body>
+    <div class="content-body">
+      <main class="board-main">
+        <div class="board-object">
+          <span id="borad-ID">등록번호 : <%=data.BoradId%></span>
+          <span class="board-title"> 제목 : <%=data.title%></span>
+          <span class="board-date"> 날짜 : <%=data.date%></span>
+          <img class="board-writer-img" src="" />
+          <span class="board-writer"> 작성자 : <%=data.writer%></span>
+          <span class="board-content"> <%=data.content%></span>
+          <span class="board-tag"> 태그 : <%=data.tag%></span>
+          <input type="text" id="board-id" value="<%=data.BoardId%>" hidden />
+        </div>
+        <button
+          type="button"
+          class="boardLike"
+          value="<%=data.BoardId%>"
+          onclick="BoardLike(this)"
+        >
+          <%=likecount%>
+        </button>
+      </main>
+      <button type="button" class="board-delete" onclick="BoardDelete(this)">
+        삭제하기
+      </button>
 
-     <main class="comment-main">
-           <% for (let i = 0; i < commentData.length; i++) { %>
-                <div class="comment-object">
-                    <span class="comment-writer"> 작성자 : <%=commentData[i].writer%></span>
-                    <span class="comment-date"> <%=commentData[i].date%></span>
-                    <span class="comment-content"><%=commentData[i].content%></span>
-                </div>
-                <button type="button" value="<%=commentData[i].commentId%>" onclick="deleteComment(this)">삭제하기</button>
-           <% } %>
-     </main>
+      <main class="comment-main">
+        <% for (let i = 0; i < commentData.length; i++) { %>
+        <div class="comment-object">
+          <span class="comment-writer">
+            작성자 : <%=commentData[i].writer%></span
+          >
+          <span class="comment-date"> <%=commentData[i].date%></span>
+          <span class="comment-content"><%=commentData[i].content%></span>
+        </div>
+        <button
+          type="button"
+          value="<%=commentData[i].commentId%>"
+          onclick="deleteComment(this)"
+        >
+          삭제하기
+        </button>
+        <% } %>
+      </main>
 
-    <footer class="board-comment">
+      <footer class="board-comment">
         <form name="comment-Write">
-            <div id="editor"></div>
-            <button type="button" class="board-comment" onclick="commentWrite()">댓글달기</button>
+          <div id="editor"></div>
+          <button type="button" class="board-comment" onclick="commentWrite()">
+            댓글달기
+          </button>
         </form>
-    </footer>
-</body>
-    <script>
-
-        if(document.querySelector(".board-main").hasChildNodes){
-
-            for(let i = 0; i < document.querySelector(".board-main").children.length; i+=2){
-                    let temp = document.querySelector(".board-main").children[i].children[5].innerText 
-                    document.querySelector(".board-main").children[i].children[5].innerText = ""
-                    let arr = Array.from(format(temp))
-                for(let j = 0; j < arr.length; j++){
-                     document.querySelector(".board-main").children[i].children[5].appendChild(arr[j])   
-        }}}
-
-        if(document.querySelector(".comment-main").hasChildNodes){
-                for(let i = 0; i < document.querySelector(".comment-main").children.length; i+=2){
-                    console.log(document.querySelector(".comment-main").children[i].children[2])
-                    let temp = document.querySelector(".comment-main").children[i].children[2].innerText
-                    document.querySelector(".comment-main").children[i].children[2].innerText = ""
-                        let arr = Array.from(format(temp))
-                            for(let j = 0; j < arr.length; j++){
-                                document.querySelector(".comment-main").children[i].children[2].appendChild(arr[j])   
-        }}}
-
-        function BoardDelete() {
-            const boardid = document.querySelector('#board-id').value
-            console.log(boardid);
-            if(!confirm('삭제하시겠습니까?')){
-                return;
-            } 
-            axios({
-                method : 'DELETE',
-                url : '/board/delete',
-                data : {
-                    BoardId : boardid,
-                },
-            }).then((res)=>{
-                if(res.data.result==true){
-                    window.location.href='/board';
-                } else {
-                    alert("다른 작성자의 글입니다!")
-                }
-            })
-        }
-
-        async function deleteComment(button) {
-            const commentId = button.value
-            console.log(commentId)
-            // if(!confirm('삭제하시겠습니까?')){
-            //     return;
-            // } 
-            const result = await axios({
-                method:"POST",
-                url:"/comment/delete",
-                data : {
-                    commentId
-                }
-            })
-            if (result===true) {
-                alert('댓글이 삭제되었습니다!')
-                window.location.reload()
-            } else{
-                alert('다른 사람이 쓴 댓글입니다!')
-            }
-      
-        }
-        
-        function BoardLike(button) {
-        const buttonValue = button.value;
-        console.log(`버튼의 value: ${buttonValue}`);
-            axios({
-                method :'POST',
-                url :'/board/like',
-                data : {id : '<%=userid%>',BoardId : buttonValue}
-            }).then(res=> {
-                if (res.data.result==true) {
-                    button.innerText =`${res.data.cou}`
-                } else {
-                    alert("이미 좋아요한 게시글입니다.!")
-                }
-        });
-        }
-
-        function commentWrite() {
-            const form = document.forms['comment-Write']
-            const data = 
-            {content : editor.getHTML(),
-             writer : '<%=user%>',
-             date : Date(),
-             BoardId : document.querySelector('#board-id').value
-            }
-            axios({
-                method:'POST',
-                url :'/comment/write',
-                data : data
-            }).then(
-                window.location.reload()
-            )
-        }
-
-        const Editor = toastui.Editor;
-        const editor = new Editor({
-               el: document.querySelector('#editor'),
-               height: '500px',
-               initialEditType: 'markdown',
-               previewStyle: 'vertical'
-           });
-
-           function format(text) {
-                let html = new DOMParser();
-                html = html.parseFromString(text, 'text/html');
-                console.log(html.children[0].children[1].children)
-
-                return html.children[0].children[1].children
-            }
-    </script>
+      </footer>
+    </div>
+  </body>
+  <script></script>
 </html>

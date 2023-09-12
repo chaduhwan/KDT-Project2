@@ -28,7 +28,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 100px;
+  margin-top: 50px;
 }
 .modal-footer > button {
   background-color: #000;
@@ -234,7 +234,8 @@ body {
   align-items: center;
   margin: 0;
   /* 작은 물고기 도트 이미지 URL 설정 */
-  background-image: url("/public/default/tile_background3.png");
+  background-image: url("/public/default/bk1_crop2.gif");
+  background-size: cover;
   /* background-repeat: repeat; 이미지 반복 설정 (기본값은 repeat) */
   /* background-size: 25px; 이미지 크기 설정 (도트 크기) */
 }
