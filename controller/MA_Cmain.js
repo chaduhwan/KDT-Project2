@@ -331,7 +331,7 @@ exports.profile = async (req, res) => {
       Classes.push(myClassName.className);
       ClassesId.push(myClassName.ClassId);
     }
-    // console.log('프로필', data)
+    console.log("프로필", data);
     res.render("MA_profile", { data, Classes, ClassesId });
   } else {
     res.render("MA_login");
