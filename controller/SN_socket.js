@@ -53,6 +53,7 @@ exports.connection = (io, socket) => {
     //id에서 이름 값 찾아서 저장하는거
     userName = await nameExtract(e);
     roomList.push(userName);
+    console.log("내이름!!!!!!!!!!!!!!!!", userName);
   });
 
   //방 생성하는 create문, roomName : 상대방이름, username 내이름
@@ -179,7 +180,23 @@ exports.connection = (io, socket) => {
   socket.on("typing", (username, msgValue) => {
     socket.broadcast.to(socket.room).emit("type", username, msgValue);
   });
-
+  socket.on("logout", () => {
+    //룸 리스트에서 나 빼는거
+    let index = roomList.indexOf(userName);
+    if (index !== -1) {
+      roomList.splice(index, 1);
+    }
+    socket.leave(realNumber);
+    if (map.get(realNumber)) {
+      const index = map.get(realNumber).indexOf(userName);
+      if (index !== -1) {
+        map.get(realNumber).splice(index, 1);
+      }
+    }
+    io.emit("deleteList", userName);
+    io.emit("accessCheck", roomList, userName);
+    io.emit("getAccess", roomList);
+  });
   socket.on("disconnect", () => {
     //연결이 끊어지면 그 방에서 나감
     socket.leave(realNumber);
