@@ -1,34 +1,99 @@
-
 .main_content {
-  display: flex;
+  position: relative;
+ display: flex;
+ height: 85%;
 }
-
 
 /* 게시글 관련 */
 .board-main {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 75%;
+  height: 100%;
   }
   
 .board-object {
+    position: relative;
+    width: 100%;
+    height: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: white;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
   }
 
-/* 버튼 모음 */
-.board-button, .board-delete,.deleteButton ,.boardLike,.commentbutton {
-    padding: 10px 20px;
-    background-color: #4993fa;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  .board-button:hover, .board-delete:hover,.deleteButton:hover , .boardLike:hover , .commentbutton:hover{
-    background-color: #337ab7;
-  }
+.boardLike , .board-delete{
+  padding: 10px 20px;
+  background-color: #4993fa;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.boardLike:hover, .board-delete:hover{
+  background-color: #337ab7;
+}
+.board-high{
+  display: flex;
+  justify-content: space-evenly;
+}
+.board-mid{
+  display: flex;
+  justify-content: space-evenly;
+}
+.board-bottom {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+/* 코멘트 관련  */
+.comment-container {
+  width: 33%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.comment-main {
+  width: 100%;
+  height: 75%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.comment-object {
+  width: 90%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: white;
+  margin-bottom: 10px;
+}
+.commet-high{
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.board-comment {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.commentbutton{
+  padding: 10px 20px;
+  background-color: #4993fa;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+.commentbutton:hover{
+  background-color: #337ab7;
+}

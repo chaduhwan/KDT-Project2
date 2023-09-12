@@ -49,37 +49,43 @@
         </ul>
         <div class="main_content">
             <main class="board-main">
-                     <div class="board-object">
-                         <span id="borad-ID">등록번호 : <%=data.BoradId%></span>
-                         <span class="board-title"> 제목 : <%=data.title%></span>
-                         <span class="board-date"> 날짜 : <%=data.date%></span>
-                         <img class="board-writer-img" src="">
-                         <span class="board-writer"> 작성자 : <%=data.writer%></span>
-                         <span class="board-content"> <%=data.content%></span>
-                         <span class="board-tag"> 태그 : <%=data.tag%></span>
-                         <input type="text" id="board-id" value="<%=data.BoardId%>" hidden>
-                     </div>
-                     <button type="button" class="boardLike" value="<%=data.BoardId%>" onclick="BoardLike(this)"><%=likecount%></button>
-             </main>
-             <button type="button" class="board-delete" onclick="BoardDelete(this)">삭제하기</button>
-        
-             <main class="comment-main">
-                   <% for (let i = 0; i < commentData.length; i++) { %>
-                        <div class="comment-object">
-                            <span class="comment-writer"> 작성자 : <%=commentData[i].writer%></span>
-                            <span class="comment-date"> <%=commentData[i].date%></span>
-                            <span class="comment-content"><%=commentData[i].content%></span>
-                        </div>
-                        <button type="button" class="deleteButton" value="<%=commentData[i].commentId%>" onclick="deleteComment(this)">삭제하기</button>
-                   <% } %>
-             </main>
-        
-            <footer class="board-comment">
-                <form name="comment-Write">
-                    <div id="editor"></div>
-                    <button type="button" class="commentbutton" onclick="commentWrite()">댓글달기</button>
-                </form>
-            </footer>
+            <div class="board-object" data-board-id="<%=data.BoardId%>">
+                    <div class="board-high">
+                        <span id="borad-ID">등록번호 : <%=data.BoardId%></span>
+                        <span class="board-title"> 제목 : <%=data.title%></span>
+                    </div>
+                    <div class="board-mid">
+                        <img class="board-writer-img" src="">
+                        <span class="board-writer"> 작성자 : <%=data.writer%></span>
+                        <span class="board-date"> 날짜 : <%=data.date%></span>
+                    </div>
+                    <span class="board-content"> <%=data.content%></span>
+                    <div class="board-bottom">
+                        <span class="board-tag"> 태그 : <%=data.tag%></span>
+                        <button type="button" class="boardLike" value="<%=data.BoardId%>" onclick="BoardLike(this)"><%=likecount%></button>
+                        <button type="button" value="<%=data.BoardId%>" class="board-delete" onclick="BoardDelete(this)">삭제하기</button>
+                    </div>
+                </div>
+            </main>
+            <div class="comment-container">
+
+                <main class="comment-main">
+                      <% for (let i = 0; i < commentData.length; i++) { %>
+                           <div class="comment-object">
+                               <span class="comment-writer"> 작성자 : <%=commentData[i].writer%></span>
+                               <span class="comment-date"> <%=commentData[i].date%></span>
+                               <span class="comment-content"><%=commentData[i].content%></span>
+                               <button type="button" class="deleteButton" value="<%=commentData[i].commentId%>" onclick="deleteComment(this)">삭제하기</button>
+                           </div>
+                      <% } %>
+                </main>
+                <footer class="board-comment">
+                    <form class="board-comment" name="comment-Write">
+                        <div id="editor"></div>
+                        <button type="button" class="commentbutton" onclick="commentWrite()">댓글달기</button>
+                    </form>
+                </footer>
+            </div>
         </div>
 
         <div class="offcanvas offcanvas-end " tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
@@ -111,18 +117,17 @@
 </body>
     <script>
 
-        if(document.querySelector(".board-main").hasChildNodes){
-
-            for(let i = 0; i < document.querySelector(".board-main").children.length; i+=2){
-                    let temp = document.querySelector(".board-main").children[i].children[5].innerText 
-                    document.querySelector(".board-main").children[i].children[5].innerText = ""
-                    let arr = Array.from(format(temp))
-                for(let j = 0; j < arr.length; j++){
-                     document.querySelector(".board-main").children[i].children[5].appendChild(arr[j])   
-        }}}
+    if(document.querySelector(".board-main").hasChildNodes){
+        for(let i = 0; i < document.querySelector(".board-main").children.length; i++){
+            let temp = document.querySelector(".board-main").children[i].children[2].innerText 
+            document.querySelector(".board-main").children[i].children[2].innerText = ""
+            let arr = Array.from(format(temp))
+        for(let j = 0; j < arr.length; j++){
+             document.querySelector(".board-main").children[i].children[2].appendChild(arr[j])   
+    }}}
 
         if(document.querySelector(".comment-main").hasChildNodes){
-                for(let i = 0; i < document.querySelector(".comment-main").children.length; i+=2){
+                for(let i = 0; i < document.querySelector(".comment-main").children.length; i++){
                     console.log(document.querySelector(".comment-main").children[i].children[2])
                     let temp = document.querySelector(".comment-main").children[i].children[2].innerText
                     document.querySelector(".comment-main").children[i].children[2].innerText = ""
@@ -132,7 +137,7 @@
         }}}
 
         function BoardDelete() {
-            const boardid = document.querySelector('#board-id').value
+            const boardid = document.querySelector('.board-delete').value
             console.log(boardid);
             if(!confirm('삭제하시겠습니까?')){
                 return;
@@ -154,10 +159,9 @@
 
         async function deleteComment(button) {
             const commentId = button.value
-            console.log(commentId)
-            // if(!confirm('삭제하시겠습니까?')){
-            //     return;
-            // } 
+            if(!confirm('삭제하시겠습니까?')){
+                return;
+            } 
             const result = await axios({
                 method:"POST",
                 url:"/comment/delete",
@@ -165,7 +169,7 @@
                     commentId
                 }
             })
-            if (result===true) {
+            if (result.data.result===true) {
                 alert('댓글이 삭제되었습니다!')
                 window.location.reload()
             } else{
@@ -196,7 +200,7 @@
             {content : editor.getHTML(),
              writer : '<%=user%>',
              date : Date(),
-             BoardId : document.querySelector('#board-id').value
+             BoardId : document.querySelector('.board-delete').value
             }
             axios({
                 method:'POST',
@@ -210,9 +214,9 @@
         const Editor = toastui.Editor;
         const editor = new Editor({
                el: document.querySelector('#editor'),
-               height: '500px',
                initialEditType: 'markdown',
                previewStyle: 'vertical',
+               height: `300px`,
                toolbarItems: [
         ['heading', 'bold', 'italic', 'strike'],
         ['image', 'link'],

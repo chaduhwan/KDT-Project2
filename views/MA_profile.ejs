@@ -29,15 +29,38 @@
       <div class="main_content">
         <div class="class_list">
           <div id="class-munu">참여한 클래스</div>
+          <% for(let i = 0; i<Classes.length; i++){ %>
+            <div data-class-id="<%=ClassesId[i]%>" onclick="enterClass(this)"><%=Classes[i]%></div>
+         <%} %>
         </div>
         <div class="userInfo"></div>
       </div>
     </div>
-    
 
     <script src="/public/js/profile.js"></script>
     <script src="/public/js/header.js"></script>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
+  <script>
+      //클래스 들어가기 함수
+      async function signinClass(){
+        const form = document.forms['ClassSignin']
+        const data = {
+          token : form.token.value
+        }
+        const res = await axios({
+          method : 'POST',
+          url : '/class/signin',
+          data : data
+        })
+        if(res) {
+          alert("가입성공!")
+          window.location.reload()
+        } else {
+          alert('가입실패!')
+        }
+      }
+
+  </script>
 </html>

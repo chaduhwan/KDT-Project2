@@ -6,6 +6,7 @@
 
 /* 옆에 뜨는 검색창 게시판 헤더 관련 */
 .board-hearder{
+  width: 25%;
   position: relative;
   height: 100%;
 }
@@ -62,20 +63,26 @@
 
 /* 게시글 관련 */
 .board-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 75%;
   height: 100%;
   overflow: auto;
+
   }
   
 .board-object {
+    width: 70%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
     background-color: white;
-    display: flex;
+    margin-bottom: 10px;
   }
 
-  .board-object:hover {
+.board-object:hover {
     background-color: #f5f5f5;
   }
 
@@ -88,6 +95,18 @@
 }
 .boardLike:hover{
   background-color: #337ab7;
+}
+.board-high{
+  display: flex;
+  justify-content: center;
+}
+.board-mid{
+  display: flex;
+  justify-content: space-evenly;
+}
+.board-bottom {
+  display: flex;
+  justify-content: space-between;
 }
 
 /* 작성창 관련 */
