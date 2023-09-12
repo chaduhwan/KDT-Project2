@@ -30,6 +30,7 @@ body {
   padding: 10px 20px 10px 10px;
   border-radius: 20px 20px 0 0;
   background-color: #4993fa;
+  height: 8%;
   /* align-items: center; */
   /* justify-content: space-between; */
 }
@@ -39,7 +40,7 @@ body {
   font-size: 20px;
   color: white;
   align-items: center;
-  font-family: "ADLaM Display", cursive;
+  font-family: 'ADLaM Display', cursive;
 }
 .head1-logo > span {
   color: white;
@@ -54,6 +55,7 @@ body {
 
 .nav {
   opacity: 0.6;
+  height: 7%;
   /* display: flex; */
   /* justify-content: space-between; */
   justify-content: space-around;
@@ -107,4 +109,11 @@ body {
   margin: 5px;
   color: black !important;
   background-color: rgba(255, 255, 255, 0.603) !important;
+}
+
+.main_content {
+  margin: 0;
+  width: 100%;
+  height: 85%;
+  background-color: rgb(128, 128, 128, 0.14);
 }
