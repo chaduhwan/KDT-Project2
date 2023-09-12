@@ -18,7 +18,7 @@ body {
   margin: 0px;
 }
 .main-section {
-  width: 960px;
+  width: 100%;
   background-color: #fff;
   margin: auto;
 }
@@ -178,7 +178,7 @@ body {
 .message ul li.msg-left img {
   position: absolute;
   width: 40px;
-  height : 35px;
+  height: 35px;
   bottom: 30px;
 }
 .message ul li.msg-left .msg-desc {
@@ -312,9 +312,9 @@ body {
   padding-top: 0;
 }
 /* 오른쪽 부분 사진 */
-.msg-left-sub img{
+.msg-left-sub img {
   border-radius: 50%;
 }
-.msg-right-sub img{
+.msg-right-sub img {
   border-radius: 50%;
 }

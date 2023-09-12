@@ -123,25 +123,25 @@ exports.practice = (req, res) => {
 };
 
 //내 프로필 사진 불러오기
-exports.myprofile = async(req,res)=>{
+exports.myprofile = async (req, res) => {
   const mypicture = await User.findOne({
-    where : {name : req.body.username}
-  })
+    where: { name: req.body.username },
+  });
   //내 사진 경로 보내주기
-  if(mypicture.profileImgPath == null){
+  if (mypicture.profileImgPath == null) {
     //사진 없을 때 디폴트 사진으로 들어가게
     mypicture.profileImgPath = "public\\default\\logo.png";
   }
-  res.send({picName : mypicture.profileImgPath});
-}
+  res.send({ picName: mypicture.profileImgPath });
+};
 //상대방 프로필 사진 불러오기
-exports.otherprofile = async (req,res)=>{
+exports.otherprofile = async (req, res) => {
   const otherpicture = await User.findOne({
-    where : {name : req.body.otherRoom}
-  })
-  if(otherpicture.profileImgPath == null){
+    where: { name: req.body.otherRoom },
+  });
+  if (otherpicture.profileImgPath == null) {
     //사진 없을 때 디폴트 사진으로 들어가게
     otherpicture.profileImgPath = "public\\default\\logo.png";
   }
-  res.send({otherpicName : otherpicture.profileImgPath})
-}
+  res.send({ otherpicName: otherpicture.profileImgPath });
+};
