@@ -66,16 +66,22 @@
             <main class="board-main">
                 <% for (let i = 0 ; i < data.length ; i ++) {%>
                 <div class="board-object" data-board-id="<%=data[i].BoardId%>" onclick="boardDetail(this)">
-                        <span id="borad-ID">등록번호 : <%=data[i].BoradId%></span>
-                        <span class="board-title"> 제목 : <%=data[i].title%></span>
-                        <span class="board-date"> 날짜 : <%=data[i].date%></span>
-                        <img class="board-writer-img" src="">
-                        <span class="board-writer"> 작성자 : <%=data[i].writer%></span>
+                        <div class="board-high">
+                            <span id="borad-ID">등록번호 : <%=data[i].BoardId%></span>
+                            <span class="board-title"> 제목 : <%=data[i].title%></span>
+                        </div>
+                        <div class="board-mid">
+                            <img class="board-writer-img" src="">
+                            <span class="board-writer"> 작성자 : <%=data[i].writer%></span>
+                            <span class="board-date"> 날짜 : <%=data[i].date%></span>
+                        </div>
                         <span class="board-content"> <%=data[i].content%></span>
-                        <span class="board-tag"> 태그 : <%=data[i].tag%></span>
+                        <div class="board-bottom">
+                            <span class="board-tag"> 태그 : <%=data[i].tag%></span>
+                            <button type="button" class="boardLike" value="<%=data[i].BoardId%>" onclick="BoardLike(this)"><%=likeArr[i]%></button>
+                        </div>
                     </div>
-                    <button type="button" class="boardLike" value="<%=data[i].BoardId%>" onclick="BoardLike(this)"><%=likeArr[i]%></button>
-                        <%}%>
+                            <%}%>
                 </main>
                 <button id="btn-modal">작성하기</button>
             </div>
@@ -107,7 +113,6 @@
               <div class="offcanvas-menu ">
                 <div class="my_page btn">마이페이지</div>
                 <div class="planner btn">플래너</div>
-                
                 <a class="btn" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   클래스 변경하기
                 </a>
@@ -128,12 +133,12 @@
 
         if(document.querySelector(".board-main").hasChildNodes){
 
-            for(let i = 0; i < document.querySelector(".board-main").children.length; i+=2){
-                    let temp = document.querySelector(".board-main").children[i].children[5].innerText 
-                    document.querySelector(".board-main").children[i].children[5].innerText = ""
+            for(let i = 0; i < document.querySelector(".board-main").children.length; i++){
+                    let temp = document.querySelector(".board-main").children[i].children[2].innerText 
+                    document.querySelector(".board-main").children[i].children[2].innerText = ""
                     let arr = Array.from(format(temp))
                 for(let j = 0; j < arr.length; j++){
-                     document.querySelector(".board-main").children[i].children[5].appendChild(arr[j])   
+                     document.querySelector(".board-main").children[i].children[2].appendChild(arr[j])   
         }}}
 
     function boardDetail(element) {
@@ -178,6 +183,13 @@
                 div.onclick = function() {
                 boardDetail(this);};
 
+                const boardHigh = document.createElement('div')
+                boardHigh.classList.add('board-high')
+                const boardMid = document.createElement('div')
+                boardMid.classList.add('board-mid')
+                const boardBottom = document.createElement('div')
+                boardBottom.classList.add('board-bottom')
+
                 const span1 = document.createElement('span');
                 span1.textContent = `등록번호 : ${res.data.data[i].BoardId}`;
                 span1.id = 'board-ID'
@@ -212,13 +224,21 @@
                 button.onclick = function(){
                     BoardLike(this)
                 }
-                div.appendChild(span1);
-                div.appendChild(span2);
-                div.appendChild(span3);
-                div.appendChild(span4);
-                div.appendChild(span5);
-                div.appendChild(span6);
-                div.appendChild(button);
+
+                boardHigh.appendChild(span1)
+                boardHigh.appendChild(span2)
+
+                boardMid.appendChild(span4)
+                boardMid.appendChild(span3)
+
+                boardBottom.appendChild(span6)
+                boardBottom.appendChild(button)
+
+                div.appendChild(boardHigh)
+                div.appendChild(boardMid)
+                div.appendChild(span5)
+                div.appendChild(boardBottom)
+
                 const main = document.querySelector('.board-main')
                 main.appendChild(div)
             }
@@ -239,6 +259,7 @@
         tagAdd.push(form.tag.value)
 
          console.log(tagAdd)
+        form.tag.value="";
     }
 
     async function boardWrite() {
@@ -255,6 +276,10 @@
             url : '/board/write',
             data : data
         })
+        if(res.data.result==false) {
+            alert("게시판을 먼저 선택해주세요!")
+            return;
+        }
         tagAdd.length = 0;
             console.log(res.data.data)
             for (let i = 0 ; i < res.data.data.length; i++) {
@@ -264,7 +289,13 @@
                 div.onclick = function() {
                 boardDetail(this);};
 
-               
+                const boardHigh = document.createElement('div')
+                boardHigh.classList.add('board-high')
+                const boardMid = document.createElement('div')
+                boardMid.classList.add('board-mid')
+                const boardBottom = document.createElement('div')
+                boardBottom.classList.add('board-bottom')
+
                 const span1 = document.createElement('span');
                 span1.textContent = `등록번호 : ${res.data.data[i].BoardId}`;
                 span1.id = 'board-ID'
@@ -299,13 +330,21 @@
                 button.onclick = function(){
                     BoardLike(this)
                 }
-                div.appendChild(span1);
-                div.appendChild(span2);
-                div.appendChild(span3);
-                div.appendChild(span4);
-                div.appendChild(span5);
-                div.appendChild(span6);
-                div.appendChild(button);
+
+                boardHigh.appendChild(span1)
+                boardHigh.appendChild(span2)
+
+                boardMid.appendChild(span4)
+                boardMid.appendChild(span3)
+
+                boardBottom.appendChild(span6)
+                boardBottom.appendChild(button)
+
+                div.appendChild(boardHigh)
+                div.appendChild(boardMid)
+                div.appendChild(span5)
+                div.appendChild(boardBottom)
+
                 const main = document.querySelector('.board-main')
                 main.appendChild(div)
             }
@@ -321,9 +360,11 @@
                     textIput.removeChild(textIput.firstChild);
                 }
             form.reset()
+            modal.style.display = "none"
     }
 
     function BoardLike(button) {
+        event.stopPropagation();
         const buttonValue = button.value;
         console.log(`버튼의 value: ${buttonValue}`);
             axios({
@@ -365,7 +406,13 @@
                 div.onclick = function() {
                 boardDetail(this);};
 
-                const tr = document.createElement('tr');
+                const boardHigh = document.createElement('div')
+                boardHigh.classList.add('board-high')
+                const boardMid = document.createElement('div')
+                boardMid.classList.add('board-mid')
+                const boardBottom = document.createElement('div')
+                boardBottom.classList.add('board-bottom')
+
                 const span1 = document.createElement('span');
                 span1.textContent = `등록번호 : ${res.data.data[i].BoardId}`;
                 span1.id = 'board-ID'
@@ -400,16 +447,23 @@
                 button.onclick = function(){
                     BoardLike(this)
                 }
-                tr.appendChild(span1);
-                tr.appendChild(span2);
-                tr.appendChild(span3);
-                tr.appendChild(span4);
-                tr.appendChild(span5);
-                tr.appendChild(span6);
-                div.appendChild(tr)
+
+                boardHigh.appendChild(span1)
+                boardHigh.appendChild(span2)
+
+                boardMid.appendChild(span4)
+                boardMid.appendChild(span3)
+
+                boardBottom.appendChild(span6)
+                boardBottom.appendChild(button)
+
+                div.appendChild(boardHigh)
+                div.appendChild(boardMid)
+                div.appendChild(span5)
+                div.appendChild(boardBottom)
+
                 const main = document.querySelector('.board-main')
                 main.appendChild(div)
-                main.appendChild(button)
             }
         })
     }

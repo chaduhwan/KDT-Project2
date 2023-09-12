@@ -141,6 +141,10 @@ exports.BoardDetail = (req, res) => {
 
 ////////게시글 작성
 exports.BoardWrite = async (req, res) => {
+  if(req.session.subjectId== null) {
+    res.json({result:false})
+    return;
+  }
   const { title, date, writer, content, tag } = req.body;
   let likeArr = [];
   const newboard = await board.create({
@@ -165,7 +169,7 @@ exports.BoardWrite = async (req, res) => {
     },
   });
   likeArr.push(cou);
-  res.json({ data: boardnew, likeArr });
+  res.json({ data: boardnew, likeArr ,result:true});
 };
 
 ////////게시글 삭제
