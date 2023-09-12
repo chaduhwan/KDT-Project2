@@ -48,10 +48,10 @@
     </form>
     <a href="/logout">로그아웃</a>
 
+    
      <% for(let i = 0; i<Classes.length; i++){ %>
         <div data-class-id="<%=ClassesId[i]%>" onclick="enterClass(this)"><%=Classes[i]%></div>
-     <% } %>
-
+     <%} %>
 
     <% if(data.userType == "leader" ){ %>
       <form name="ClassMake">
