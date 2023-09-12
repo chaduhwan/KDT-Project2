@@ -1,0 +1,144 @@
+/* 
+폰트참고
+font-family: 'ADLaM Display', cursive;
+font-family: 'Jua', sans-serif;
+font-family: 'Monoton', cursive;
+ */
+body {
+  margin: 0;
+  /* padding: 20px; */
+  width: 1500px;
+  height: 700px;
+  background-color: rgba(73, 147, 250, 0.6);
+  /* opacity: 0.6; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main_container {
+  margin-left: 45px;
+  width: 1400px;
+  height: 650px;
+  border-radius: 20px;
+  background-color: rgb(255, 255, 255);
+  padding: 0;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); /* 그림자 설정 */
+}
+
+.head1 {
+  display: flex;
+  height: 8%;
+  padding: 10px 20px 10px 10px;
+  border-radius: 20px 20px 0 0;
+  background-color: #4993fa;
+  height: 8%;
+  /* align-items: center; */
+  /* justify-content: space-between; */
+}
+.head1-logo {
+  display: flex;
+  margin-left: 10px;
+  font-size: 20px;
+  color: white;
+  align-items: center;
+  font-family: 'ADLaM Display', cursive;
+}
+.head1-logo > span {
+  color: white;
+}
+.head1-profile {
+  /* margin-left: auto; */
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.nav {
+  opacity: 0.6;
+  height: 7%;
+  /* display: flex; */
+  /* justify-content: space-between; */
+  justify-content: space-around;
+}
+.nav-link {
+  flex: 1;
+}
+
+/* 사이드바 */
+
+.profile_img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.603);
+}
+
+.offcanvas {
+  border-radius: 20px;
+  margin-top: 4vh;
+  margin-right: 3vw;
+  height: 92vh;
+  transition: transform 0.3s ease-in-out; /* 애니메이션 지속 시간 및 이징 함수 조정 */
+  background-color: #ffedb5bf;
+  --bs-offcanvas-width: 350px;
+}
+
+.offcanvas.show {
+  transform: translateX(0); /* Offcanvas가 나타날 때의 최종 위치 */
+}
+
+.offcanvas.hide {
+  transform: translateX(100%); /* Offcanvas가 사라질 때의 최종 위치 */
+  transition: transform 0.3s ease-in-out;
+}
+
+.offcanvas-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+  text-align: center;
+  height: 100%;
+}
+.offcanvas-body > * {
+  margin: 10px;
+}
+
+.offcanvas-menu > * {
+  width: 163px !important;
+  margin: 5px;
+  color: black !important;
+  background-color: rgba(255, 255, 255, 0.603) !important;
+}
+
+.main_content {
+  margin: 0;
+  width: 100%;
+  height: 85%;
+  border-radius: 0 0 20px 20px;
+  background-color: rgba(128, 128, 128, 0.14);
+}
+
+.nav-drop {
+  display: none;
+  justify-content: center;
+}
+.dropdown-toggle {
+  width: 200px;
+}
+.dropdown-menu {
+  width: 200px;
+  /* display: flex; */
+  justify-content: center;
+}
+
+@media screen and (max-width: 455px) {
+  .nav {
+    display: none;
+  }
+  .nav-drop {
+    display: flex;
+  }
+}

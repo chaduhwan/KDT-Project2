@@ -4,6 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/public/js/header.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/1a34eeff0c.js"crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous" ></script>
+    <!-- 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&family=Jua&family=Monoton&display=swap" rel="stylesheet">
+    <!-- axios cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- 부트스트랩cdn -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"rel="stylesheet"integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"crossorigin="anonymous"/>
+    <link rel="stylesheet" href="/public/css/classMain.css" />
+    <title>Document</title>
     <title>Document</title>
     <style>
       body {
@@ -82,27 +96,150 @@
         display: flex;
         flex-direction: row;
       }
+      .all-file-place{
+        display: flex;
+        flex-direction: row;
+      }
+      .left-file-place{
+        border-color: #646464;
+        border-style: solid;
+        border-width: 0.5px;
+        width: 150px;
+        height: 50%;
+      }
+      .right-file-place{
+        overflow-y: scroll;
+        overflow-x: hidden;
+        height: 76vh;
+      }
+      .right-file-place::-webkit-scrollbar {
+        width: 10px;  
+      }
+
+      .right-file-place::-webkit-scrollbar-thumb {
+        background: #A7ECEE; /* 스크롤바 색상 */
+        border-radius: 10px; /* 스크롤바 둥근 테두리 */
+      }
+
+      .right-file-place::-webkit-scrollbar-track {
+        /* background: rgba(220, 20, 60, .1); */
+      }
+
+      #file_upload{
+        display: none;
+      }
+      .uploader{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 80px;
+        height: 30px;
+        border-style: solid;
+        border-color: black;
+        border-width: 0.5px;
+      }
+      .file-text{
+        margin: 0;
+      }
+      .btn-sizing{
+        width: 150px;
+      }
     </style>
   </head>
   <body>
-    <form onsubmit="fileupload(event)">
-      <input type="file" id="file_upload" multiple /> <br />
-      폴더
-      <select id="folder_location" onchange="positionChange()">
-        <option value="root">root</option>
-      </select>
-      <br />
-      <button type="submit">업로드</button><br />
-    </form>
-    <button type="button" onclick="folderCreate()">폴더생성</button> <br />
-    <button type="button" onclick="selectAll()">전체선택</button> <br />
-    <button type="button" onclick="erase()">삭제</button> <br />
-    <button type="button" onclick="move()">이동</button> <br />
 
-    <h1 class="currentPlace">root</h1>
-    <div class="result"></div>
-    <div class="list_modal">
-      <div class="list_modal_center"></div>
+
+    <div class="main_container">
+      <div class="head1 d-flex justify-content-between">
+        <div class="head1-logo "><img src="/public/default/logo-removebg.png" style="width: 30px; height: 30px;"></img><span>CLAVI</span></div>
+        <i class="head1-profile fa-solid fa-user " data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="color: white; "></i>
+          <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button> -->
+      </div>
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/login"><i class="fa-solid fa-chalkboard-user"></i>  BOARD</a>
+          
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"><i class="fa-solid fa-chair"></i>  SEAT</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"><i class="fa-solid fa-comments"></i>  MESSAGE</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"><i class="fa-solid fa-book"></i>  NOTE</a>
+        </li>
+      </ul>
+
+      <div class="dropdown nav-drop">
+        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          MENU
+        </button>
+        <ul class="dropdown-menu">
+          <li><button class="dropdown-item" type="button">BOARD</button></li>
+          <li><button class="dropdown-item" type="button">SEAT</button></li>
+          <li><button class="dropdown-item" type="button">MESSAGE</button></li>
+          <li><button class="dropdown-item" type="button">NOTE</button></li>
+        </ul>
+      </div>
+
+      <div class="main_content">
+        <div class="all-file-place">
+          <div class="left-file-place">
+            폴더
+            <select id="folder_location" onchange="positionChange()">
+              <option value="root">root</option>
+            </select>
+            <form onsubmit="fileupload(event)">
+              <input type="file" name="file_upload" id="file_upload" multiple /> <br />
+              <label for="file_upload">
+                <div class="uploader btn-sizing"><p class="file-text">파일선택</p></div>
+              </label>
+              <br>
+              <button class="btn-upload btn-sizing" type="submit">업로드</button>
+            </form>
+            <button type="button" class="btn-sizing" onclick="folderCreate()">폴더생성</button> <br />
+            <button type="button" class="btn-sizing" onclick="selectAll()">전체선택</button> <br />
+            <button type="button" class="btn-sizing" onclick="erase()">삭제</button> <br />
+            <button type="button" class="btn-sizing" onclick="move()">이동</button> <br />
+          </div>
+          <div class="right-file-place">
+            <div style="padding: 0 0 0 30px;">
+              <h1 class="currentPlace">root</h1>
+            </div>
+            <div class="result"></div>
+            <div class="list_modal">
+              <div class="list_modal_center"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="offcanvas offcanvas-end " tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasRightLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body ">
+        <div class="profile_img"><img src="/public/default/모래성.png" style="width: 200px;"></div>
+        <br />
+        <div class="offcanvas-menu ">
+          <div class="my_page btn">마이페이지</div>
+          <div class="planner btn">플래너</div>
+          
+          <a class="btn" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            클래스 변경하기
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">KDT 9기</a></li>
+            <li><a class="dropdown-item" href="#">두환이네</a></li>
+            <li><a class="dropdown-item" href="#">KDT 1기</a></li>
+          </ul>
+          <div class="logout btn" onclick="logout()">로그아웃</div>
+        </div>
+        
+      </div>
     </div>
 
     <script>
@@ -219,7 +356,7 @@
             div3.style.cursor = 'pointer';
             div3.appendChild(div);
             div3.appendChild(div2);
-            if (line.children.length < 6) {
+            if (line.children.length < 9) {
               line.appendChild(div3);
               console.log(line.children.length);
             } else {
