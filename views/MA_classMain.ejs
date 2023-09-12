@@ -25,7 +25,7 @@
       </div>
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#"><i class="fa-solid fa-chalkboard-user"></i>  BOARD</a>
+          <a class="nav-link active" aria-current="page" href="/login"><i class="fa-solid fa-chalkboard-user"></i>  BOARD</a>
           
         </li>
         <li class="nav-item">
@@ -38,10 +38,23 @@
           <a class="nav-link" href="#"><i class="fa-solid fa-book"></i>  NOTE</a>
         </li>
       </ul>
-      <div class="main_body">
+
+      <div class="dropdown nav-drop">
+        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          MENU
+        </button>
+        <ul class="dropdown-menu">
+          <li><button class="dropdown-item" type="button">BOARD</button></li>
+          <li><button class="dropdown-item" type="button">SEAT</button></li>
+          <li><button class="dropdown-item" type="button">MESSAGE</button></li>
+          <li><button class="dropdown-item" type="button">NOTE</button></li>
+        </ul>
+      </div>
+      <div class="main_content">
 
       </div>
     </div>
+    
     <div class="offcanvas offcanvas-end " tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
       <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasRightLabel"></h5>
@@ -57,7 +70,6 @@
           <a class="btn" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             클래스 변경하기
           </a>
-        
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="#">KDT 9기</a></li>
             <li><a class="dropdown-item" href="#">두환이네</a></li>

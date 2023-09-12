@@ -1,0 +1,28 @@
+@font-face {
+  font-family: "S-CoreDream-3Light";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+body {
+  font-family: "S-CoreDream-3Light", sans-serif; /* 폰트를 적용합니다. */
+  /* 다른 스타일 속성을 추가할 수 있습니다. */
+}
+
+.profile_img_div {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: rgb(128, 128, 128, 0.14);
+}
+.profile_img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: rgb(128, 128, 128, 0.14);
+}
+
+.main_content {
+  padding: 10px;
+}

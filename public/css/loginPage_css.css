@@ -41,7 +41,7 @@
   padding-left: 20px;
 }
 .login_banner > img {
-  width: 250px;
+  width: 100px;
   background-color: #4993fa;
   border-radius: 40px;
 }
@@ -169,6 +169,14 @@ input:focus {
   font-size: 7px;
   font-weight: bold;
 }
+#back1 {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(128, 128, 128, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 #backGround {
   width: 500px;
@@ -190,7 +198,8 @@ body {
   align-items: center;
   margin: 0;
   /* 작은 물고기 도트 이미지 URL 설정 */
-  background-image: url("/public/default/tile_background2.png");
+  background-image: url("/public/default/bk1_crop2.gif");
+  background-size: cover;
   /* background-repeat: repeat; 이미지 반복 설정 (기본값은 repeat) */
   /* background-size: 25px; 이미지 크기 설정 (도트 크기) */
 }
