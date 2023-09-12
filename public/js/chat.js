@@ -291,10 +291,10 @@ socket.on("getAccess", (roomList) => {
   });
 });
 
-//나가면 회색으로 변하는 이벤트
-// socket.on("deleteList", (username) => {
-//   document.querySelector(`#${username}`).style.color = "gray";
-// });
+// 나가면 회색으로 변하는 이벤트
+socket.on("deleteList", (username) => {
+  document.querySelector(`#${username}`).style.color = "gray";
+});
 //내가 채팅하고 잇는 방 불러오고 -> 그 채팅방 미리보기 메시지까지 가져오는거
 socket.on("chatList", async (username, roomList) => {
   document.querySelector(".chatList").innerHTML = "";
