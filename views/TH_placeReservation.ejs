@@ -6,25 +6,44 @@
     <title>Document</title>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="/public/js/header.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/1a34eeff0c.js"crossorigin="anonymous"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous" ></script> -->
+    <!-- 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&family=Jua&family=Monoton&display=swap" rel="stylesheet">
+    <!-- axios cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- 부트스트랩cdn -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"rel="stylesheet"integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"crossorigin="anonymous"/>
+    <link rel="stylesheet" href="/public/css/classMain.css" />
+    <script src="/public/js/header.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <style>
-      .main {
+     .main {
         display: flex;
         flex-direction: row;
+        height: 100%;
       }
       .right-bar {
         display: flex;
         flex-direction: column;
       }
       .square {
-        width: 80px;
-        height: 80px;
+        width: 60px;
+        height: 60px;
         background-color: red;
         border-radius: 10px;
         font-size: 15px;
       }
       .room {
-        width: 80%;
-        height: 800px;
+        width: 100%;
+        /* height: 100%; */
         background-color: lightgreen;
       }
       .chosen {
@@ -33,7 +52,73 @@
     </style>
   </head>
   <body>
-    <div class="main">
+
+
+    <div class="main_container">
+      <div class="head1 d-flex justify-content-between">
+        <div class="head1-logo "><img src="/public/default/logo-removebg.png" style="width: 30px; height: 30px;"></img><span>CLAVI</span></div>
+        <i class="head1-profile fa-solid fa-user " data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="color: white; "></i>
+          <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button> -->
+      </div>
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#"><i class="fa-solid fa-chalkboard-user"></i>  BOARD</a>
+          
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"><i class="fa-solid fa-chair"></i>  SEAT</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"><i class="fa-solid fa-comments"></i>  MESSAGE</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"><i class="fa-solid fa-book"></i>  NOTE</a>
+        </li>
+      </ul>
+      <div class="main_content">
+        <div class="main">
+          <div class="room"></div>
+          <div class="right-bar">
+            <button style="height: 50px" onclick="Unoccupate()">예약취소</button>
+            <button style="height: 50px" onclick="reset()">리셋</button>
+            <a href="/desk" onclick="return confirm('페이지를 벗어나시겠습니까?');"
+              >돌아가기</a
+            >
+          </div>
+          <ul class="data-list"></ul>
+        </div>
+      </div>
+    </div>
+    <div class="offcanvas offcanvas-end " tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasRightLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body ">
+        <div class="profile_img"><img src="/public/default/모래성.png" style="width: 200px;"></div>
+        <br />
+        <div class="offcanvas-menu ">
+          <div class="my_page btn">마이페이지</div>
+          <div class="planner btn">플래너</div>
+          
+          <a class="btn" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            클래스 변경하기
+          </a>
+        
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">KDT 9기</a></li>
+            <li><a class="dropdown-item" href="#">두환이네</a></li>
+            <li><a class="dropdown-item" href="#">KDT 1기</a></li>
+          </ul>
+          <div class="logout btn" onclick="logout()">로그아웃</div>
+        </div>
+        
+      </div>
+    </div>
+
+
+
+    <!-- <div class="main">
       <div class="room"></div>
       <div class="right-bar">
         <button style="height: 50px" onclick="Unoccupate()">예약취소</button>
@@ -43,7 +128,7 @@
         >
       </div>
       <ul></ul>
-    </div>
+    </div> -->
     <script>
       let whoAmI = '<%= name %>';
       let myType = '<%= userType %>';
@@ -58,7 +143,7 @@
         }).then((res) => {
           socket.emit('basicSetting', res.data);
           console.log('data', res.data);
-          let ul = document.querySelector('ul');
+          let ul = document.querySelector('.data-list');
           const { desk: data } = res.data;
           ul.innerHTML = '';
           if (!ul.hasChildNodes()) {
