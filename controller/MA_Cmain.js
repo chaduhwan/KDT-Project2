@@ -450,7 +450,7 @@ exports.logout = (req, res) => {
 exports.bobSelect = async (req, res) => {
   const { placeId, placeName, placeAddress } = req.body;
   // const place = `${placeId}|${placeName}|${placeAddress}`;
-  console.log(place);
+  // console.log(place);
   // await board.update({ place }, { where: { BoardId: "2" } }); //보드 db에 더미데이터 생성하고 실행해야함
   res.json(true);
 };

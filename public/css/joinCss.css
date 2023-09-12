@@ -234,17 +234,17 @@ body {
   align-items: center;
   margin: 0;
   /* 작은 물고기 도트 이미지 URL 설정 */
-  background-image: url("/public/default/tile_background2.png");
+  background-image: url("/public/default/tile_background3.png");
   /* background-repeat: repeat; 이미지 반복 설정 (기본값은 repeat) */
   /* background-size: 25px; 이미지 크기 설정 (도트 크기) */
 }
-.join_container_par{
-    width: 500px;
-    height: 88vh;
-    border-radius: 20px;
-    background-color: rgb(255, 255, 255);
-    padding: 0;
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); /* 그림자 설정 */
+.join_container_par {
+  width: 500px;
+  height: 88vh;
+  border-radius: 20px;
+  background-color: rgb(255, 255, 255);
+  padding: 0;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); /* 그림자 설정 */
 }
 @media screen and (min-width: 770px) {
   .join_container {
