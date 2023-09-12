@@ -53,24 +53,23 @@ exports.connection = (io, socket) => {
     //id에서 이름 값 찾아서 저장하는거
     userName = await nameExtract(e);
     roomList.push(userName);
-
   });
 
   //방 생성하는 create문, roomName : 상대방이름, username 내이름
   socket.on("create", async (roomName, username) => {
     console.log("현재 방은? 시작부분", realNumber);
-    if(realNumber != undefined){
-    //연결이 끊어지면 그 방에서 나감
-    socket.leave(realNumber);
-    //방에서 나가면 map에서 realNumber 키의 value값에 해당하는 내 이름(username)을 빼줌
-    //그래야지 위에 메시지를 보낼 때 checked 값이 'N'으로 감
-    if(map.get(realNumber)){
-      const index = map.get(realNumber).indexOf(userName);
-      if(index !== -1){
-        map.get(realNumber).splice(index, 1);
+    if (realNumber != undefined) {
+      //연결이 끊어지면 그 방에서 나감
+      socket.leave(realNumber);
+      //방에서 나가면 map에서 realNumber 키의 value값에 해당하는 내 이름(username)을 빼줌
+      //그래야지 위에 메시지를 보낼 때 checked 값이 'N'으로 감
+      if (map.get(realNumber)) {
+        const index = map.get(realNumber).indexOf(userName);
+        if (index !== -1) {
+          map.get(realNumber).splice(index, 1);
+        }
       }
-    }
-    console.log("나갔을 때 ", map);
+      console.log("나갔을 때 ", map);
     }
     //findall해서 내가 입장하려는 방이랑 내 닉네임으로 만들어진 곳이 있는지 찾아보기
     const userFind1 = await room.findAll({
@@ -114,18 +113,18 @@ exports.connection = (io, socket) => {
       realNumber = createRoom.roomNum;
       console.log("현재 방은?", realNumber);
       socket.join(realNumber);
-      socket.emit("chatList",username, roomList)  //방 만들어지면 왼쪽section 초기화
+      socket.emit("chatList", username, roomList); //방 만들어지면 왼쪽section 초기화
     } else {
       //만약에 방이 있으면 그냥 채팅만 불러오기
       console.log("============방있으면 오는곳=================");
       //내가 들어간 방 리스트에 들어가려는 방이 있으면 join은 안함
       if (roomList.join("").includes(realNumber)) {
         socket.join(realNumber);
-        socket.emit("chatList",username, roomList)  //방 만들어지면 왼쪽section 초기화
+        socket.emit("chatList", username, roomList); //방 만들어지면 왼쪽section 초기화
       } else {
         //리스트에 없으면 방에 join 시켜줌
         socket.join(realNumber);
-        socket.emit("chatList",username, roomList)  //방 만들어지면 왼쪽section 초기화
+        socket.emit("chatList", username, roomList); //방 만들어지면 왼쪽section 초기화
       }
       //상대방 프로필 사진 불러오기
       socket.emit("otherprofile", roomName);
@@ -135,7 +134,7 @@ exports.connection = (io, socket) => {
       socket.emit("roomNumber", realNumber);
 
       //방이 없으면? -> 새로 만들어서 넣어줌
-      if (!(map.has(realNumber))) {
+      if (!map.has(realNumber)) {
         participantRoom.push(username);
         map.set(realNumber, participantRoom);
         participantRoom = [];
@@ -152,7 +151,7 @@ exports.connection = (io, socket) => {
     }
     console.log("현재 방은(끝부분)?", realNumber);
     //socket.room에 방 이름 저장시키기
-    socket.room = realNumber;                                                         
+    socket.room = realNumber;
     //값을 제대로 불러오면 상대방 이름 적용시키는거
     socket.emit("true");
   });
@@ -160,18 +159,18 @@ exports.connection = (io, socket) => {
 
   //메시지 보내기
   socket.on("sendMessage", async (message, userid, otherName) => {
-    //방에 메시지 전송 
-    io.to(realNumber).emit("newMessage", message, userid);  
+    //방에 메시지 전송
+    io.to(realNumber).emit("newMessage", message, userid);
     //받은메세지, 보낸사람 이름 저장하기
-    var checked = "N"
-    if(map.get(realNumber) != undefined){
-      checked = map.get(realNumber).includes(otherName) ? "Y" : "N" //해당 채팅방이랑 현재 참가자 배열
+    var checked = "N";
+    if (map.get(realNumber) != undefined) {
+      checked = map.get(realNumber).includes(otherName) ? "Y" : "N"; //해당 채팅방이랑 현재 참가자 배열
     }
     await Chat.create({
       roomNum: realNumber,
       message: message,
       send: userid,
-      checked : checked
+      checked: checked,
     });
     // 1:1 대화를 하고 있지 않을 때 알람이 가게 해주는거
     io.to(otherName).emit("chatList", otherName, roomList);
@@ -181,18 +180,18 @@ exports.connection = (io, socket) => {
     socket.broadcast.to(socket.room).emit("type", username, msgValue);
   });
 
-  socket.on("disconnect", ()=>{
+  socket.on("disconnect", () => {
     //연결이 끊어지면 그 방에서 나감
     socket.leave(realNumber);
     //방에서 나가면 map에서 realNumber 키의 value값에 해당하는 내 이름(username)을 빼줌
     //그래야지 위에 메시지를 보낼 때 checked 값이 'N'으로 감
-    if(map.get(realNumber)){
+    if (map.get(realNumber)) {
       const index = map.get(realNumber).indexOf(userName);
-      if(index !== -1){
+      if (index !== -1) {
         map.get(realNumber).splice(index, 1);
       }
     }
     console.log("나갔을 때 ", map);
-  })
+  });
 };
 //////////connection 끝////////////
