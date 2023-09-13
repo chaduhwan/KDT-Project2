@@ -13,6 +13,9 @@ body {
   width: 20%;
   position: relative;
   height: 100%;
+  padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 /* 검색창 관련 */
 .search-bar {
@@ -51,11 +54,12 @@ body {
 /* 게시글 추가  폼관련 */
 .subject-List {
   height: 4vh;
-  display: flex;
-  font-size: xx-small;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
+    display: flex;
+    font-size: xx-small;
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
 }
 .subject-button{
   background-color: #4993fa;
@@ -109,7 +113,6 @@ body {
 }
 .board-high{
   display: flex;
-  justify-content: center;
 }
 .board-mid{
   display: flex;
@@ -142,10 +145,6 @@ body {
   font-size: xx-small;
 }
 
-.board-onWrite {
-  position: absolute;
-  right: 0;
-}
 .tag-object{
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -154,6 +153,7 @@ body {
   display: flex;
 }
 .write-tag-bar{
+  height: 3vh;
   display: flex;
 }
 #editor {
