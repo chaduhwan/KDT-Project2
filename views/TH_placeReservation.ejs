@@ -80,6 +80,9 @@
         margin: 10px;
         border-style: none;
       }
+      .resetter{
+        display : none;
+      }
     </style>
   </head>
   <body>
@@ -112,7 +115,8 @@
           <div class="right-bar">
             <div class="button-place">
               <button class="btn-custom" onclick="Unoccupate()">예약취소</button>
-              <button class="btn-custom" onclick="reset()">리셋</button>
+              <button class="btn-custom resetter" onclick="reset()">리셋</button>
+              <button class="btn-custom resetter" onclick="placeReset()">예약리셋</button>
             </div>
             <select id="data-list2" onchange="positionChange()"></select>
           </div>
@@ -169,6 +173,10 @@
       const socket = io();
 
       if (myType == 'leader') {
+        let showButton = document.querySelectorAll(".resetter")
+        for(let i = 0; i < showButton.length; i++){
+          showButton[i].style.display = "block"
+        }
         axios({
           method: 'GET',
           url: '/desk/get_generator',
@@ -446,6 +454,34 @@
         socket.emit('saveState', [data], nowMap);
         socket.emit('dataPush', data);
       };
+      const placeReset = () => {
+        for(let i = 0; i < document.querySelector('.room').children.length; i++){
+          if (
+                document
+                  .querySelector('.room')
+                  .children[i].classList.contains("chosen")
+              ){
+                let str =
+                  document.querySelector('.room').children[i].children[0]
+                    .innerText;
+                str = str.split(': ' + whoAmI)[0];
+                console.log(str);
+                document.querySelector('.room').children[
+                  i
+                ].children[0].innerText = str;
+                document
+                  .querySelector('.room')
+                  .children[i].classList.remove("chosen")
+              }     
+        }
+        let data = saveSetting(
+                  document.querySelector('.room').innerHTML,
+                  nowMap,
+                );
+                dbSave(0);
+                socket.emit('saveState', [data], nowMap);
+                socket.emit('dataPush', data);
+      }
     </script>
   </body>
 </html>
