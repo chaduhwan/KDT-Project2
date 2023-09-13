@@ -111,28 +111,6 @@
                 <button id="btn-modal">함께 나누고픈 의견이 있나요?</button>
             </div>
             </div>
-
-            <!-- <div id="searchModal">
-                <div id="closeBtn">&times;</div>
-                <div class="map_wrap" id="map_wrap">
-                  <div id="map"></div>
-                  <div id="menu_wrap" class="bg_white">
-                    <div class="option">
-                      <div>
-                        <form onsubmit="searchPlaces(); return false;">
-                          키워드 :
-                          <input type="text" value="재모식당" id="keyword" size="15" />
-                          <button type="submit">검색하기</button>
-                        </form>
-                      </div>
-                    </div>
-                    <hr />
-                    <ul id="placesList"></ul>
-                    <div id="pagination"></div>
-                  </div>
-                </div>
-              </div> -->
-
             <div id="modal" class="modal-overlay">
                 <div class="modal-window">
                     <form name="board-write">
@@ -154,11 +132,9 @@
                               <div id="menu_wrap" class="bg_white">
                                 <div class="option">
                                   <div>
-                                    <form onsubmit="searchPlaces(); return false;">
-                                      키워드 :
-                                      <input type="text" value="재모식당" id="keyword" size="15" />
-                                      <button type="submit">검색하기</button>
-                                    </form>
+                                    키워드 :
+                                        <input type="text" value="재모식당" id="keyword" size="15" />
+                                        <button type="button" onclick="searchPlaces()">검색하기</button>
                                   </div>
                                 </div>
                                 <hr />
