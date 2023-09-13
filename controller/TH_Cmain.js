@@ -56,7 +56,10 @@ exports.noteUpload = async (req, res) => {
         filename: req.files[i].key,
         isFolder: false,
         location: req.files[i].location,
-        parent: req.body.folder_location[i],
+        parent:
+          typeof req.body.folder_location == 'string'
+            ? req.body.folder_location
+            : req.body.folder_location[i],
       });
       let obj = {
         id: file.id,
