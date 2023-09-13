@@ -100,6 +100,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
   <script>
+    // console.log(`<%= data.profileImgPath %>`)
+    // const pathdata = "<%= data.profileImgPath %>"
+    window.localStorage.setItem("profileImgPath", "<%= data.profileImgPath %>");
       //클래스 들어가기 함수
       async function signinClass(){
         const form = document.forms['ClassSignin']

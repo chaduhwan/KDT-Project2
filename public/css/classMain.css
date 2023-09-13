@@ -19,7 +19,7 @@ body {
 .main_container {
   width: 94vw;
   height: 92vh;
-  border-radius: 20px;
+  border-radius: 0 0 20px 20px;
   background-color: rgb(255, 255, 255);
   padding: 0;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); /* 그림자 설정 */
@@ -41,7 +41,7 @@ body {
   font-size: 20px;
   color: white;
   align-items: center;
-  font-family: 'ADLaM Display', cursive;
+  font-family: "ADLaM Display", cursive;
 }
 .head1-logo > span {
   color: white;

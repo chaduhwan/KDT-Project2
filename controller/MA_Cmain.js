@@ -331,6 +331,7 @@ exports.profile = async (req, res) => {
       Classes.push(myClassName.className);
       ClassesId.push(myClassName.ClassId);
     }
+
     console.log("프로필", data);
     res.render("MA_profile", { data, Classes, ClassesId });
   } else {
@@ -423,7 +424,8 @@ exports.post_login = async (req, res) => {
 //프로필 사진
 exports.profileImg = async (req, res) => {
   console.log(req.file);
-  const profileImgPath = req.file.path.toString(); //경로를 string으로 변환
+  const profileImgPath = `/${req.file.path.replace(/\\/g, "/")}`;
+  // const profileImgPath = `/${req.file.path.toString()}`; //경로를 string으로 변환
   await User.update({ profileImgPath }, { where: { id: req.session.userId } });
   console.log(req.file); //userfile이 담김
   console.log(profileImgPath);
