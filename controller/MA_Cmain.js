@@ -1,4 +1,11 @@
-const { User, UserTakeClass, Class, board, map , like} = require("../models/index");
+const {
+  User,
+  UserTakeClass,
+  Class,
+  board,
+  map,
+  like,
+} = require("../models/index");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
 const nodemailer = require("nodemailer");
@@ -80,6 +87,8 @@ exports.kakao_join = async (req, res) => {
     res.json(e.data);
   }
   try {
+    345678;
+
     let nickname = user.data.properties.nickname;
     let email = user.data.kakao_account.email;
     const existCheck = await User.findOne({ where: { email } });
@@ -316,7 +325,7 @@ exports.profile = async (req, res) => {
   if (req.session.isLogined) {
     //세션이 있는경우
     const data = await User.findOne({ where: { id: req.session.userId } });
-    const myBoard = await board.findAll({where: {id : req.session.userId}})
+    const myBoard = await board.findAll({ where: { id: req.session.userId } });
     const myClass = await UserTakeClass.findAll({
       where: { userid: req.session.userId },
     }); //유저id 가 가지고 있는 클래스  row 반환
@@ -339,10 +348,8 @@ exports.profile = async (req, res) => {
       likeArr.push(cou);
     }
 
-
-
     console.log("프로필", data);
-    res.render("MA_profile", { data, Classes, ClassesId ,myBoard, likeArr});
+    res.render("MA_profile", { data, Classes, ClassesId, myBoard, likeArr });
   } else {
     res.render("MA_login");
   }
