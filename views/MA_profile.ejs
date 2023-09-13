@@ -32,10 +32,26 @@
 
         <!-- 클래스 리스트 영역 -->
         <div class="class_list itemM">
-          <div id="class-munu ">참여한 클래스</div>
-          <% for(let i = 0; i<Classes.length; i++){ %>
-            <div data-class-id="<%=ClassesId[i]%>" onclick="enterClass(this)"><%=Classes[i]%></div>
-         <%} %>
+          <div id="class-menu ">참여한 클래스</div>
+          <!-- 클래스 목록 -->
+          <div class="classes">
+            <% for(let i = 0; i<Classes.length; i++){ %>
+              <div data-class-id="<%=ClassesId[i]%>" onclick="enterClass(this)"><%=Classes[i]%></div>
+              <%} %>
+          </div>
+         
+          .
+            <% if(data.userType == "leader" ){ %>
+              <form name="ClassMake">
+                <input type="text" name="className" placeholder="className">
+                <button type="button" onclick="makeClass()">클래스 만들기</button>
+              </form>
+            <% } %> 
+      
+            <form name="ClassSignin">
+              <input type="text" name="token" placeholder="token">
+              <button type="button" onclick="signinClass()">클래스 참여하기</button>
+            </form>
         </div>
 
         <!-- 로그아웃, 탈퇴 영역 -->
@@ -115,10 +131,10 @@
           data : data
         })
         if(res) {
-          alert("가입성공!")
+          alert('참여완료!')
           window.location.reload()
         } else {
-          alert('가입실패!')
+          alert('참여실패!')
         }
       }
 
