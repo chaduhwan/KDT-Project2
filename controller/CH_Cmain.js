@@ -9,8 +9,6 @@ const {
 const { Op } = require("sequelize");
 const Sequelize = require("sequelize");
 const sequelize = require("sequelize");
-const jwt = require("jsonwebtoken");
-const SECRET = "condingon";
 
 exports.main = (req, res) => {
   res.render("index");
@@ -176,7 +174,7 @@ exports.BoardWrite = async (req, res) => {
     tag,
     SubjectId: req.session.subjectId,
     ClassId: req.session.classId,
-    id: req.session.userid,
+    id: req.session.userId,
   });
   const result = await board.findOne({
     attributes: [[sequelize.fn("max", sequelize.col("BoardId")), "maxBoardId"]],
@@ -294,7 +292,11 @@ exports.CommentDelete = async (req, res) => {
 ///////////////리더 클래스 생성
 exports.ClassMake = async (req, res) => {
   const { className, leader } = req.body;
-  const token = jwt.sign({ className, leader }, SECRET);
+  let randomNumber = function (min, max) {
+    const randNum = Math.floor(Math.random() * (max - min +1)) +min;
+    return randNum;
+  }
+  const token = await randomNumber(111111,999999)
   const result = await Class.create({ className, leader, token });
   res.json({ res: true, result, token });
 };
@@ -313,3 +315,5 @@ exports.ClassSignin = async (req, res) => {
     res.json({ success: false });
   }
 };
+
+

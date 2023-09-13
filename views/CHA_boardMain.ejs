@@ -101,11 +101,15 @@
                         <div class="modal-input">
                             <input type="text" name="title" placeholder="제목을 입력해주세요">
                             <input type="text" name="tag" placeholder="태그를 입력해주세요">
-                            <button class="board-tag-add" onclick="boardTag()">태그추가</button>
+                            <button class="board-tag-add" onclick="boardTag()">
+                                <i class="fa-solid fa-tags"></i>
+                            </button>
+                            <button type="button" class="board-onWrite" onclick="boardWrite()">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
                         </div>
                         <div class="write-tag-bar"></div>
                         <div id="editor"></div>
-                        <button type="button" class="board-onWrite" onclick="boardWrite()">작성하기</button>
                     </form> 
                 </div>
             </div>
@@ -276,9 +280,16 @@
 
     async function boardWrite() {
         const form = document.forms['board-write']
+        const now = new Date();
+        const year = now.getFullYear()
+        const month = now.getMonth()+1;
+        const day = now.getDate();
+        const hour = now.getHours();
+        const min = now.getMinutes();
+
         const data = {
             title : form.title.value,
-            date : Date(),
+            date : `${year}년 ${month}월 ${day}일 ${hour}:${min}`,
             writer : '<%=user %>',
             content : editor.getHTML(),
             tag : tagAdd.join(', ')
@@ -495,6 +506,8 @@
     const evTarget = e.target
     if(evTarget.classList.contains("modal-overlay")) {
         modal.style.display = "none"
+        const form = document.forms['board-write']
+        form.reset()
     }})
 
        const Editor = toastui.Editor;

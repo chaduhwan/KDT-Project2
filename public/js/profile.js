@@ -96,25 +96,6 @@ async function logout() {
   location.href = "/login";
 }
 
-//클래스만들기 함수
-async function makeClass() {
-  const form = document.forms["ClassMake"];
-  const data = {
-    className: form.className.value,
-    leader: "<%= data.name %>",
-  };
-  const res = await axios({
-    method: "POST",
-    url: "/class/make",
-    data: data,
-  });
-  if (res.data.res) {
-    alert(
-      `클래스 생성완료! 클래스 공유 코드입니다 외부유출에 조심하세요 : ${res.data.token}`
-    );
-  }
-  window.location.reload();
-}
 //클래스 들어가기 함수
 async function signinClass() {
   const form = document.forms["ClassSignin"];

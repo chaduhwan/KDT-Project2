@@ -1,4 +1,5 @@
 .embla {
+
   --slide-spacing: 1rem;
   --slide-size: 100%;
   --slide-height: 19rem;
@@ -93,3 +94,4 @@
   width: 65%;
   height: 65%;
 }
+

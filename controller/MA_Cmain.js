@@ -1,4 +1,4 @@
-const { User, UserTakeClass, Class, board, map } = require("../models/index");
+const { User, UserTakeClass, Class, board, map , like} = require("../models/index");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
 const nodemailer = require("nodemailer");
@@ -316,24 +316,33 @@ exports.profile = async (req, res) => {
   if (req.session.isLogined) {
     //세션이 있는경우
     const data = await User.findOne({ where: { id: req.session.userId } });
+    const myBoard = await board.findAll({where: {id : req.session.userId}})
     const myClass = await UserTakeClass.findAll({
       where: { userid: req.session.userId },
     }); //유저id 가 가지고 있는 클래스  row 반환
-    let Classes = [];
 
+    let Classes = [];
     let ClassesId = [];
+    let likeArr = [];
     for (const ele of myClass) {
       const myClassName = await Class.findOne({
         where: { ClassId: ele.classClassId }, // 원하는 조건을 지정합니다.
       });
-
-      console.log(myClassName);
       Classes.push(myClassName.className);
       ClassesId.push(myClassName.ClassId);
     }
 
+    for (const my of myBoard) {
+      const cou = await like.count({
+        where: { BoardId: my.BoardId },
+      });
+      likeArr.push(cou);
+    }
+
+
+
     console.log("프로필", data);
-    res.render("MA_profile", { data, Classes, ClassesId });
+    res.render("MA_profile", { data, Classes, ClassesId ,myBoard, likeArr});
   } else {
     res.render("MA_login");
   }

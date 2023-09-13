@@ -17,6 +17,11 @@
     <!-- 소켓io 경로 -->
     <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="/public/css/profile.css">
+    <!-- 메모 -->
+    <link href="../public/css/base.css" rel="stylesheet" />
+    <link href="../public/css/sandbox.css" rel="stylesheet" />
+    <link href="../public/css/embla.css" rel="stylesheet" />
+    <script src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"></script>
     <title>Document</title>
   </head>
 
@@ -32,10 +37,26 @@
 
         <!-- 클래스 리스트 영역 -->
         <div class="class_list itemM">
-          <div id="class-munu ">참여한 클래스</div>
-          <% for(let i = 0; i<Classes.length; i++){ %>
-            <div data-class-id="<%=ClassesId[i]%>" onclick="enterClass(this)"><%=Classes[i]%></div>
-         <%} %>
+          <div id="class-menu ">참여한 클래스</div>
+          <!-- 클래스 목록 -->
+          <div class="classes">
+            <% for(let i = 0; i<Classes.length; i++){ %>
+              <div data-class-id="<%=ClassesId[i]%>" onclick="enterClass(this)"><%=Classes[i]%></div>
+              <%} %>
+          </div>
+         
+          .
+            <% if(data.userType == "leader" ){ %>
+              <form name="ClassMake">
+                <input type="text" name="className" placeholder="className">
+                <button type="button" onclick="makeClass()">클래스 만들기</button>
+              </form>
+            <% } %> 
+      
+            <form name="ClassSignin">
+              <input type="text" name="token" placeholder="token">
+              <button type="button" onclick="signinClass()">클래스 참여하기</button>
+            </form>
         </div>
 
         <!-- 로그아웃, 탈퇴 영역 -->
@@ -87,10 +108,75 @@
         </div>
 
         <!-- 메모 -->
-        <div class="memo-zone itemM"></div>
+        <div class="memo-zone itemM">
+          <section class="sandbox__carousel">
+            <div class="embla">
+              <div class="embla__viewport">
+                <div class="embla__container">
+                  <div class="embla__slide sorting">
+                    <p>안녕</p>
+                  </div>
+                  <div class="embla__slide sorting">
+                    <p>안녕</p>
+                  </div>
+                  <div class="embla__slide sorting">
+                    <p>안녕</p>
+                  </div>
+                  <div class="embla__slide sorting">
+                    <p>안녕</p>
+                  </div>
+                  <div class="embla__slide sorting">
+                    <p>안녕</p>
+                  </div>
+                </div>
+              </div>
+      
+              <div class="embla__buttons">
+                <button class="embla__button embla__button--prev" type="button">
+                  <svg class="embla__button__svg" viewBox="0 0 532 532">
+                    <path
+                      fill="currentColor"
+                      d="M355.66 11.354c13.793-13.805 36.208-13.805 50.001 0 13.785 13.804 13.785 36.238 0 50.034L201.22 266l204.442 204.61c13.785 13.805 13.785 36.239 0 50.044-13.793 13.796-36.208 13.796-50.002 0a5994246.277 5994246.277 0 0 0-229.332-229.454 35.065 35.065 0 0 1-10.326-25.126c0-9.2 3.393-18.26 10.326-25.2C172.192 194.973 332.731 34.31 355.66 11.354Z"
+                    ></path>
+                  </svg>
+                </button>
+                <button class="embla__button embla__button--next" type="button">
+                  <svg class="embla__button__svg" viewBox="0 0 532 532">
+                    <path
+                      fill="currentColor"
+                      d="M176.34 520.646c-13.793 13.805-36.208 13.805-50.001 0-13.785-13.804-13.785-36.238 0-50.034L330.78 266 126.34 61.391c-13.785-13.805-13.785-36.239 0-50.044 13.793-13.796 36.208-13.796 50.002 0 22.928 22.947 206.395 206.507 229.332 229.454a35.065 35.065 0 0 1 10.326 25.126c0 9.2-3.393 18.26-10.326 25.2-45.865 45.901-206.404 206.564-229.332 229.52Z"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
 
         <!-- 내가 쓴 글 -->
-        <div class="myBoards itemM"></div>
+        <div class="myBoards itemM">
+          <% for (let i = 0 ; i < myBoard.length ; i ++) {%>
+            <div class="board-object" data-board-id="<%=myBoard[i].BoardId%>" onclick="boardDetail(this)">
+                    <div class="board-high">
+                        <span id="borad-ID">등록번호 : <%=myBoard[i].BoardId%></span>
+                        <span class="board-title"> 제목 : <%=myBoard[i].title%></span>
+                    </div>
+                    <div class="board-mid">
+                        <img class="board-writer-img" src="">
+                        <span class="board-writer"> 작성자 : <%=myBoard[i].writer%></span>
+                        <span class="board-date"> 날짜 : <%=myBoard[i].date%></span>
+                    </div>
+                    <span class="board-content"> <%=myBoard[i].content%></span>
+                    <div class="board-bottom">
+                        <span class="board-tag"> 태그 : <%=myBoard[i].tag%></span>
+                        <button type="button" class="boardLike" value="<%=myBoard[i].BoardId%>" onclick="BoardLike(this)">
+                            <i class="fa-regular fa-thumbs-up"><%=likeArr[i]%></i>
+                        </button>
+                    </div>
+                </div>
+          <%} %>
+
+        </div>
       </div>
     </div>
 
@@ -103,6 +189,38 @@
     // console.log(`<%= data.profileImgPath %>`)
     // const pathdata = "<%= data.profileImgPath %>"
     window.localStorage.setItem("profileImgPath", "<%= data.profileImgPath %>");
+
+
+    if(document.querySelector(".myBoards itemM").hasChildNodes){
+
+        for(let i = 0; i < document.querySelector(".myBoards itemM").children.length; i++){
+          let temp = document.querySelector(".myBoards itemM").children[i].children[2].innerText 
+          document.querySelector(".myBoards itemM").children[i].children[2].innerText = ""
+          let arr = Array.from(format(temp))
+        for(let j = 0; j < arr.length; j++){
+          document.querySelector(".myBoards itemM").children[i].children[2].appendChild(arr[j])   
+    }}}
+    
+      //클래스만들기 함수
+      async function makeClass() {
+        const form = document.forms["ClassMake"];
+        const data = {
+        className: form.className.value,
+        leader: "<%= data.name %>",
+        };
+           const res = await axios({
+         method: "POST",
+          url: "/class/make",
+         data: data,
+          });
+         if (res.data.res) {
+          alert(
+            `클래스 생성완료! 클래스 공유 코드입니다 외부유출에 조심하세요 : ${res.data.token}`
+         );
+         }
+           window.location.reload();
+        }
+
       //클래스 들어가기 함수
       async function signinClass(){
         const form = document.forms['ClassSignin']
@@ -115,12 +233,72 @@
           data : data
         })
         if(res) {
-          alert("가입성공!")
+          alert('참여완료!')
           window.location.reload()
         } else {
-          alert('가입실패!')
+          alert('참여실패!')
         }
       }
 
+  </script>
+  <script type="text/javascript">
+    const emblaNode = document.querySelector('.embla');
+    const viewportNode = emblaNode.querySelector('.embla__viewport');
+    const prevBtn = emblaNode.querySelector('.embla__button--prev');
+    const nextBtn = emblaNode.querySelector('.embla__button--next');
+
+    var options = { loop: true, containScroll: 'trimSnaps' };
+
+    var emblaApi = EmblaCarousel(viewportNode, options);
+
+    const addTogglePrevNextBtnsActive = (emblaApi, prevBtn, nextBtn) => {
+      const togglePrevNextBtnsState = () => {
+        if (emblaApi.canScrollPrev()) prevBtn.removeAttribute('disabled');
+        else prevBtn.setAttribute('disabled', 'disabled');
+
+        if (emblaApi.canScrollNext()) nextBtn.removeAttribute('disabled');
+        else nextBtn.setAttribute('disabled', 'disabled');
+      };
+
+      emblaApi
+        .on('select', togglePrevNextBtnsState)
+        .on('init', togglePrevNextBtnsState)
+        .on('reInit', togglePrevNextBtnsState);
+
+      return () => {
+        prevBtn.removeAttribute('disabled');
+        nextBtn.removeAttribute('disabled');
+      };
+    };
+
+    const addPrevNextBtnsClickHandlers = (emblaApi, prevBtn, nextBtn) => {
+      const scrollPrev = () => {
+        emblaApi.scrollPrev();
+      };
+      const scrollNext = () => {
+        emblaApi.scrollNext();
+      };
+      prevBtn.addEventListener('click', scrollPrev, false);
+      nextBtn.addEventListener('click', scrollNext, false);
+
+      const removeTogglePrevNextBtnsActive = addTogglePrevNextBtnsActive(
+        emblaApi,
+        prevBtn,
+        nextBtn,
+      );
+
+      return () => {
+        removeTogglePrevNextBtnsActive();
+        prevBtn.removeEventListener('click', scrollPrev, false);
+        nextBtn.removeEventListener('click', scrollNext, false);
+      };
+    };
+
+    const removePrevNextBtnsClickHandlers = addPrevNextBtnsClickHandlers(
+      emblaApi,
+      prevBtn,
+      nextBtn,
+    );
+    emblaApi.on('destroy', removePrevNextBtnsClickHandlers);
   </script>
 </html>
