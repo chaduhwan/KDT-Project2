@@ -114,18 +114,16 @@ exports.connection = (io, socket) => {
       realNumber = createRoom.roomNum;
       console.log("현재 방은?", realNumber);
       socket.join(realNumber);
-      socket.emit("chatList", username, roomList); //방 만들어지면 왼쪽section 초기화
+      // await socket.emit("chatList", username, roomList); //방 만들어지면 왼쪽section 초기화
     } else {
       //만약에 방이 있으면 그냥 채팅만 불러오기
       console.log("============방있으면 오는곳=================");
       //내가 들어간 방 리스트에 들어가려는 방이 있으면 join은 안함
       if (roomList.join("").includes(realNumber)) {
         socket.join(realNumber);
-        socket.emit("chatList", username, roomList); //방 만들어지면 왼쪽section 초기화
       } else {
         //리스트에 없으면 방에 join 시켜줌
         socket.join(realNumber);
-        socket.emit("chatList", username, roomList); //방 만들어지면 왼쪽section 초기화
       }
       //상대방 프로필 사진 불러오기
       socket.emit("otherprofile", roomName);
@@ -150,8 +148,8 @@ exports.connection = (io, socket) => {
         console.log("방이 있을 때 ", map);
       }
     }
-    console.log("현재 방은(끝부분)?", realNumber);
     //socket.room에 방 이름 저장시키기
+    socket.emit("chatList", username, roomList); //방 만들어지면 왼쪽section 초기화
     socket.room = realNumber;
     //값을 제대로 불러오면 상대방 이름 적용시키는거
     socket.emit("true");

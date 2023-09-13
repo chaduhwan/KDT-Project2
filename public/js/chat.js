@@ -133,10 +133,6 @@ function createMessageElement(
     alert(`${otherName}님 방에 입장하였습니다.`);
     //create -> 방 만들기
     socket.emit("create", otherName, username);
-    const pTag = document.querySelector(`#${otherName}msg`);
-    if (pTag) {
-      pTag.remove();
-    }
   });
   //알람의 수(notRead)의 개수가 0이 아니면 p태그까지 출력
   if (notRead != 0) {
@@ -233,9 +229,6 @@ function addVisitor(visitorName) {
 
       //create -> 방 만들기
       socket.emit("create", otherName, username);
-      //그 방에 입장하면 p태그 삭제시켜버림(알람삭제)
-      const pTag = document.querySelector(`#${otherName}msg`);
-      pTag.remove();
     }
   });
   modalBody.appendChild(visitorElement);
@@ -298,7 +291,7 @@ socket.on("deleteList", (username) => {
 
 //내가 채팅하고 잇는 방 불러오고 -> 그 채팅방 미리보기 메시지까지 가져오는거
 socket.on("chatList", async (username, roomList) => {
-  document.querySelector(".chatList").innerHTML = "";
+  chatContainer.innerHTML = "";
   myRoomList = [];
   //참여 채팅방 불러오기
   const listResult = await axios({
@@ -374,10 +367,6 @@ roomForm.addEventListener("submit", async (e) => {
     socket.emit("create", otherName, username);
     alert(`${otherName}님 방에 입장하였습니다.`);
     //방 들어가면 p태그 삭제시켜버려서 알람 없애기
-    const pTag = document.querySelector(`#${otherName}msg`);
-    if(pTag){
-      pTag.remove();
-    }
   } else {
     //없으면 가입되지 않은 사람이라고 해줌
     alert("가입되지 않은 사용자 입니다.");
