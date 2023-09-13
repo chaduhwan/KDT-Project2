@@ -102,13 +102,15 @@ exports.post_calendar = async (req, res) => {
     where: { username: req.session.userName },
   });
   await req.body.forEach((res) => {
-    calendar.create({
-      username: req.session.userName,
-      title: res.title,
-      start: res.start,
-      end: res.end,
-      backgroundColor: res.backgroundColor,
-    });
+    if (res.url == undefined) {
+      calendar.create({
+        username: req.session.userName,
+        title: res.title,
+        start: res.start,
+        end: res.end,
+        backgroundColor: res.backgroundColor,
+      });
+    }
   });
 };
 exports.eventData = async (req, res) => {
