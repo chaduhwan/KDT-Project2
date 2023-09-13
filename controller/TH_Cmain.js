@@ -7,6 +7,9 @@ exports.test = (req, res) => {
 exports.test2 = (req, res) => {
   res.render('test2');
 };
+exports.test3 = (req, res) => {
+  res.render('test3');
+};
 
 exports.noteManager = async (req, res) => {
   res.render('TH_noteManager');
