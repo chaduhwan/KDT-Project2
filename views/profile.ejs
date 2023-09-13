@@ -55,12 +55,12 @@
         <div data-class-id="<%=ClassesId[i]%>" onclick="enterClass(this)"><%=Classes[i]%></div>
      <%} %>
 
-    <% if(data.userType == "leader" ){ %>
-      <form name="ClassMake">
-        <input type="text" name="className" placeholder="className">
-        <button type="button" onclick="makeClass()">클래스 만들기</button>
-      </form>
-    <% } %> 
+      <% if(data.userType == "leader" ){ %>
+        <form name="ClassMake">
+          <input type="text" name="className" placeholder="className">
+          <button type="button" onclick="makeClass()">클래스 만들기</button>
+        </form>
+      <% } %> 
 
       <form name="ClassSignin">
         <input type="text" name="token" placeholder="token">

@@ -29,10 +29,13 @@
       <ul class="nav nav-tabs">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/login"><i class="fa-solid fa-chalkboard-user"></i>  BOARD</a>
-          
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#"><i class="fa-solid fa-chair"></i>  SEAT</a>
+          <a class="nav-link " data-bs-toggle="dropdown" role="button" aria-expanded="false" href="#"><i class="fa-solid fa-chair"></i>  SEAT</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">자리 예약</a></li>
+            <li><a class="dropdown-item" href="#">자리 배치</a></li>
+          </ul>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#"><i class="fa-solid fa-comments"></i>  MESSAGE</a>
@@ -48,8 +51,9 @@
         </button>
         <ul class="dropdown-menu">
           <li><button class="dropdown-item" type="button">BOARD</button></li>
-          <li><button class="dropdown-item" type="button">SEAT</button></li>
-          <li><button class="dropdown-item" type="button">MESSAGE</button></li>
+          <li><button class="dropdown-item" type="button" >SEAT</button></li>
+          <li><button class="dropdown-item" type="button">MESSAGE</button>
+          </li>
           <li><button class="dropdown-item" type="button">NOTE</button></li>
         </ul>
       </div>
@@ -68,7 +72,7 @@
         <div class="profile_img" id="profile_img"></div>
         <br />
         <div class="offcanvas-menu ">
-          <div class="my_page btn">마이페이지</div>
+          <div class="my_page btn" >마이페이지</div>
           <div class="planner btn">플래너</div>
           
           <a class="btn" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
