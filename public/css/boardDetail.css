@@ -95,6 +95,7 @@
   justify-content: flex-end;
 }
 .commentbutton{
+  height: 4vh;
   padding: 10px 20px;
   background-color: #4993fa;
   color: white;
@@ -106,8 +107,6 @@
 }
 
 .deleteButton {
-  width: 5%;
-  height: 10%;
   position: absolute;
   bottom: 0;
   right: 0;
