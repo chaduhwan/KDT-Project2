@@ -75,16 +75,16 @@
                                <span class="comment-writer"> 작성자 : <%=commentData[i].writer%></span>
                                <span class="comment-date"> <%=commentData[i].date%></span>
                                <span class="comment-content"><%=commentData[i].content%></span>
-                               <button type="button" class="deleteButton" value="<%=commentData[i].commentId%>" onclick="deleteComment(this)">삭제하기</button>
+                               <button type="button" class="deleteButton" value="<%=commentData[i].commentId%>" onclick="deleteComment(this)"></button>
                            </div>
                       <% } %>
-                </main>
-                <footer class="board-comment">
-                    <form class="board-comment" name="comment-Write">
-                        <div id="editor"></div>
-                        <button type="button" class="commentbutton" onclick="commentWrite()">댓글달기</button>
-                    </form>
-                </footer>
+                    </main>
+                    <footer class="board-comment">
+                        <form class="board-comment" name="comment-Write">
+                            <div id="editor"></div>
+                            <button type="button" class="commentbutton" onclick="commentWrite()">댓글달기</button>
+                        </form>
+                    </footer>
             </div>
         </div>
 

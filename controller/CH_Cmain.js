@@ -38,29 +38,50 @@ exports.EnterSubject = async (req, res) => {
   const { SubjectId } = req.body;
   req.session.subjectId = SubjectId;
 
-  console.log(req.session.subjectId);
-
   let subjectId = [];
   let subjectTitle = [];
-  const subject = await Subject.findAll({ where: { classId } });
 
-  for (const ele of subject) {
-    subjectId.push(ele.SubjectId);
-    subjectTitle.push(ele.subjectTitle);
-  }
+  if(SubjectId !== 9999) {
 
-  let likeArr = [];
-
-  const boards = await board.findAll({
-    where: { SubjectId: req.session.subjectId },
-  });
-  for (const boardEle of boards) {
-    const cou = await like.count({
-      where: { BoardId: boardEle.BoardId },
+    const subject = await Subject.findAll({ where: { classId } });
+  
+    for (const ele of subject) {
+      subjectId.push(ele.SubjectId);
+      subjectTitle.push(ele.subjectTitle);
+    }
+  
+    let likeArr = [];
+  
+    const boards = await board.findAll({
+      where: { SubjectId: req.session.subjectId },
     });
-    likeArr.push(cou);
+    for (const boardEle of boards) {
+      const cou = await like.count({
+        where: { BoardId: boardEle.BoardId },
+      });
+      likeArr.push(cou);
+    }
+    res.send({ data: boards, likeArr });
+  } else {
+   const subject = await Subject.findAll({ where: { classId } });
+  
+    for (const ele of subject) {
+      subjectId.push(ele.SubjectId);
+      subjectTitle.push(ele.subjectTitle);
+    }
+  
+    let likeArr = [];
+  
+    const boards = await board.findAll();
+    for (const boardEle of boards) {
+      const cou = await like.count({
+        where: { BoardId: boardEle.BoardId },
+      });
+      likeArr.push(cou);
+    }
+    res.send({ data: boards, likeArr });
   }
-  res.send({ data: boards, likeArr });
+
 };
 
 ///// 게시판 메인페이지

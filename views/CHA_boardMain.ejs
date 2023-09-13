@@ -47,7 +47,9 @@
         <div class="main_content">
             <header class="board-hearder">
                 <form  class="search-bar" name="board-search">
-                    <button type="button" class="search-button" onclick="boardSearch()">검색</button>
+                    <button type="button" class="search-button" onclick="boardSearch()">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
                     <select id="search_select">
                         <option value="title">제목</option>
                         <option value="content">내용</option>
@@ -55,35 +57,42 @@
                     </select>
                     <input type="text" name="searchBar" placeholder="검색어를 입력해주세요">
                 </form>
+                <div class="subject-object" onclick="Allboard()"># 모든글</div>
                 <% for (let i = 0; i < subjectId.length; i++) { %>
-                    <div class="subject-object" data-subject-id="<%= subjectId[i] %>" onclick="enterSubject(this)"><%= subjectTitle[i] %></div>
+                    <div class="subject-object" data-subject-id="<%= subjectId[i] %>" onclick="enterSubject(this)"># <%= subjectTitle[i] %></div>
                     <% } %>
                 <form class="subject-List" name="subjectList">
                     <input type="text" name="SubjectTitle" placeholder="게시판 제목">
-                    <button type="button" class="subject-button" onclick="SubjectMake()">게시판 추가</button>
+                    <button type="button" class="subject-button" onclick="SubjectMake()">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
                 </form>
             </header>
-            <main class="board-main">
-                <% for (let i = 0 ; i < data.length ; i ++) {%>
-                <div class="board-object" data-board-id="<%=data[i].BoardId%>" onclick="boardDetail(this)">
-                        <div class="board-high">
-                            <span id="borad-ID">등록번호 : <%=data[i].BoardId%></span>
-                            <span class="board-title"> 제목 : <%=data[i].title%></span>
+            <div class="board-container">
+                <main class="board-main">
+                    <% for (let i = 0 ; i < data.length ; i ++) {%>
+                    <div class="board-object" data-board-id="<%=data[i].BoardId%>" onclick="boardDetail(this)">
+                            <div class="board-high">
+                                <span id="borad-ID">등록번호 : <%=data[i].BoardId%></span>
+                                <span class="board-title"> 제목 : <%=data[i].title%></span>
+                            </div>
+                            <div class="board-mid">
+                                <img class="board-writer-img" src="">
+                                <span class="board-writer"> 작성자 : <%=data[i].writer%></span>
+                                <span class="board-date"> 날짜 : <%=data[i].date%></span>
+                            </div>
+                            <span class="board-content"> <%=data[i].content%></span>
+                            <div class="board-bottom">
+                                <span class="board-tag"> 태그 : <%=data[i].tag%></span>
+                                <button type="button" class="boardLike" value="<%=data[i].BoardId%>" onclick="BoardLike(this)">
+                                    <i class="fa-regular fa-thumbs-up"><%=likeArr[i]%></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="board-mid">
-                            <img class="board-writer-img" src="">
-                            <span class="board-writer"> 작성자 : <%=data[i].writer%></span>
-                            <span class="board-date"> 날짜 : <%=data[i].date%></span>
-                        </div>
-                        <span class="board-content"> <%=data[i].content%></span>
-                        <div class="board-bottom">
-                            <span class="board-tag"> 태그 : <%=data[i].tag%></span>
-                            <button type="button" class="boardLike" value="<%=data[i].BoardId%>" onclick="BoardLike(this)"><%=likeArr[i]%></button>
-                        </div>
-                    </div>
-                            <%}%>
-                </main>
-                <button id="btn-modal">작성하기</button>
+                                <%}%>
+                            </main>
+                <button id="btn-modal">함께 나누고픈 의견이 있나요?</button>
+            </div>
             </div>
 
             <div id="modal" class="modal-overlay">
@@ -140,7 +149,7 @@
                 for(let j = 0; j < arr.length; j++){
                      document.querySelector(".board-main").children[i].children[2].appendChild(arr[j])   
         }}}
-
+        
     function boardDetail(element) {
         const boardid = element.getAttribute('data-board-id');
         axios({
@@ -220,10 +229,13 @@
                 const button = document.createElement('button')
                 button.value =  `${res.data.data[i].BoardId}`
                 button.className = 'boardLike'
-                button.innerText = `${res.data.likeArr[i]}`
                 button.onclick = function(){
                     BoardLike(this)
                 }
+                const icon = document.createElement('i')
+                icon.className ="fa-regular fa-thumbs-up"
+                icon.innerText= `${res.data.likeArr[i]}`
+                button.appendChild(icon)
 
                 boardHigh.appendChild(span1)
                 boardHigh.appendChild(span2)
@@ -326,10 +338,13 @@
                 const button = document.createElement('button')
                 button.value =  `${res.data.data[i].BoardId}`
                 button.className = 'boardLike'
-                button.innerText = `${res.data.likeArr[i]}`
                 button.onclick = function(){
                     BoardLike(this)
                 }
+                const icon = document.createElement('i')
+                icon.className ="fa-regular fa-thumbs-up"
+                icon.innerText= `${res.data.likeArr[i]}`
+                button.appendChild(icon)
 
                 boardHigh.appendChild(span1)
                 boardHigh.appendChild(span2)
@@ -373,7 +388,7 @@
                 data : {id : '<%=userid%>',BoardId : buttonValue}
             }).then(res=> {
                 if (res.data.result==true) {
-                    button.innerText =`${res.data.cou}`
+                    button.children[0].innerText =`${res.data.cou}`
                 } else {
                     alert("이미 좋아요한 게시글입니다.!")
                 }
@@ -443,10 +458,13 @@
                 const button = document.createElement('button')
                 button.value =  `${res.data.data[i].BoardId}`
                 button.className = 'boardLike'
-                button.innerText = `${res.data.likeArr[i]}`
                 button.onclick = function(){
                     BoardLike(this)
                 }
+                const icon = document.createElement('i')
+                icon.className ="fa-regular fa-thumbs-up"
+                icon.innerText= `${res.data.likeArr[i]}`
+                button.appendChild(icon)
 
                 boardHigh.appendChild(span1)
                 boardHigh.appendChild(span2)
@@ -496,5 +514,8 @@
                 // 
                 
             }
+        function Allboard() {
+            window.location.reload()
+        }    
 </script>
 </html>
