@@ -8,6 +8,22 @@
       name="viewport"
       content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"
     />
+    <script
+      src="https://kit.fontawesome.com/1a34eeff0c.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
+    <!-- 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=ADLaM+Display&family=Jua&family=Monoton&display=swap"
+      rel="stylesheet"
+    />
     <!-- jquery CDN -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- fullcalendar CDN -->
@@ -33,33 +49,116 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="/public/css/classMain.css" />
     <style>
+      @font-face {
+  font-family: "S-CoreDream-3Light";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
       /* body 스타일 */
       html,
       body {
         overflow: hidden;
-        font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+        font-family: "S-CoreDream-3Light", sans-serif;
         font-size: 14px;
+      }
+      .fc-button-group{
+        background-color: white;
       }
       /* 캘린더 위의 해더 스타일(날짜가 있는 부분) */
       .fc-header-toolbar {
         padding-top: 1em;
-        padding-left: 1em;
-        padding-right: 1em;
+        /* padding-left: 1em;
+        padding-right: 1em; */
+      }
+      .fc .fc-toolbar-title{
+        font-weight: bold;
+      }
+      .fc .fc-col-header-cell-cushion{
+        text-decoration: none;
+      }
+      .fc .fc-daygrid-day-number{
+        text-decoration: none;
+        font-weight: bold;
       }
       .fc-event-title {
         color: black;
       }
+
       .fc-daygrid-day-number {
         color: black;
+        text-decoration: none;
       }
-    </style>
+      #calendar-style{
+        width: 90%;
+        padding-left: 10%;
+        height: 70
+        0px;
+      }
+      .fc .fc-button-primary { 
+        color: #FFFFFF; 
+        background-color: #30A2FF !important; 
+        border-color: #FFFFFF !important;   
+        font-weight: bold;
+      }
+      .fc-day-sun a {
+          color: red;
+      }
+      .fc-day-sat a {
+       color: blue;
+      }
+      a{
+        /* color : black; */
+      }
+    </style>  
   </head>
   <body style="padding: 30px">
     <!-- calendar 태그 -->
-    <div id="calendar-container">
-      <div id="calendar"></div>
+    <div class="main_container">
+      <div class="head1 d-flex justify-content-between">
+        <div class="head1-logo "><img src="/public/default/logo-removebg.png" style="width: 30px; height: 30px;"></img><span>CLAVI</span></div>
+        <i class="head1-profile fa-solid fa-user " data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="color: white; "></i>
+          <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button> -->
+      </div>
+      <div id="calendar-style">
+        <div id="calendar-container">
+          <div id="calendar"></div>
+        </div>
+      </div>
+      
+      <!-- <div class="main_content"> -->
+      </div>
     </div>
+    
+    <div class="offcanvas offcanvas-end " tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasRightLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body ">
+        <div class="profile_img" id="profile_img"></div>
+        <br />
+        <div class="offcanvas-menu ">
+          <div class="my_page btn">마이페이지</div>
+          <div class="planner btn">플래너</div>
+          
+          <a class="btn" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            클래스 변경하기
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">KDT 9기</a></li>
+            <li><a class="dropdown-item" href="#">두환이네</a></li>
+            <li><a class="dropdown-item" href="#">KDT 1기</a></li>
+          </ul>
+          <div class="logout btn" onclick="logout()">로그아웃</div>
+        </div>
+        
+      </div>
+    </div>
+
 
     <!-- 부트스트랩 modal 부분 -->
     <!-- Modal -->
@@ -118,6 +217,7 @@
           var calendarEl = document.getElementById("calendar");
           // full-calendar 생성하기
           var calendar = new FullCalendar.Calendar(calendarEl, {
+            googleCalendarApiKey: 'AIzaSyBVRxXoSq4Y3yW1tTO9ov6H_5NwaVLQdQg',
             height: "700px", // calendar 높이 설정
             expandRows: true, // 화면에 맞게 높이 재설정
             slotMinTime: "08:00", // Day 캘린더에서 시작 시간
@@ -186,7 +286,9 @@
               }
             },
             //데이터 가져오는 이벤트
-            events: async function (info, successCallback, failureCallback) {
+            eventSources:[
+              {
+                events: async function (info, successCallback, failureCallback) {
               const eventResult = await axios({
                 method: "POST",
                 url: "/eventData",
@@ -203,7 +305,17 @@
                 });
               });
               successCallback(eventArray);
+           
             },
+              },
+                  {
+                    googleCalendarId : 'ko.south_korea.official#holiday@group.v.calendar.google.com',
+                    backgroundColor: 'red',
+                    // textColor: 'red', 
+                    className : 'holiday',
+                    id :'holiday',
+                  }
+            ]
           });
           //선택하면 모달창 뜨게 하는거
           $("#saveChanges").on("click", function () {
@@ -239,5 +351,7 @@
         });
       })();
     </script>
+    <script src="/public/js/img.js"></script>
+    <script src="/public/js/header.js"></script>
   </body>
 </html>
