@@ -1,0 +1,96 @@
+/* 
+폰트참고
+font-family: 'ADLaM Display', cursive;
+font-family: 'Jua', sans-serif;
+font-family: 'Monoton', cursive;
+ */
+body {
+  margin: 0;
+  /* padding: 20px; */
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(73, 147, 250, 0.6);
+  /* opacity: 0.6; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main_container {
+  width: 94vw;
+  height: 92vh;
+  border-radius: 20px;
+  background-color: rgb(255, 255, 255);
+  padding: 0;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); /* 그림자 설정 */
+}
+
+.head1 {
+  display: flex;
+  height: 8%;
+  padding: 10px 20px 10px 10px;
+  border-radius: 20px 20px 0 0;
+  background-color: #4993fa;
+  height: 8%;
+  /* align-items: center; */
+  /* justify-content: space-between; */
+}
+.head1-logo {
+  display: flex;
+  margin-left: 10px;
+  font-size: 20px;
+  color: white;
+  align-items: center;
+  font-family: "ADLaM Display", cursive;
+}
+.head1-logo > span {
+  color: white;
+}
+.head1-profile {
+  /* margin-left: auto; */
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.nav {
+  opacity: 0.6;
+  height: 7%;
+  /* display: flex; */
+  /* justify-content: space-between; */
+  justify-content: space-around;
+}
+.nav-link {
+  flex: 1;
+}
+
+.main_content {
+  margin: 0;
+  width: 100%;
+  height: 92%;
+
+  background-color: rgba(128, 128, 128, 0.14);
+}
+
+.nav-drop {
+  display: none;
+  justify-content: center;
+}
+.dropdown-toggle {
+  width: 200px;
+}
+.dropdown-menu {
+  width: 200px;
+  /* display: flex; */
+  justify-content: center;
+}
+
+@media screen and (max-width: 455px) {
+  .nav {
+    display: none;
+  }
+  .nav-drop {
+    display: flex;
+  }
+}

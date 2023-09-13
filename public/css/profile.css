@@ -11,10 +11,9 @@ body {
 }
 
 .profile_img_div {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  background-color: rgb(128, 128, 128, 0.14);
+  display: flex;
+  justify-content: center; /* 가로 중앙 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
 }
 .profile_img {
   width: 200px;
@@ -23,6 +22,109 @@ body {
   background-color: rgb(128, 128, 128, 0.14);
 }
 
+.img-save {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 10%;
+}
+
+#dynamic {
+  /* display: none; */
+}
+
+.profile-detail {
+  margin: 20px 10px;
+}
+
+#profile-form {
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  border-style: solid;
+  border-width: 0px 0px 1px 0px;
+  border-color: rgb(218, 217, 217);
+}
+
+#editbutton {
+  border-style: solid;
+  /* border-width: 0px 0px 1px 0px; */
+  border-color: rgb(218, 217, 217);
+}
+
+button {
+  border-style: solid;
+  /* border-width: 0px 0px 1px 0px; */
+  border-color: rgb(218, 217, 217);
+}
+
 .main_content {
+  overflow: auto;
+  padding: 20px 40px;
+  display: grid;
+  grid-template-areas:
+    "class userinfo memo"
+    "class userinfo memo"
+    "class userinfo board"
+    "exit note board";
+  /* align-items: stretch; */
+  /* justify-content: stretch; */
+
+  /* grid-template-columns: 200px 200px 500px; */
+  grid-template-columns: 1fr 2fr 2fr;
+  /* grid-template-columns: repeat(3, 1fr) */
+  /* grid-template-columns: 200px 1fr */
+  /* grid-template-columns: 100px 200px auto */
+
+  /* grid-template-rows: 200px 200px 500px; */
+  /* grid-template-rows: 1fr 1fr 1fr */
+  /* grid-template-rows: repeat(3, 1fr) */
+  /* grid-template-rows: 200px 1fr */
+  /* grid-template-rows: 100px 200px auto */
+
+  gap: 10px 20px;
+  /* row-gap: 10px; column-gap: 20px; */
+}
+
+.itemM {
+  border-radius: 10px;
+  background-color: white;
+  padding: 5px;
+}
+
+.class_list {
+  grid-area: class;
+}
+
+.exit-zone {
+  grid-area: exit;
+}
+
+.userInfo {
+  grid-area: userinfo;
   padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-content {
+  height: min-content;
+  width: 300px;
+}
+.userInfo * {
+  font-size: small;
+}
+
+.my-note {
+  grid-area: note;
+}
+
+.memo-zone {
+  grid-area: memo;
+}
+
+.myBoards {
+  grid-area: board;
 }
