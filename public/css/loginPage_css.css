@@ -184,7 +184,7 @@ input:focus {
   border-radius: 20px;
   background-color: rgb(255, 255, 255);
   padding: 0;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); /* 그림자 설정 */
+  /* box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); */
 }
 body {
   margin: 0;

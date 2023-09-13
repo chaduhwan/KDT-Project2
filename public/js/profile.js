@@ -22,11 +22,26 @@ async function registerEdit(id) {
     // window.location.reload();
   }
 }
+
 //프로필 사진 업로드 함수
-async function fileupload(event) {
+// function imgEdit2(fileupload) {
+//   // event.preventDefault(); // 폼 제출 방지
+//   const dynamicInput = document.getElementById("dynamic");
+
+//   if (dynamicInput.style.display === "none") {
+//     dynamicInput.style.display = "block"; // input 요소를 보이게 함
+//     this.innerText = "사진 저장"; // 버튼 텍스트 변경
+//   } else {
+//     fileupload();
+//     dynamicInput.style.display = "none"; // input 요소를 숨김
+//     this.innerText = "사진 수정"; // 버튼 텍스트 변경
+//   }
+// }
+
+async function fileupload() {
   event.preventDefault();
   console.log("사진등록");
-  const imgBox = $("#profile_img");
+  const imgBox = $(".profile_img_div");
   const file = document.querySelector("#dynamic");
   // const file = $('#dynamic');
   console.log(file);
