@@ -281,6 +281,10 @@
                 span3.textContent= `${res.data.data[i].date}`
                 span3.className = 'board-date'
 
+                const img = document.createElement('img')
+                img.src = `${res.data.data[i].place}`
+                img.className = 'board-writer-img'
+
                 const span4 = document.createElement('span');
                 span4.textContent= `${res.data.data[i].writer}`
                 span4.className = 'board-writer'
@@ -310,6 +314,7 @@
                 boardHigh.appendChild(span1)
                 boardHigh.appendChild(span2)
 
+                boardMid.appendChild(img)
                 boardMid.appendChild(span4)
                 boardMid.appendChild(span3)
 
@@ -397,6 +402,10 @@
                 span3.textContent= `${res.data.data[i].date}`
                 span3.className = 'board-date'
 
+                const img = document.createElement('img')
+                img.src = `${res.data.data[i].place}`
+                img.className = 'board-writer-img'
+
                 const span4 = document.createElement('span');
                 span4.textContent= `${res.data.data[i].writer}`
                 span4.className = 'board-writer'
@@ -420,12 +429,13 @@
                 }
                 const icon = document.createElement('i')
                 icon.className ="fa-regular fa-thumbs-up"
-                icon.innerText= `${res.data.likeArr[i]}`
+                icon.innerText= `${res.data.likeArr[i]}`    
                 button.appendChild(icon)
 
                 boardHigh.appendChild(span1)
                 boardHigh.appendChild(span2)
 
+                boardMid.appendChild(img)
                 boardMid.appendChild(span4)
                 boardMid.appendChild(span3)
 
@@ -521,6 +531,10 @@
                 span4.textContent= `${res.data.data[i].writer}`
                 span4.className = 'board-writer'
 
+                const img = document.createElement('img')
+                img.src = `${res.data.data[i].place}`
+                img.className = 'board-writer-img'
+
                 const span5 = document.createElement('span');
                 let arr = Array.from(format(`${res.data.data[i].content}`))
                 for(let j = 0; j < arr.length; j++){
@@ -546,6 +560,7 @@
                 boardHigh.appendChild(span1)
                 boardHigh.appendChild(span2)
 
+                boardMid.appendChild(img)
                 boardMid.appendChild(span4)
                 boardMid.appendChild(span3)
 

@@ -54,13 +54,13 @@
                         <span class="board-title"> <%=data.title%></span>
                     </div>
                     <div class="board-mid">
-                        <img class="board-writer-img" src="">
+                        <img class="board-writer-img" src="<%=data.place%>">
                         <span class="board-writer"> <%=data.writer%></span>
                         <span class="board-date"> <%=data.date%></span>
                     </div>
                     <span class="board-content"> <%=data.content%></span>
                     <div class="board-bottom">
-                        <span class="board-tag" hidden> 태그 : <%=data.tag%></span>
+                        <span class="board-tag" > 태그 : <%=data.tag%></span>
                         <div class="bottom-button">
                             <button type="button" class="boardLike" value="<%=data.BoardId%>" onclick="BoardLike(this)">
                                 <i class="fa-regular fa-thumbs-up"><%=likecount%></i></button>
@@ -75,6 +75,7 @@
                 <main class="comment-main">
                       <% for (let i = 0; i < commentData.length; i++) { %>
                            <div class="comment-object">
+                                <img class="board-writer-img" src="<%=commentData[i].img%>">
                                <span class="comment-writer"><%=commentData[i].writer%></span>
                                <span class="comment-date"> <%=commentData[i].date%></span>
                                <span class="comment-content"><%=commentData[i].content%></span>
@@ -135,12 +136,12 @@
 
         if(document.querySelector(".comment-main").hasChildNodes){
                 for(let i = 0; i < document.querySelector(".comment-main").children.length; i++){
-                    console.log(document.querySelector(".comment-main").children[i].children[2])
-                    let temp = document.querySelector(".comment-main").children[i].children[2].innerText
-                    document.querySelector(".comment-main").children[i].children[2].innerText = ""
+                    console.log(document.querySelector(".comment-main").children[i].children[3])
+                    let temp = document.querySelector(".comment-main").children[i].children[3].innerText
+                    document.querySelector(".comment-main").children[i].children[3].innerText = ""
                         let arr = Array.from(format(temp))
                             for(let j = 0; j < arr.length; j++){
-                                document.querySelector(".comment-main").children[i].children[2].appendChild(arr[j])   
+                                document.querySelector(".comment-main").children[i].children[3].appendChild(arr[j])   
         }}}
 
         function BoardDelete() {
