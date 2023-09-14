@@ -22,13 +22,13 @@ exports.classMain = (req, res) => {
   res.render("MA_classMain");
 };
 
-exports.main = async (req, res) => {
+exports.intro = async (req, res) => {
   if (req.session.isLogined) {
     const data = await User.findOne({ where: { id: req.session.userId } });
     // console.log('프로필', data)
     res.render("MA_profile", { data });
   } else {
-    res.render("MA_main");
+    res.render("intro");
   }
 };
 //회원가입
@@ -446,7 +446,7 @@ exports.profileImg = async (req, res) => {
   await User.update({ profileImgPath }, { where: { id: req.session.userId } });
   console.log(req.file); //userfile이 담김
   console.log(profileImgPath);
-  req.session.img = profileImgPath
+  req.session.img = profileImgPath;
   res.send(req.file);
 };
 
