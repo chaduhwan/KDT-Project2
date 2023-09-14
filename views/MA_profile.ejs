@@ -30,13 +30,14 @@
       }
       /* 버튼 추가하는 영역 */
       .btn-hover.color-9 {
-        background-image: linear-gradient(
+        /* background-image: linear-gradient(
           to right,
           #25aae1,
           #4481eb,
           #04befe,
           #3f86ed
-        );
+        ); */
+        background-color: #00c4ff;
         box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75);
       }
       * {
@@ -56,7 +57,7 @@
         font-weight: 600;
         color: #fff;
         cursor: pointer;
-        margin: 20px;
+        margin: 0px 20px 20px 20px;
         height: 40px;
         text-align: center;
         border: none;
@@ -79,6 +80,14 @@
 
       .btn-hover:focus {
         outline: none;
+      }
+      .class-name {
+        text-align: center;
+    border: 2px solid #e2e0e0;
+    border-radius: 10px;
+      }
+      #makeNotice{
+        margin-bottom :10px
       }
     </style>
   </head>
@@ -104,7 +113,7 @@
               <%} %>
           </div>
         <div class="class-make-btn">
-          <button type="button" data-bs-toggle="modal" data-bs-target="#classModal" >클래스 참여하기</button>
+          <button type="button" class="btn-hover color-9" data-bs-toggle="modal" data-bs-target="#classModal" >클래스 참여하기</button>
         </div>
 
         <!-- 클래스 참여 모달 -->
@@ -118,7 +127,7 @@
               <div class="modal-body">
                 <form name="ClassSignin">
                   <input type="text" name="token" placeholder="token">
-                  <button type="button" onclick="signinClass()">클래스 참여하기</button>
+                  <button type="button"  onclick="signinClass()">클래스 참여하기</button>
                 </form>
               </div>
             </div>
