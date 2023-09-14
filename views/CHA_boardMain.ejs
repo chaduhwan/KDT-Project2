@@ -78,12 +78,14 @@
                 <% for (let i = 0; i < subjectId.length; i++) { %>
                     <div class="subject-object" data-subject-id="<%= subjectId[i] %>" onclick="enterSubject(this)"># <%= subjectTitle[i] %></div>
                     <% } %>
+                    <% if(userType == "leader" ){ %>
                 <form class="subject-List" name="subjectList">
                     <input type="text" name="SubjectTitle" placeholder="게시판 제목">
                     <button type="button" class="subject-button" onclick="SubjectMake()">
                         <i class="fa-solid fa-plus"></i>
                     </button>
                 </form>
+                <% } %>
             </header>
             <div class="board-container">
                 <main class="board-main">

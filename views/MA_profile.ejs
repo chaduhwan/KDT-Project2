@@ -295,11 +295,11 @@
           url : '/class/signin',
           data : data
         })
-        if(res) {
+        if(res.data.success === true) {
           alert('참여완료!')
           window.location.reload()
         } else {
-          alert('참여실패!')
+          alert('존재하지않는 클래스이거나 참여코드가 틀렸습니다!')
         }
       }
 
