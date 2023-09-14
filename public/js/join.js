@@ -1,5 +1,5 @@
 let joinBtn = $("#joinBtn");
-let email = $("#email"); // 이메일
+var email = $("#email"); // 이메일
 let name = $("#name"); //이름
 let phone = $("#phone"); //핸드폰번호
 let pw = $("#pw"); // 비밀번호
@@ -30,12 +30,20 @@ function pwcheck() {
   if (pwReg.test(pwVal)) {
     // 만족하면
     pwValidation = true; // 유효성 true
-    pw.css("border-bottom", "1px solid blue"); // 파란색 밑줄
+    pw.css("border-bottom", "1px solid black"); // 파란색 밑줄
     pwRule.css("visibility", "hidden"); // rule 안보이게
+    $(".errors")
+      .removeClass("errorPwCheck")
+      .addClass("correctPwCheck")
+      .html("비밀번호 형식과 일치합니다.");
   } else {
     pwValidation = false; // 만족하지 않으면
     pw.css("border-bottom", "1px solid red"); // 빨간색 밑줄
     pwRule.css("visibility", "visible"); // rule 보이게
+    $(".errors")
+      .removeClass("correctPwCheck")
+      .addClass("errorPwCheck")
+      .html("비밀번호 형식과 일치하지 않습니다.");
   }
 
   // ★ 비밀번호 일치 검사 ★
@@ -46,7 +54,7 @@ function pwcheck() {
   } else {
     // 비밀번호 일치시
     pwSame.css("visibility", "hidden"); // 일치하지 않습니다 문구 X
-    pwV.css("border-bottom", "1px solid blue"); // 파란색 밑줄
+    pwV.css("border-bottom", "1px solid black"); // 파란색 밑줄
   }
 }
 
@@ -134,3 +142,67 @@ function kakaoLogin() {
 function googleLogin() {
   location.href = "/auth/google/join";
 }
+
+//비밀번호 체크
+let pwValid = false; // 맞는 비밀번호
+let emailValid = false; // 맞는 이메일
+let checkValid = false; // 체크박스 다 체크
+
+let pwValue; //비밀번호
+let pwCheckValue; //비밀번호 확인
+$("#pw").on("change", function () {
+  pwValue = $("#pw").val();
+  if (pwValue == pwCheckValue) {
+    $(".error")
+      .removeClass("errorPwCheck")
+      .addClass("correctPwCheck")
+      .html("비밀번호가 일치합니다.");
+    pwValid = true;
+  } else {
+    $(".error")
+      .removeClass("correctPwCheck")
+      .addClass("errorPwCheck")
+      .html("비밀번호가 일치하지 않습니다.");
+    pwValid = false;
+  }
+});
+$("#pwVal").on("change", function () {
+  pwCheckValue = $("#pwVal").val();
+  if (pwValue == pwCheckValue) {
+    $(".error")
+      .removeClass("errorPwCheck")
+      .addClass("correctPwCheck")
+      .html("비밀번호가 일치합니다.");
+    pwValid = true;
+  } else {
+    $(".error")
+      .removeClass("correctPwCheck")
+      .addClass("errorPwCheck")
+      .html("비밀번호가 일치하지 않습니다.");
+    pwValid = false;
+  }
+});
+
+//이메일 유효성 검사
+//이메일 유효성검사 (숫자or영어)@(숫자or영어)
+
+var regex =
+  /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+$("#email").on("change", function () {
+  let email = $("#email").val(); //email value값 받아오기
+  if (regex.test(email) == false) {
+    $(".errorEmail")
+      .removeClass("correctPwCheck")
+      .addClass("errorPwCheck")
+      .html("이메일 형식이 올바르지 않습니다.");
+    emailValid = false;
+    console.log(emailValid);
+  } else {
+    $(".errorEmail")
+      .removeClass("errorPwCheck")
+      .addClass("correctPwCheck")
+      .html("이메일을 옳게 입력하셨습니다.");
+    emailValid = true;
+    console.log(emailValid);
+  }
+});
