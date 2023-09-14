@@ -10,19 +10,19 @@ body {
   /* 다른 스타일 속성을 추가할 수 있습니다. */
 }
 .board-title{
-  font-size: large;
+  font-size: xx-large;
   font-weight: 700;
 }
 
 .board-writer,.comment-writer{
   font-weight: 600;
-  font-size: small;
+  font-size: medium;
 }
 
 
 .board-date{
     font-weight: 200;
-    font-size: x-small;
+    font-size: small;
     right: 0;
     position: absolute;
   }
@@ -35,10 +35,11 @@ body {
 .board-content{
   font-size: medium;
   font-weight: 600;
+  padding: 20px;
 }
 
 .board-tag{
-  font-size: small;
+  font-size:medium;
   font-weight: 700;
 }
 
@@ -93,8 +94,10 @@ body {
 }
 .board-high{
   display: flex;
+  border-bottom: 0.5px solid;
 }
 .board-mid{
+  margin-top: 10px;
   display: flex;
   position: relative;
   align-items: center;
@@ -102,7 +105,7 @@ body {
 .board-bottom {
   width: 100%;
   position: absolute;
-  bottom: 0;
+  bottom: 10px;
   display: flex;
   justify-content: space-between;
 }
@@ -119,7 +122,7 @@ body {
   display: flex;
   flex-direction: column;
   position: relative;
-  padding : 20px 20px 30px 20px
+  padding: 20px 20px 30px 0px;
 }
 .comment-main {
   width: 100%;
@@ -130,7 +133,7 @@ body {
   overflow: scroll;
 }
 .comment-object {
-  width: 90%;
+  width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;

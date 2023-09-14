@@ -99,12 +99,15 @@
                     <div class="subject-object" data-subject-id="<%= subjectId[i] %>" onclick="enterSubject(this)"># <%= subjectTitle[i] %></div>
                     <% } %>
                     <% if(userType == "leader" ){ %>
-                    <form class="subject-List" name="subjectList">
-                        <input type="text" name="SubjectTitle" placeholder="게시판 제목">
-                        <button type="button" class="subject-button" onclick="SubjectMake()">
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
-                    </form>
+                    <div class="readerOnly">
+                        <div id="makeNotice"> * Leader에게만 보이는 항목입니다 </div>
+                        <form class="subject-List" name="subjectList">
+                            <input type="text" name="SubjectTitle" placeholder="게시판 제목">
+                            <button type="button" class="subject-button" onclick="SubjectMake()">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </form>
+                    </div>
                 <% } %>
             </header>
             <div class="board-container">
@@ -130,7 +133,14 @@
                         </div>
                                 <%}%>
                             </main>
-                <button id="btn-modal">함께 나누고픈 의견이 있나요?</button>
+                     <button id="btn-modal">
+                        <div></div>
+                        <div>
+                            함께 나누고픈 의견이 있나요?
+                        </div>
+                        <i class="fa-regular fa-comments"></i>
+                            
+                    </button>
             </div>
             </div>
             <div id="modal" class="modal-overlay">
@@ -239,7 +249,7 @@
             url : '/subject/make',
             data : {subjectTitle:form.SubjectTitle.value}
         })
-          window.location.reload();
+        window.location.reload();
     }
 
     async function enterSubject(element) {
@@ -363,7 +373,7 @@
             date : `${year}년 ${month}월 ${day}일 ${hour}:${min}`,
             writer : '<%=user %>',
             content : editor.getHTML(),
-            tag : tagAdd.join(', ')
+            tag : tagAdd.map(tag => `#${tag}`).join(' ')
         }
         const res =  await axios ({
             method : 'POST',
@@ -657,7 +667,6 @@
           document.querySelector('.toastui-editor-defaultUI-toolbar')
             .firstChild,
         );
-      let space = smallDiv.innerHTML;
-      console.log(document.querySelector('#editor').innerHTML);    
+      let space = smallDiv.innerHTML;   
 </script>
 </html>

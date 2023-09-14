@@ -217,7 +217,7 @@ exports.BoardSearch = async (req, res) => {
   let result;
   if (searchValue === "title") {
     result = await board.findAll({
-      where: { title: { [Op.like]: "%" + searchBar + "%" } },
+      where: { title: { [Op.like]: "%" + searchBar + "%" } , ClassId : req.session.classId},
     });
     for (const boardEle of result) {
       const cou = await like.count({
@@ -227,17 +227,17 @@ exports.BoardSearch = async (req, res) => {
     }
   } else if (searchValue === "tag") {
     result = await board.findAll({
-      where: { tag: { [Op.like]: "%" + searchBar + "%" } },
+      where: { tag: { [Op.like]: "%" + searchBar + "%" } ,ClassId : req.session.classId},
     });
     for (const boardEle of result) {
       const cou = await like.count({
-        where: { BoardId: boardEle.BoardId },
+        where: { BoardId: boardEle.BoardId ,},
       });
       likeArr.push(cou);
     }
   } else if (searchValue === "content") {
     result = await board.findAll({
-      where: { content: { [Op.like]: "%" + searchBar + "%" } },
+      where: { content: { [Op.like]: "%" + searchBar + "%" } ,ClassId : req.session.classId},
     });
     for (const boardEle of result) {
       const cou = await like.count({
