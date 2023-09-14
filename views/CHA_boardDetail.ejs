@@ -50,22 +50,24 @@
             <main class="board-main">
             <div class="board-object" data-board-id="<%=data.BoardId%>">
                     <div class="board-high">
-                        <span id="borad-ID">등록번호 : <%=data.BoardId%></span>
-                        <span class="board-title"> 제목 : <%=data.title%></span>
+                        <span id="borad-ID" hidden>등록번호 : <%=data.BoardId%></span>
+                        <span class="board-title"> <%=data.title%></span>
                     </div>
                     <div class="board-mid">
                         <img class="board-writer-img" src="">
-                        <span class="board-writer"> 작성자 : <%=data.writer%></span>
-                        <span class="board-date"> 날짜 : <%=data.date%></span>
+                        <span class="board-writer"> <%=data.writer%></span>
+                        <span class="board-date"> <%=data.date%></span>
                     </div>
                     <span class="board-content"> <%=data.content%></span>
                     <div class="board-bottom">
-                        <span class="board-tag"> 태그 : <%=data.tag%></span>
-                        <button type="button" class="boardLike" value="<%=data.BoardId%>" onclick="BoardLike(this)">
-                            <i class="fa-regular fa-thumbs-up"><%=likecount%></i></button>
-                        <button type="button" value="<%=data.BoardId%>" class="board-delete" onclick="BoardDelete(this)">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
+                        <span class="board-tag" hidden> 태그 : <%=data.tag%></span>
+                        <div class="bottom-button">
+                            <button type="button" class="boardLike" value="<%=data.BoardId%>" onclick="BoardLike(this)">
+                                <i class="fa-regular fa-thumbs-up"><%=likecount%></i></button>
+                            <button type="button" value="<%=data.BoardId%>" class="board-delete" onclick="BoardDelete(this)">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </main>
@@ -73,7 +75,7 @@
                 <main class="comment-main">
                       <% for (let i = 0; i < commentData.length; i++) { %>
                            <div class="comment-object">
-                               <span class="comment-writer"> 작성자 : <%=commentData[i].writer%></span>
+                               <span class="comment-writer"><%=commentData[i].writer%></span>
                                <span class="comment-date"> <%=commentData[i].date%></span>
                                <span class="comment-content"><%=commentData[i].content%></span>
                                <button type="button" class="deleteButton" value="<%=commentData[i].commentId%>" onclick="deleteComment(this)">
@@ -199,7 +201,7 @@
         });
         }
 
-        function commentWrite() {
+        async function commentWrite() {
             const form = document.forms['comment-Write']
             const now = new Date();
             const year = now.getFullYear()
@@ -213,13 +215,13 @@
              date : `${year}년 ${month}월 ${day}일 ${hour}:${min}` ,
              BoardId : document.querySelector('.board-delete').value
             }
-            axios({
+            const result = await axios({
                 method:'POST',
                 url :'/comment/write',
                 data : data
-            }).then(
-                window.location.reload()
-            )
+            })
+            window.location.reload();
+           
         }
 
         const Editor = toastui.Editor;
