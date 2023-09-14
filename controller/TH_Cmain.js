@@ -17,10 +17,11 @@ exports.noteManager = async (req, res) => {
 
 exports.memo_post = async (req, res) => {
   try {
+    console.log(req.body);
     await Memo.create({
-      userid: req.body.userid,
+      userid: req.session.userId,
       content: req.body.content,
-      name: req.body.name,
+      name: req.session.userName,
     });
     res.send('성공');
   } catch (e) {
@@ -28,9 +29,40 @@ exports.memo_post = async (req, res) => {
   }
 };
 
-exports.memo_patch = async (req, res) => {};
+exports.memo_get = async (req, res) => {
+  try {
+    let memos = await Memo.findAll({ where: { userid: req.session.userId } });
+    res.send({ memos });
+  } catch (e) {
+    console.log(e);
+  }
+};
 
-exports.memo_delete = async (req, res) => {};
+exports.memo_patch = async (req, res) => {
+  try {
+    let updated = await Memo.update(
+      { content: req.body.content },
+      {
+        where: {
+          id: req.body.id,
+        },
+      },
+    );
+    console.log('이건데', updated);
+    res.send('성공');
+  } catch (e) {
+    res.send('실패');
+  }
+};
+
+exports.memo_delete = async (req, res) => {
+  try {
+    let deleted = await Memo.destroy({ where: { id: req.body.id } });
+    res.send('성공');
+  } catch (e) {
+    res.send('실패');
+  }
+};
 
 exports.get_noteManager = async (req, res) => {
   try {
