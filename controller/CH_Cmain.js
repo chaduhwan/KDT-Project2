@@ -275,7 +275,7 @@ exports.BoardLike = async (req, res) => {
 //////////////댓글 작성
 exports.CommentWrite = (req, res) => {
   const { content, writer, date, BoardId } = req.body;
-  comment.create({ content, writer, date, BoardId }).then((result) => {
+  comment.create({ content, writer, date, BoardId , img : req.session.img}).then((result) => {
     console.log(result);
     res.json({ result: true });
   });

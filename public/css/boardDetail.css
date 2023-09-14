@@ -20,7 +20,14 @@ body {
 }
 
 
-.board-date, .comment-date{
+.board-date{
+    font-weight: 200;
+    font-size: x-small;
+    right: 0;
+    position: absolute;
+  }
+
+.comment-date{
   font-weight: 200;
   font-size: x-small;
 }
@@ -38,10 +45,16 @@ body {
 .main_content {
   position: relative;
  display: flex;
- height: 85%;
+
 }
 ::-webkit-scrollbar {
   display: none;
+}
+
+.board-writer-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
 }
 
 /* 게시글 관련 */
@@ -83,6 +96,8 @@ body {
 }
 .board-mid{
   display: flex;
+  position: relative;
+  align-items: center;
 }
 .board-bottom {
   width: 100%;

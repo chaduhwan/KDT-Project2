@@ -25,6 +25,8 @@ body {
 .board-date{
   font-weight: 200;
   font-size: x-small;
+  right: 10px;
+  position: absolute;
 }
 
 .board-content{
@@ -37,15 +39,14 @@ body {
   font-weight: 700;
 }
 .board-writer-img {
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   border-radius: 100%;
 }
 
 .main_content {
   position: relative;
  display: flex;
- height: 85%;
 }
 
 /* 옆에 뜨는 검색창 게시판 헤더 관련 */
@@ -57,6 +58,7 @@ body {
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: white;
+  border-radius: 20px;
 }
 /* 검색창 관련 */
 .search-bar {
@@ -157,7 +159,8 @@ body {
 }
 .board-mid{
   display: flex;
-  justify-content: space-evenly;
+  position: relative;
+  align-items: center;
 }
 .board-bottom {
   display: flex;
