@@ -39,17 +39,16 @@ exports.EnterSubject = async (req, res) => {
   let subjectId = [];
   let subjectTitle = [];
 
-  if(SubjectId !== 9999) {
-
+  if (SubjectId !== 9999) {
     const subject = await Subject.findAll({ where: { classId } });
-  
+
     for (const ele of subject) {
       subjectId.push(ele.SubjectId);
       subjectTitle.push(ele.subjectTitle);
     }
-  
+
     let likeArr = [];
-  
+
     const boards = await board.findAll({
       where: { SubjectId: req.session.subjectId },
     });
@@ -61,15 +60,15 @@ exports.EnterSubject = async (req, res) => {
     }
     res.send({ data: boards, likeArr });
   } else {
-   const subject = await Subject.findAll({ where: { classId } });
-  
+    const subject = await Subject.findAll({ where: { classId } });
+
     for (const ele of subject) {
       subjectId.push(ele.SubjectId);
       subjectTitle.push(ele.subjectTitle);
     }
-  
+
     let likeArr = [];
-  
+
     const boards = await board.findAll();
     for (const boardEle of boards) {
       const cou = await like.count({
@@ -79,7 +78,6 @@ exports.EnterSubject = async (req, res) => {
     }
     res.send({ data: boards, likeArr });
   }
-
 };
 
 ///// 게시판 메인페이지
@@ -87,88 +85,95 @@ exports.BoardMain = async (req, res) => {
   const user = req.session.userName;
   const userid = req.session.userId;
   const classId = req.session.classId;
-  const userType = req.session.userType
+  const userType = req.session.userType;
+  if (req.session.isLogined) {
+    console.log(req.session.classId);
 
-  console.log(req.session.classId);
+    let subjectId = [];
+    let subjectTitle = [];
+    const subject = await Subject.findAll({ where: { classId } });
 
-  let subjectId = [];
-  let subjectTitle = [];
-  const subject = await Subject.findAll({ where: { classId } });
+    for (const ele of subject) {
+      subjectId.push(ele.SubjectId);
+      subjectTitle.push(ele.subjectTitle);
+    }
 
-  for (const ele of subject) {
-    subjectId.push(ele.SubjectId);
-    subjectTitle.push(ele.subjectTitle);
-  }
+    console.log(subject);
+    let likeArr = [];
 
-  console.log(subject);
-  let likeArr = [];
-
-  const boards = await board.findAll({ where: { ClassId: classId } });
-  for (const boardEle of boards) {
-    const cou = await like.count({
-      where: { BoardId: boardEle.BoardId },
+    const boards = await board.findAll({ where: { ClassId: classId } });
+    for (const boardEle of boards) {
+      const cou = await like.count({
+        where: { BoardId: boardEle.BoardId },
+      });
+      likeArr.push(cou);
+    }
+    res.render("CHA_boardMain", {
+      data: boards,
+      user,
+      userid,
+      likeArr,
+      subjectId,
+      subjectTitle,
+      userType,
     });
-    likeArr.push(cou);
+  } else {
+    res.render("MA_login");
   }
-  res.render("CHA_boardMain", {
-    data: boards,
-    user,
-    userid,
-    likeArr,
-    subjectId,
-    subjectTitle,
-    userType
-  });
 };
 
 ///////게시판 상세페이지
 exports.BoardDetail = (req, res) => {
-  const user = req.session.userName;
-  const userid = req.session.userId;
-  board
-    .findOne({
-      where: { BoardId: req.query.boardId },
-    })
-    .then((result) => {
-      comment
-        .findAll({
-          include: [
-            {
-              model: board,
-            },
-          ],
-          where: { boardId: req.query.boardId },
-        })
-        .then((commentData) => {
-          like
-            .count({
-              where: {
-                boardId: req.query.boardId,
+  if (req.session.isLogined) {
+    const user = req.session.userName;
+    const userid = req.session.userId;
+    board
+      .findOne({
+        where: { BoardId: req.query.boardId },
+      })
+      .then((result) => {
+        comment
+          .findAll({
+            include: [
+              {
+                model: board,
               },
-            })
-            .then((likecount) => {
-              res.render("CHA_boardDetail", {
-                data: result,
-                commentData,
-                user,
-                userid,
-                likecount,
+            ],
+            where: { boardId: req.query.boardId },
+          })
+          .then((commentData) => {
+            like
+              .count({
+                where: {
+                  boardId: req.query.boardId,
+                },
+              })
+              .then((likecount) => {
+                res.render("CHA_boardDetail", {
+                  data: result,
+                  commentData,
+                  user,
+                  userid,
+                  likecount,
+                });
               });
-            });
-        });
-      // console.log(result)
-    });
+          });
+        // console.log(result)
+      });
+  } else {
+    res.render("MA_login");
+  }
 };
 
 ////////게시글 작성
 exports.BoardWrite = async (req, res) => {
-  if(req.session.subjectId== null) {
-    res.json({result:false})
+  if (req.session.subjectId == null) {
+    res.json({ result: false });
     return;
   }
   const { title, date, writer, content, tag } = req.body;
   let likeArr = [];
-  
+
   const newboard = await board.create({
     title,
     date,
@@ -178,7 +183,7 @@ exports.BoardWrite = async (req, res) => {
     SubjectId: req.session.subjectId,
     ClassId: req.session.classId,
     id: req.session.userId,
-    place : req.session.img 
+    place: req.session.img,
   });
   const result = await board.findOne({
     attributes: [[sequelize.fn("max", sequelize.col("BoardId")), "maxBoardId"]],
@@ -192,7 +197,7 @@ exports.BoardWrite = async (req, res) => {
     },
   });
   likeArr.push(cou);
-  res.json({ data: boardnew, likeArr ,result:true});
+  res.json({ data: boardnew, likeArr, result: true });
 };
 
 ////////게시글 삭제
@@ -275,10 +280,12 @@ exports.BoardLike = async (req, res) => {
 //////////////댓글 작성
 exports.CommentWrite = (req, res) => {
   const { content, writer, date, BoardId } = req.body;
-  comment.create({ content, writer, date, BoardId , img : req.session.img}).then((result) => {
-    console.log(result);
-    res.json({ result: true });
-  });
+  comment
+    .create({ content, writer, date, BoardId, img: req.session.img })
+    .then((result) => {
+      console.log(result);
+      res.json({ result: true });
+    });
 };
 
 ////////////댓글 삭제
@@ -297,10 +304,10 @@ exports.CommentDelete = async (req, res) => {
 exports.ClassMake = async (req, res) => {
   const { className, leader } = req.body;
   let randomNumber = function (min, max) {
-    const randNum = Math.floor(Math.random() * (max - min +1)) +min;
+    const randNum = Math.floor(Math.random() * (max - min + 1)) + min;
     return randNum;
-  }
-  const token = await randomNumber(111111,999999)
+  };
+  const token = await randomNumber(111111, 999999);
   const result = await Class.create({ className, leader, token });
   res.json({ res: true, result, token });
 };
@@ -319,5 +326,3 @@ exports.ClassSignin = async (req, res) => {
     res.json({ success: false });
   }
 };
-
-
