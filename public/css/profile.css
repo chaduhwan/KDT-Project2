@@ -8,6 +8,7 @@
 body {
   font-family: "S-CoreDream-3Light", sans-serif; /* 폰트를 적용합니다. */
   /* 다른 스타일 속성을 추가할 수 있습니다. */
+  background-color: rgba(73, 147, 250, 0.6);
 }
 
 .profile_img_div {
