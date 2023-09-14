@@ -212,17 +212,19 @@
               <% for (let i = 0 ; i < myBoard.length ; i ++) {%>
                 <div class="board-object" data-board-id="<%=myBoard[i].BoardId%>" onclick="boardDetail(this)">
                         <div class="board-high">
-                            <span class="board-class"> <%=myBoard[i].ClassId%> </span>
-                            <span class="board-title"> <%=myBoard[i].title%></span>
+                            <div class="board-class"> <%=myBoard[i].ClassId%> </div>
+                            <div class="board-title"> <%=myBoard[i].title%></div>
+                            <div class="board-date"> <%=myBoard[i].date%></div>
+                            <div class="like-count"><i class="fa-regular fa-thumbs-up"> <%=likeArr[i]%></i></div>
                         </div>
-                        <div class="board-mid">
+                        <!-- <div class="board-mid">
                             <img class="board-writer-img" src="">
                             <span> 클래스:<%=myBoard[i].ClassId%> </span>
-                            <span class="board-date"> 날짜 : <%=myBoard[i].date%></span>
-                            <!-- <button type="button" class="boardLike" value="<%=myBoard[i].BoardId%>" onclick="BoardLike(this)"> -->
-                              <i class="fa-regular fa-thumbs-up"> <%=likeArr[i]%></i>
-                            <!-- </button> -->
-                          </div>
+                            <span class="board-date"> <%=myBoard[i].date%></span>
+                            <button type="button" class="boardLike" value="<%=myBoard[i].BoardId%>" onclick="BoardLike(this)">
+                            <i class="fa-regular fa-thumbs-up"> <%=likeArr[i]%></i>
+                            </button> -->
+                          <!-- </div> -->
                         
                     </div>
               <%} %>
