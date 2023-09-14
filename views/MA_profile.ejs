@@ -28,6 +28,58 @@
         width: 20px;
         height: 20px;
       }
+      /* 버튼 추가하는 영역 */
+      .btn-hover.color-9 {
+        background-image: linear-gradient(
+          to right,
+          #25aae1,
+          #4481eb,
+          #04befe,
+          #3f86ed
+        );
+        box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75);
+      }
+      * {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+
+      .buttons {
+        margin: 10%;
+        text-align: center;
+      }
+
+      .btn-hover {
+        width: 140px;
+        font-size: 11px;
+        font-weight: 600;
+        color: #fff;
+        cursor: pointer;
+        margin: 20px;
+        height: 40px;
+        text-align: center;
+        border: none;
+        background-size: 300% 100%;
+
+        border-radius: 12px;
+        moz-transition: all 0.4s ease-in-out;
+        -o-transition: all 0.4s ease-in-out;
+        -webkit-transition: all 0.4s ease-in-out;
+        transition: all 0.4s ease-in-out;
+      }
+
+      .btn-hover:hover {
+        background-position: 100% 0;
+        moz-transition: all 0.4s ease-in-out;
+        -o-transition: all 0.4s ease-in-out;
+        -webkit-transition: all 0.4s ease-in-out;
+        transition: all 0.4s ease-in-out;
+      }
+
+      .btn-hover:focus {
+        outline: none;
+      }
     </style>
   </head>
 
@@ -78,7 +130,7 @@
             <% if(data.userType == "leader" ){ %>
               <div id="makeNotice"> * Leader에게만 보이는 항목입니다 </div>
               <div class="class-make-btn">
-              <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" >클래스 생성하기</button>
+              <button type="button" class="btn-hover color-9"data-bs-toggle="modal" data-bs-target="#exampleModal" >클래스 생성하기</button>
             </div>
             <% } %> 
 
@@ -212,17 +264,19 @@
               <% for (let i = 0 ; i < myBoard.length ; i ++) {%>
                 <div class="board-object" data-board-id="<%=myBoard[i].BoardId%>" onclick="boardDetail(this)">
                         <div class="board-high">
-                            <span class="board-class"> <%=myBoard[i].ClassId%> </span>
-                            <span class="board-title"> <%=myBoard[i].title%></span>
+                            <div class="board-class"> <%=myBoard[i].ClassId%> </div>
+                            <div class="board-title"> <%=myBoard[i].title%></div>
+                            <div class="board-date"> <%=myBoard[i].date%></div>
+                            <div class="like-count"><i class="fa-regular fa-thumbs-up"> <%=likeArr[i]%></i></div>
                         </div>
-                        <div class="board-mid">
+                        <!-- <div class="board-mid">
                             <img class="board-writer-img" src="">
                             <span> 클래스:<%=myBoard[i].ClassId%> </span>
-                            <span class="board-date"> 날짜 : <%=myBoard[i].date%></span>
-                            <!-- <button type="button" class="boardLike" value="<%=myBoard[i].BoardId%>" onclick="BoardLike(this)"> -->
-                              <i class="fa-regular fa-thumbs-up"> <%=likeArr[i]%></i>
-                            <!-- </button> -->
-                          </div>
+                            <span class="board-date"> <%=myBoard[i].date%></span>
+                            <button type="button" class="boardLike" value="<%=myBoard[i].BoardId%>" onclick="BoardLike(this)">
+                            <i class="fa-regular fa-thumbs-up"> <%=likeArr[i]%></i>
+                            </button> -->
+                          <!-- </div> -->
                         
                     </div>
               <%} %>
