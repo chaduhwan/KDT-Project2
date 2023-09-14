@@ -590,10 +590,11 @@
             url : '/subject/make',
             data : {subjectTitle:form.SubjectTitle.value}
         })
-        window.location.reload();
+        window.location.reload()
     }
-
+  let subjectIs = false;
     async function enterSubject(element) {
+        subjectIs = true;
         const SubjectId = element.getAttribute('data-subject-id');
          const res = await axios({
             method:'POST',
@@ -679,6 +680,8 @@
 
                 const main = document.querySelector('.board-main')
                 main.appendChild(div)
+                subjectIs = res.data.subjectIs
+                console.log(subjectIs)
             }
     }
 
@@ -721,10 +724,6 @@
             url : '/board/write',
             data : data
         })
-        if(res.data.result==false) {
-            alert("게시판을 먼저 선택해주세요!")
-            return;
-        }
         tagAdd.length = 0;
             console.log(res.data.data)
             for (let i = 0 ; i < res.data.data.length; i++) {
@@ -932,6 +931,10 @@
     const modal2 = document.getElementById("modal")
     const btnModal = document.getElementById("btn-modal")
     btnModal.addEventListener("click", e => {
+        if (subjectIs== false) {
+            alert("게시판을 선택해주세요!")
+            return;
+        }
         modal2.style.display = "flex"
         })
     modal2.addEventListener("click", e => {
