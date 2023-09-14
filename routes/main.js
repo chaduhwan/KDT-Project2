@@ -179,9 +179,10 @@ router.post("/noteManager/upload_folder", T_controller.noteUpload_folder);
 router.delete("/noteManager/erase_files", T_controller.erase_files);
 router.patch("/noteManager/patch_files", T_controller.patch_files);
 
-router.post("/profile/memo_post", T_controller.memo_post);
-router.patch("/profile/memo_patch", T_controller.memo_patch);
-router.delete("/profile/memo_delete", T_controller.memo_post);
+router.get('/profile/memo_get', T_controller.memo_get);
+router.post('/profile/memo_post', T_controller.memo_post);
+router.patch('/profile/memo_patch', T_controller.memo_patch);
+router.delete('/profile/memo_delete', T_controller.memo_delete);
 
 router.get("/test", T_controller.test);
 router.get("/test2", T_controller.test2);
