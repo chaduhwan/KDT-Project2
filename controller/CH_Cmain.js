@@ -87,6 +87,7 @@ exports.BoardMain = async (req, res) => {
   const user = req.session.userName;
   const userid = req.session.userId;
   const classId = req.session.classId;
+  const userType = req.session.userType
 
   console.log(req.session.classId);
 
@@ -116,6 +117,7 @@ exports.BoardMain = async (req, res) => {
     likeArr,
     subjectId,
     subjectTitle,
+    userType
   });
 };
 
