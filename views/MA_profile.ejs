@@ -43,8 +43,9 @@
 
         <!-- 클래스 리스트 영역 -->
         <div class="class_list itemM">
-          <div id="class-menu">참여한 클래스</div>
+          <div class="itemIndex" id="class-menu">참여한 클래스</div>
           <!-- 클래스 목록 -->
+          <div class="itemBody">
           <div class="classes">
             <% for(let i = 0; i<Classes.length; i++){ %>
               <div class="class-name" data-class-id="<%=ClassesId[i]%>" onclick="enterClass(this)"><%=Classes[i]%></div>
@@ -99,126 +100,133 @@
               </div>
             </div>        
           </div>
-            
+        </div>
         </div>
 
         <!-- 로그아웃, 탈퇴 영역 -->
         <div class="exit-zone itemM">
-          <button type="button" onclick="logout()">로그아웃</button>
-          <button type="button" onclick="deleteUser(`<%= data.id %>`)">탈퇴하기</button>
+          <div class="userbtn">
+            <button type="button" onclick="logout()">로그아웃</button>
+            <button type="button" onclick="deleteUser(`<%= data.id %>`)">탈퇴하기</button>
+          </div>
         </div>
 
         <!-- 유저 정보 -->
         <div class="userInfo itemM">
-          <div class="user-content">
-          <!-- 프로필사진 -->
-            <div class="profile_img_div"><img class="profile_img" src="<%= data.profileImgPath%>"></div>
-            <div>
-              <form onsubmit="fileupload(event)" name="form-upload">
-                <div class="img-save">
-                <input type="file" id="dynamic" /><button type="submit"  class="imgEdit" >사진 등록</button>
+          <div class="itemIndex" >나의 정보</div>
+          <div class="itemBody">
+            <div class="user-content">
+            <!-- 프로필사진 -->
+              <div class="profile_img_div"><img class="profile_img" src="<%= data.profileImgPath%>"></div>
+              <div>
+                <form onsubmit="fileupload(event)" name="form-upload">
+                  <div class="img-save">
+                  <input type="file" id="dynamic" /><button type="submit"  class="imgEdit" >사진 등록</button>
+                </div>
+                </form>
               </div>
-              </form>
-            </div>
-            <!-- 회원 정보 -->
-            <div class="profile-detail">
-              <form name="form-profile" id="profile-form">
-                <table>
-                  <tr>
-                    <th scope="row">이름</th>
-                    <td><input type="text" id="name" value="<%= data.name %>" /></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">이메일</th>
-                    <td><input type="email" id="email" value="<%= data.email%>" /></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">전화번호</th>
-                    <td><input type="number" id="phone" value="<%= data.phone %>" /></td>
-                  </tr>
-                </table>
-                <br/>
-                <button id="editbutton" type="button" onclick="registerEdit(`<%= data.id %>`)">Edit</button>
-              </form>
+              <!-- 회원 정보 -->
+              <div class="profile-detail">
+                <form name="form-profile" id="profile-form">
+                  <table>
+                    <tr>
+                      <th scope="row">이름</th>
+                      <td><input type="text" id="name" value="<%= data.name %>" /></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">이메일</th>
+                      <td><input type="email" id="email" value="<%= data.email%>" /></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">전화번호</th>
+                      <td><input type="number" id="phone" value="<%= data.phone %>" /></td>
+                    </tr>
+                  </table>
+                  <br/>
+                  <button id="editbutton" type="button" onclick="registerEdit(`<%= data.id %>`)">Edit</button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- 플래너, 노트 존 -->
-        <div class="my-note itemM">
+        <!-- <div class="my-note itemM">
           <div id="myPlanner"></div>
           <div id="myNote"></div>
-        </div>
+        </div> -->
 
         <!-- 메모 -->
         <div class="memo-zone itemM">
-          <section class="sandbox__carousel">
-            <div class="embla">
-              <div class="embla__viewport">
-                <div class="embla__container">
-                  <div class="embla__slide sorting">
-                    <p>안녕</p>
-                  </div>
-                  <div class="embla__slide sorting">
-                    <p>안녕</p>
-                  </div>
-                  <div class="embla__slide sorting">
-                    <p>안녕</p>
-                  </div>
-                  <div class="embla__slide sorting">
-                    <p>안녕</p>
-                  </div>
-                  <div class="embla__slide sorting">
-                    <p>안녕</p>
+          <div class="itemIndex">메모</div>
+            <div class="itemBody">
+            <section class="sandbox__carousel">
+              <div class="embla">
+                <div class="embla__viewport">
+                  <div class="embla__container">
+                    <div class="embla__slide sorting">
+                      <p>안녕</p>
+                    </div>
+                    <div class="embla__slide sorting">
+                      <p>안녕</p>
+                    </div>
+                    <div class="embla__slide sorting">
+                      <p>안녕</p>
+                    </div>
+                    <div class="embla__slide sorting">
+                      <p>안녕</p>
+                    </div>
+                    <div class="embla__slide sorting">
+                      <p>안녕</p>
+                    </div>
                   </div>
                 </div>
+        
+                <div class="embla__buttons">
+                  <button class="embla__button embla__button--prev sizing-button" type="button">
+                    <svg class="embla__button__svg" viewBox="0 0 532 532">
+                      <path
+                        fill="currentColor"
+                        d="M355.66 11.354c13.793-13.805 36.208-13.805 50.001 0 13.785 13.804 13.785 36.238 0 50.034L201.22 266l204.442 204.61c13.785 13.805 13.785 36.239 0 50.044-13.793 13.796-36.208 13.796-50.002 0a5994246.277 5994246.277 0 0 0-229.332-229.454 35.065 35.065 0 0 1-10.326-25.126c0-9.2 3.393-18.26 10.326-25.2C172.192 194.973 332.731 34.31 355.66 11.354Z"
+                      ></path>
+                    </svg>
+                  </button>
+                  <button class="embla__button embla__button--next sizing-button" type="button">
+                    <svg class="embla__button__svg" viewBox="0 0 532 532">
+                      <path
+                        fill="currentColor"
+                        d="M176.34 520.646c-13.793 13.805-36.208 13.805-50.001 0-13.785-13.804-13.785-36.238 0-50.034L330.78 266 126.34 61.391c-13.785-13.805-13.785-36.239 0-50.044 13.793-13.796 36.208-13.796 50.002 0 22.928 22.947 206.395 206.507 229.332 229.454a35.065 35.065 0 0 1 10.326 25.126c0 9.2-3.393 18.26-10.326 25.2-45.865 45.901-206.404 206.564-229.332 229.52Z"
+                      ></path>
+                    </svg>
+                  </button>
+                </div>
               </div>
-      
-              <div class="embla__buttons">
-                <button class="embla__button embla__button--prev sizing-button" type="button">
-                  <svg class="embla__button__svg" viewBox="0 0 532 532">
-                    <path
-                      fill="currentColor"
-                      d="M355.66 11.354c13.793-13.805 36.208-13.805 50.001 0 13.785 13.804 13.785 36.238 0 50.034L201.22 266l204.442 204.61c13.785 13.805 13.785 36.239 0 50.044-13.793 13.796-36.208 13.796-50.002 0a5994246.277 5994246.277 0 0 0-229.332-229.454 35.065 35.065 0 0 1-10.326-25.126c0-9.2 3.393-18.26 10.326-25.2C172.192 194.973 332.731 34.31 355.66 11.354Z"
-                    ></path>
-                  </svg>
-                </button>
-                <button class="embla__button embla__button--next sizing-button" type="button">
-                  <svg class="embla__button__svg" viewBox="0 0 532 532">
-                    <path
-                      fill="currentColor"
-                      d="M176.34 520.646c-13.793 13.805-36.208 13.805-50.001 0-13.785-13.804-13.785-36.238 0-50.034L330.78 266 126.34 61.391c-13.785-13.805-13.785-36.239 0-50.044 13.793-13.796 36.208-13.796 50.002 0 22.928 22.947 206.395 206.507 229.332 229.454a35.065 35.065 0 0 1 10.326 25.126c0 9.2-3.393 18.26-10.326 25.2-45.865 45.901-206.404 206.564-229.332 229.52Z"
-                    ></path>
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </section>
+            </section>
+          </div>
         </div>
 
         <!-- 내가 쓴 글 -->
         <div class="myBoards itemM">
-          <% for (let i = 0 ; i < myBoard.length ; i ++) {%>
-            <div class="board-object" data-board-id="<%=myBoard[i].BoardId%>" onclick="boardDetail(this)">
-                    <div class="board-high">
-                        <span id="borad-ID">등록번호 : <%=myBoard[i].BoardId%></span>
-                        <span class="board-title"> 제목 : <%=myBoard[i].title%></span>
+          <div class="itemIndex">내가 쓴 글</div>
+            <div class="itemBody">
+              <% for (let i = 0 ; i < myBoard.length ; i ++) {%>
+                <div class="board-object" data-board-id="<%=myBoard[i].BoardId%>" onclick="boardDetail(this)">
+                        <div class="board-high">
+                            <span class="board-class"> <%=myBoard[i].ClassId%> </span>
+                            <span class="board-title"> <%=myBoard[i].title%></span>
+                        </div>
+                        <div class="board-mid">
+                            <img class="board-writer-img" src="">
+                            <span> 클래스:<%=myBoard[i].ClassId%> </span>
+                            <span class="board-date"> 날짜 : <%=myBoard[i].date%></span>
+                            <!-- <button type="button" class="boardLike" value="<%=myBoard[i].BoardId%>" onclick="BoardLike(this)"> -->
+                              <i class="fa-regular fa-thumbs-up"> <%=likeArr[i]%></i>
+                            <!-- </button> -->
+                          </div>
+                        
                     </div>
-                    <div class="board-mid">
-                        <img class="board-writer-img" src="">
-                        <span class="board-writer"> 작성자 : <%=myBoard[i].writer%></span>
-                        <span class="board-date"> 날짜 : <%=myBoard[i].date%></span>
-                    </div>
-                    <span class="board-content"> <%=myBoard[i].content%></span>
-                    <div class="board-bottom">
-                        <span class="board-tag"> 태그 : <%=myBoard[i].tag%></span>
-                        <button type="button" class="boardLike" value="<%=myBoard[i].BoardId%>" onclick="BoardLike(this)">
-                            <i class="fa-regular fa-thumbs-up"><%=likeArr[i]%></i>
-                        </button>
-                    </div>
-                </div>
-          <%} %>
-
+              <%} %>
+            </div>
         </div>
       </div>
     </div>
@@ -243,6 +251,18 @@
         for(let j = 0; j < arr.length; j++){
           document.querySelector(".myBoards itemM").children[i].children[2].appendChild(arr[j])   
     }}}
+
+    // 보드 디테일 불러오기
+    function boardDetail(element) {
+        const boardid = element.getAttribute('data-board-id');
+        axios({
+            method : 'GET',
+            url : `/board/detail?boardId=${boardid}`,
+            params :{ boardId : boardid}
+        }).then(
+            window.location.href=`/board/detail?boardId=${boardid}`
+        )
+    }
     
       //클래스만들기 함수
       async function makeClass() {

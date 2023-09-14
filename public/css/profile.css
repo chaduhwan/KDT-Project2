@@ -24,12 +24,12 @@ body {
 
 .img-save {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   padding: 0 10%;
 }
 
 #dynamic {
-  /* display: none; */
+  width: 170px;
 }
 
 .profile-detail {
@@ -67,7 +67,7 @@ button {
     "class userinfo memo"
     "class userinfo memo"
     "class userinfo board"
-    "exit note board";
+    "exit userinfo board";
   /* align-items: stretch; */
   /* justify-content: stretch; */
 
@@ -90,29 +90,43 @@ button {
 .itemM {
   border-radius: 10px;
   background-color: white;
-  padding: 5px;
+  /* padding: 5px; */
+  position: relative;
 }
-
+.itemIndex {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  background-color: #9ac5f4;
+  color: white;
+  border-radius: 10px 10px 0 0;
+  padding: 5px;
+  text-align: center;
+  height: 32px;
+  font-size: 15px;
+}
+.itemBody {
+  position: absolute;
+  top: 32px;
+  width: 100%;
+  height: calc(100% - 32px);
+}
 .class_list {
   grid-area: class;
   padding: 0;
   position: relative;
   justify-content: center;
 }
-#class-menu {
-  background-color: #4993fa;
-  color: white;
-  border-radius: 10px 10px 0 0;
-  padding: 5px;
-}
+
 .classes {
   padding: 5px;
 }
 .class-make {
   position: absolute;
-  bottom: 5px;
+  bottom: 0px;
   padding: 5px;
   width: 100%;
+  background-color: #ffeebb88;
 }
 .class-make-btn {
   width: 100%;
@@ -123,12 +137,15 @@ button {
   cursor: pointer;
   padding: 2px;
   margin: 2px 0px;
-  background-color: beige;
+}
+.class-name:hover {
+  background-color: #ffeebb88;
 }
 #setClassName {
   text-align: center;
 }
 #makeNotice {
+  text-align: center;
   font-size: 10px;
   color: red;
 }
@@ -142,22 +159,32 @@ button {
 
 .exit-zone {
   grid-area: exit;
+  background-color: #9ac6f400;
+}
+.userbtn {
+  position: absolute;
+  bottom: 5px;
 }
 
 .userInfo {
   grid-area: userinfo;
   padding: 10px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .user-content {
+  position: absolute;
+  top: 35px;
   height: min-content;
-  width: 300px;
-}
-.userInfo * {
+  width: 100%;
   font-size: small;
+}
+#profile-form {
+  padding: 5% 10%;
 }
 
 .my-note {
@@ -170,4 +197,23 @@ button {
 
 .myBoards {
   grid-area: board;
+  overflow: auto;
+}
+
+.board-object {
+  padding: 5px;
+  margin: 5px 10px;
+  border-radius: 5px;
+  background-color: #9dc6ff;
+}
+
+.board-class {
+  background-color: #4993fa;
+  width: 15px;
+  height: 15px;
+  font-weight: 700;
+  color: white;
+  border-radius: 5px;
+  padding: 2px;
+  text-align: center;
 }
