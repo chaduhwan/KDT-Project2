@@ -50,6 +50,8 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="/public/css/classMain.css" />
+        <!-- 소켓io 경로 -->
+        <script src="/socket.io/socket.io.js"></script>
     <style>
       @font-face {
   font-family: "S-CoreDream-3Light";
@@ -211,6 +213,8 @@
       </div>
     </div>
     <script>
+      //소켓io
+      const socket = io();
       (function () {
         document.addEventListener("DOMContentLoaded", function () {
           // calendar element 취득

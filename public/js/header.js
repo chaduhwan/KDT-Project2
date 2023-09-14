@@ -22,6 +22,7 @@ async function logout() {
     method: "POST",
     url: "/header/logout",
   });
+  socket.emit("logout");
   window.alert("로그아웃되었습니다.");
   location.href = "/login";
 }
