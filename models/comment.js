@@ -21,6 +21,10 @@ const Model = (sequelize) => {
             allowNull : false,
             defaultValue: '0000-00-00 00:00:00'
         },
+        img : {
+            type : DataTypes.STRING(255),
+            allowNull : false,
+        }
     })
 };
 

@@ -60,7 +60,8 @@
         </div>
         <div class="join_password">
           <h3 class="h3_password">비밀번호</h3>
-          <input type="password" id="pw" />
+          <input type="password" id="pw"  placeholder="비밀번호 길이 8~16, 영문, 숫자, 특수문자 포함"/>
+          <div class="errors"></div>
         </div>
         <div class="join_password">
           <h3 class="h3_password">비밀번호 확인</h3>
@@ -70,7 +71,7 @@
 
         <div class="joinTerms">
           <div class="joinTerms2">
-            <div>
+            <!-- <div>
               <input
                 class="input-essential"
                 type="checkbox"
@@ -105,33 +106,8 @@
                   >보기</a
                 ></span
               >
-            </div>
-            <!-- <div>
-              <input
-                class="input-essential"
-                type="checkbox"
-                id="agreeCheck4"
-                name="see"
-              />
-              <span>만 14세 이상입니다.</span>
-            </div>
-            <div>
-              <input
-                type="checkbox"
-                id="agreeCheck3"
-                name="see"
-              />
-              <span>이메일 마케팅 수신동의(선택)</span>
-              <span
-                ><a
-                  id="agree"
-                  class="btn btn-primary"
-                  data-bs-toggle="modal"
-                  data-bs-target="#agree3"
-                  >보기</a
-                ></span
-              >
             </div> -->
+
             <div></div>
             </div>
           </div>
@@ -246,7 +222,7 @@
     </div>
     <!-- 모달끝 -->
     <!-- 회원가입 버튼 눌렀을 때 나오는 모달창 -->
-    <div class="modal" tabindex="-1" id="joinus">
+    <!-- <div class="modal" tabindex="-1" id="joinus">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -275,9 +251,9 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <span class="pwSame" style="visibility: hidden"
-    >비밀번호가 일치하지 않습니다.</span
+    ></span
   ><br />
     <!-- 자바스크립트 연결 -->
     <!-- 이건 원래 있던 파일 -->

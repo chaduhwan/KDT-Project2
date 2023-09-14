@@ -1,14 +1,20 @@
 @font-face {
-  font-family: "GangwonEdu_OTFBoldA";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff")
+  font-family: "S-CoreDream-3Light";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff")
     format("woff");
   font-weight: normal;
   font-style: normal;
 }
+html {
+  /* height: 1vh; */
+}
 body {
-  font-family: "GangwonEdu_OTFBoldA", sans-serif;
+  font-family: "S-CoreDream-3Light", sans-serif;
   /* background-color: #accedc; */
-  margin: 50px 0px;
+  /* height: 0vh; */
+}
+.main_container {
+  /* height: 0px; */
 }
 .main-section small {
   font-size: 12px;
@@ -90,6 +96,9 @@ body {
 }
 .left-section ul li.active .desc .time {
   color: #fff;
+}
+#mCSB_1 {
+  border-bottom: 1px solid #e6e6e6;
 }
 .left-section ul li.active:before {
   position: absolute;
@@ -258,6 +267,7 @@ body {
   position: absolute;
   bottom: 0px;
   border-top: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
   text-align: center;
 }
 .right-section-bottom input {

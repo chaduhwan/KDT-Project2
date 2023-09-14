@@ -2,7 +2,11 @@ const { User, Sequelize, Chat, participant, calendar } = require("../models");
 const Op = Sequelize.Op;
 
 exports.chat = (req, res) => {
-  res.render("SN_chat");
+  if (req.session.isLogined) {
+    res.render("SN_chat");
+  } else {
+    res.render("MA_login");
+  }
 };
 
 exports.preMessage = async (req, res) => {
@@ -95,7 +99,11 @@ exports.userList = async (req, res) => {
   }
 };
 exports.calendar = (req, res) => {
-  res.render("SN_calendar");
+  if (req.session.isLogined) {
+    res.render("SN_calendar");
+  } else {
+    res.render("MA_login");
+  }
 };
 exports.post_calendar = async (req, res) => {
   await calendar.destroy({

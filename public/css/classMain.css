@@ -27,11 +27,10 @@ body {
 
 .head1 {
   display: flex;
-  height: 8%;
   padding: 10px 20px 10px 10px;
   border-radius: 20px 20px 0 0;
   background-color: #4993fa;
-  height: 8%;
+  height: 50px;
   /* align-items: center; */
   /* justify-content: space-between; */
 }
@@ -56,10 +55,11 @@ body {
 
 .nav {
   opacity: 0.6;
-  height: 7%;
+  height: 40px;
   /* display: flex; */
   /* justify-content: space-between; */
   justify-content: space-around;
+  z-index: 99;
 }
 .nav-link {
   flex: 1;
@@ -115,9 +115,10 @@ body {
 .main_content {
   margin: 0;
   width: 100%;
-  height: 85%;
+  height: calc(100% - 90px);
   border-radius: 0 0 20px 20px;
   background-color: rgba(128, 128, 128, 0.14);
+  z-index: 1;
 }
 
 .nav-drop {
@@ -131,6 +132,7 @@ body {
   width: 200px;
   /* display: flex; */
   justify-content: center;
+  z-index: 3;
 }
 
 @media screen and (max-width: 455px) {

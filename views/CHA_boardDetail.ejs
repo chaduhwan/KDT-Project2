@@ -17,10 +17,14 @@
      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
      <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&family=Jua&family=Monoton&display=swap" rel="stylesheet">
      <!-- 부트스트랩cdn -->
+     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"rel="stylesheet"integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"crossorigin="anonymous"/>
      <!-- css 연결 -->
      <link rel="stylesheet" href="/public/css/classMain.css" />
      <link rel="stylesheet" href="/public/css/boardDetail.css" />
+         <!-- 소켓io 경로 -->
+    <script src="/socket.io/socket.io.js"></script>
     <title>Document</title>
 
 </head>
@@ -31,41 +35,60 @@
           <i class="head1-profile fa-solid fa-user " data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="color: white; "></i>
             <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button> -->
         </div>
-        <ul class="nav nav-tabs">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#"><i class="fa-solid fa-chalkboard-user"></i>  BOARD</a>
-            
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa-solid fa-chair"></i>  SEAT</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa-solid fa-comments"></i>  MESSAGE</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa-solid fa-book"></i>  NOTE</a>
-          </li>
-        </ul>
+        <ul class="nav nav-tabs dropup">
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="/board"><i class="fa-solid fa-chalkboard-user"></i>  BOARD</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown  dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false"><i class="fa-solid fa-chair"></i>  SEAT</a>
+              <ul class="dropdown-menu" style="min-width: fit-content;
+              width: 120px; ">
+                <li><a class="dropdown-item" href="/desk/reservation">자리 예약</a></li>
+                <li><a class="dropdown-item" href="/desk/generator">자리 배치</a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/chat"><i class="fa-solid fa-comments"></i>  MESSAGE</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active " href="/noteManager"><i class="fa-solid fa-book"></i>  NOTE</a>
+            </li>
+          </ul>
+    
+          <div class="dropdown nav-drop">
+            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              MENU
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" type="button" href="/board">BOARD</a></li>
+              <li><a class="dropdown-item" type="button" href="/desk/reservation"  >SEAT</a></li>
+              <li><a class="dropdown-item" type="button" href="/chat" >MESSAGE</a>
+              </li>
+              <li><a class="dropdown-item" type="button" href="/noteManager" >NOTE</a></li>
+            </ul>
+          </div>
         <div class="main_content">
             <main class="board-main">
             <div class="board-object" data-board-id="<%=data.BoardId%>">
                     <div class="board-high">
-                        <span id="borad-ID">등록번호 : <%=data.BoardId%></span>
-                        <span class="board-title"> 제목 : <%=data.title%></span>
+                        <span id="borad-ID" hidden>등록번호 : <%=data.BoardId%></span>
+                        <span class="board-title"> <%=data.title%></span>
                     </div>
                     <div class="board-mid">
-                        <img class="board-writer-img" src="">
-                        <span class="board-writer"> 작성자 : <%=data.writer%></span>
-                        <span class="board-date"> 날짜 : <%=data.date%></span>
+                        <img class="board-writer-img" src="<%=data.place%>">
+                        <span class="board-writer"> <%=data.writer%></span>
+                        <span class="board-date"> <%=data.date%></span>
                     </div>
                     <span class="board-content"> <%=data.content%></span>
                     <div class="board-bottom">
-                        <span class="board-tag"> 태그 : <%=data.tag%></span>
-                        <button type="button" class="boardLike" value="<%=data.BoardId%>" onclick="BoardLike(this)">
-                            <i class="fa-regular fa-thumbs-up"><%=likecount%></i></button>
-                        <button type="button" value="<%=data.BoardId%>" class="board-delete" onclick="BoardDelete(this)">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
+                        <span class="board-tag" > 태그 : <%=data.tag%></span>
+                        <div class="bottom-button">
+                            <button type="button" class="boardLike" value="<%=data.BoardId%>" onclick="BoardLike(this)">
+                                <i class="fa-regular fa-thumbs-up"><%=likecount%></i></button>
+                            <button type="button" value="<%=data.BoardId%>" class="board-delete" onclick="BoardDelete(this)">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </main>
@@ -73,7 +96,8 @@
                 <main class="comment-main">
                       <% for (let i = 0; i < commentData.length; i++) { %>
                            <div class="comment-object">
-                               <span class="comment-writer"> 작성자 : <%=commentData[i].writer%></span>
+                                <img class="board-writer-img" src="<%=commentData[i].img%>">
+                               <span class="comment-writer"><%=commentData[i].writer%></span>
                                <span class="comment-date"> <%=commentData[i].date%></span>
                                <span class="comment-content"><%=commentData[i].content%></span>
                                <button type="button" class="deleteButton" value="<%=commentData[i].commentId%>" onclick="deleteComment(this)">
@@ -99,16 +123,15 @@
               <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body ">
-              <div class="profile_img"><img src="/public/default/모래성.png" style="width: 200px;"></div>
+              <div class="profile_img" id="profile_img"></div>
               <br />
               <div class="offcanvas-menu ">
-                <div class="my_page btn">마이페이지</div>
+                <div class="my_page btn" >마이페이지</div>
                 <div class="planner btn">플래너</div>
                 
                 <a class="btn" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   클래스 변경하기
                 </a>
-              
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="#">KDT 9기</a></li>
                   <li><a class="dropdown-item" href="#">두환이네</a></li>
@@ -120,8 +143,10 @@
             </div>
           </div>
 </body>
+<script src="/public/js/header.js"></script>
     <script>
-
+      //소켓io
+      const socket = io();
     if(document.querySelector(".board-main").hasChildNodes){
         for(let i = 0; i < document.querySelector(".board-main").children.length; i++){
             let temp = document.querySelector(".board-main").children[i].children[2].innerText 
@@ -133,12 +158,12 @@
 
         if(document.querySelector(".comment-main").hasChildNodes){
                 for(let i = 0; i < document.querySelector(".comment-main").children.length; i++){
-                    console.log(document.querySelector(".comment-main").children[i].children[2])
-                    let temp = document.querySelector(".comment-main").children[i].children[2].innerText
-                    document.querySelector(".comment-main").children[i].children[2].innerText = ""
+                    console.log(document.querySelector(".comment-main").children[i].children[3])
+                    let temp = document.querySelector(".comment-main").children[i].children[3].innerText
+                    document.querySelector(".comment-main").children[i].children[3].innerText = ""
                         let arr = Array.from(format(temp))
                             for(let j = 0; j < arr.length; j++){
-                                document.querySelector(".comment-main").children[i].children[2].appendChild(arr[j])   
+                                document.querySelector(".comment-main").children[i].children[3].appendChild(arr[j])   
         }}}
 
         function BoardDelete() {
@@ -199,7 +224,7 @@
         });
         }
 
-        function commentWrite() {
+        async function commentWrite() {
             const form = document.forms['comment-Write']
             const now = new Date();
             const year = now.getFullYear()
@@ -213,13 +238,13 @@
              date : `${year}년 ${month}월 ${day}일 ${hour}:${min}` ,
              BoardId : document.querySelector('.board-delete').value
             }
-            axios({
+            const result = await axios({
                 method:'POST',
                 url :'/comment/write',
                 data : data
-            }).then(
-                window.location.reload()
-            )
+            })
+            window.location.reload();
+           
         }
 
         const Editor = toastui.Editor;

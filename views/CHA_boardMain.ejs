@@ -21,11 +21,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&family=Jua&family=Monoton&display=swap" rel="stylesheet">
     <!-- 부트스트랩cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script> -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"rel="stylesheet"integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"crossorigin="anonymous"/>
     <!-- css 연결 -->
     <link rel="stylesheet" href="/public/css/classMain.css" />
     <link rel="stylesheet" href="/public/css/board.css" />
     <link rel="stylesheet" href="/public/css/placeSearch.css" />
+        <!-- 소켓io 경로 -->
+        <script src="/socket.io/socket.io.js"></script>
     <title>Document</title>
     <style>
         .for:hover {
@@ -40,27 +44,45 @@
       </style>
 </head>
 <body>
+    
     <div class="main_container">
         <div class="head1 d-flex justify-content-between">
           <div class="head1-logo "><img src="/public/default/logo-removebg.png" style="width: 30px; height: 30px;"></img><span>CLAVI</span></div>
           <i class="head1-profile fa-solid fa-user " data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="color: white; "></i>
             <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button> -->
         </div>
-        <ul class="nav nav-tabs">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#"><i class="fa-solid fa-chalkboard-user"></i>  BOARD</a>
-            
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa-solid fa-chair"></i>  SEAT</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa-solid fa-comments"></i>  MESSAGE</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa-solid fa-book"></i>  NOTE</a>
-          </li>
-        </ul>
+        <ul class="nav nav-tabs dropup">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/board"><i class="fa-solid fa-chalkboard-user"></i>  BOARD</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown  dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false"><i class="fa-solid fa-chair"></i>  SEAT</a>
+              <ul class="dropdown-menu" style="min-width: fit-content;
+              width: 120px; ">
+                <li><a class="dropdown-item" href="/desk/reservation">자리 예약</a></li>
+                <li><a class="dropdown-item" href="/desk/generator">자리 배치</a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/chat"><i class="fa-solid fa-comments"></i>  MESSAGE</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/noteManager"><i class="fa-solid fa-book"></i>  NOTE</a>
+            </li>
+          </ul>
+    
+          <div class="dropdown nav-drop">
+            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              MENU
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" type="button" href="/board">BOARD</a></li>
+              <li><a class="dropdown-item" type="button" href="/desk/reservation"  >SEAT</a></li>
+              <li><a class="dropdown-item" type="button" href="/chat" >MESSAGE</a>
+              </li>
+              <li><a class="dropdown-item" type="button" href="/noteManager" >NOTE</a></li>
+            </ul>
+          </div>
         <div class="main_content">
             <header class="board-hearder">
                 <form  class="search-bar" name="board-search">
@@ -79,12 +101,12 @@
                     <div class="subject-object" data-subject-id="<%= subjectId[i] %>" onclick="enterSubject(this)"># <%= subjectTitle[i] %></div>
                     <% } %>
                     <% if(userType == "leader" ){ %>
-                <form class="subject-List" name="subjectList">
-                    <input type="text" name="SubjectTitle" placeholder="게시판 제목">
-                    <button type="button" class="subject-button" onclick="SubjectMake()">
-                        <i class="fa-solid fa-plus"></i>
-                    </button>
-                </form>
+                    <form class="subject-List" name="subjectList">
+                        <input type="text" name="SubjectTitle" placeholder="게시판 제목">
+                        <button type="button" class="subject-button" onclick="SubjectMake()">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </form>
                 <% } %>
             </header>
             <div class="board-container">
@@ -92,19 +114,19 @@
                     <% for (let i = 0 ; i < data.length ; i ++) {%>
                     <div class="board-object" data-board-id="<%=data[i].BoardId%>" onclick="boardDetail(this)">
                             <div class="board-high">
-                                <span id="borad-ID">등록번호 : <%=data[i].BoardId%></span>
-                                <span class="board-title"> 제목 : <%=data[i].title%></span>
+                                <span id="borad-ID" hidden>등록번호 : <%=data[i].BoardId%></span>
+                                <span class="board-title"><%=data[i].title%></span>
                             </div>
                             <div class="board-mid">
-                                <img class="board-writer-img" src="">
-                                <span class="board-writer"> 작성자 : <%=data[i].writer%></span>
-                                <span class="board-date"> 날짜 : <%=data[i].date%></span>
+                                <img class="board-writer-img" src="<%=data[i].place%>">
+                                <span class="board-writer"> <%=data[i].writer%></span>
+                                <span class="board-date"> <%=data[i].date%></span>
                             </div>
                             <span class="board-content"> <%=data[i].content%></span>
                             <div class="board-bottom">
                                 <span class="board-tag"> 태그 : <%=data[i].tag%></span>
                                 <button type="button" class="boardLike" value="<%=data[i].BoardId%>" onclick="BoardLike(this)">
-                                    <i class="fa-regular fa-thumbs-up"><%=likeArr[i]%></i>
+                                    <i class="fa-regular fa-thumbs-up"> <%=likeArr[i]%></i>
                                 </button>
                             </div>
                         </div>
@@ -151,30 +173,31 @@
             </div>
     </div> 
 
-        <div class="offcanvas offcanvas-end " tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-            <div class="offcanvas-header">
-              <h5 class="offcanvas-title" id="offcanvasRightLabel"></h5>
-              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body ">
-              <div class="profile_img"><img src="/public/default/모래성.png" style="width: 200px;"></div>
-              <br />
-              <div class="offcanvas-menu ">
-                <div class="my_page btn">마이페이지</div>
-                <div class="planner btn">플래너</div>
-                <a class="btn" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  클래스 변경하기
-                </a>
-              
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">KDT 9기</a></li>
-                  <li><a class="dropdown-item" href="#">두환이네</a></li>
-                  <li><a class="dropdown-item" href="#">KDT 1기</a></li>
-                </ul>
-                <div class="logout btn" onclick="logout()">로그아웃</div>
-              </div>
-            </div> 
+    <div class="offcanvas offcanvas-end " tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasRightLabel"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
+        <div class="offcanvas-body ">
+          <div class="profile_img" id="profile_img"></div>
+          <br />
+          <div class="offcanvas-menu ">
+            <div class="my_page btn" >마이페이지</div>
+            <div class="planner btn">플래너</div>
+            
+            <a class="btn" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              클래스 변경하기
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">KDT 9기</a></li>
+              <li><a class="dropdown-item" href="#">두환이네</a></li>
+              <li><a class="dropdown-item" href="#">KDT 1기</a></li>
+            </ul>
+            <div class="logout btn" onclick="logout()">로그아웃</div>
+          </div>
+          
+        </div>
+      </div>
         <!-- 카카오 맵 cdn  -->
     <script
     type="text/javascript"
@@ -182,10 +205,16 @@
   ></script>
         <script src="/public/placeSearch2.js"></script>
           <script src="/public/js/header.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+      
 </body>
 <script>
-
+          //소켓io
+          const socket = io();
+    var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
+    var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+            return new bootstrap.Dropdown(dropdownToggleEl)
+        })
         if(document.querySelector(".board-main").hasChildNodes){
 
             for(let i = 0; i < document.querySelector(".board-main").children.length; i++){
@@ -207,15 +236,14 @@
         )
     }
 
-    function SubjectMake() {
+    async function SubjectMake() {
         const form = document.forms['subjectList']
-        axios({
+        const result = await axios({
             method : 'POST',
             url : '/subject/make',
             data : {subjectTitle:form.SubjectTitle.value}
-        }).then(
-            window.location.reload()
-        )
+        })
+          window.location.reload();
     }
 
     async function enterSubject(element) {
@@ -246,19 +274,23 @@
                 boardBottom.classList.add('board-bottom')
 
                 const span1 = document.createElement('span');
-                span1.textContent = `등록번호 : ${res.data.data[i].BoardId}`;
+                span1.textContent = ``;
                 span1.id = 'board-ID'
 
                 const span2 = document.createElement('span');
-                span2.textContent= `제목 : ${res.data.data[i].title}`
+                span2.textContent= `${res.data.data[i].title}`
                 span2.className = 'board-title'
 
                 const span3 = document.createElement('span');
-                span3.textContent= `날짜 : ${res.data.data[i].date}`
+                span3.textContent= `${res.data.data[i].date}`
                 span3.className = 'board-date'
 
+                const img = document.createElement('img')
+                img.src = `${res.data.data[i].place}`
+                img.className = 'board-writer-img'
+
                 const span4 = document.createElement('span');
-                span4.textContent= `작성자 : ${res.data.data[i].writer}`
+                span4.textContent= `${res.data.data[i].writer}`
                 span4.className = 'board-writer'
 
                 const span5 = document.createElement('span');
@@ -286,6 +318,7 @@
                 boardHigh.appendChild(span1)
                 boardHigh.appendChild(span2)
 
+                boardMid.appendChild(img)
                 boardMid.appendChild(span4)
                 boardMid.appendChild(span3)
 
@@ -362,19 +395,23 @@
                 boardBottom.classList.add('board-bottom')
 
                 const span1 = document.createElement('span');
-                span1.textContent = `등록번호 : ${res.data.data[i].BoardId}`;
+                span1.textContent = ``;
                 span1.id = 'board-ID'
 
                 const span2 = document.createElement('span');
-                span2.textContent= `제목 : ${res.data.data[i].title}`
+                span2.textContent= `${res.data.data[i].title}`
                 span2.className = 'board-title'
 
                 const span3 = document.createElement('span');
-                span3.textContent= `날짜 : ${res.data.data[i].date}`
+                span3.textContent= `${res.data.data[i].date}`
                 span3.className = 'board-date'
 
+                const img = document.createElement('img')
+                img.src = `${res.data.data[i].place}`
+                img.className = 'board-writer-img'
+
                 const span4 = document.createElement('span');
-                span4.textContent= `작성자 : ${res.data.data[i].writer}`
+                span4.textContent= `${res.data.data[i].writer}`
                 span4.className = 'board-writer'
 
                 const span5 = document.createElement('span');
@@ -396,12 +433,13 @@
                 }
                 const icon = document.createElement('i')
                 icon.className ="fa-regular fa-thumbs-up"
-                icon.innerText= `${res.data.likeArr[i]}`
+                icon.innerText= `${res.data.likeArr[i]}`    
                 button.appendChild(icon)
 
                 boardHigh.appendChild(span1)
                 boardHigh.appendChild(span2)
 
+                boardMid.appendChild(img)
                 boardMid.appendChild(span4)
                 boardMid.appendChild(span3)
 
@@ -482,20 +520,24 @@
                 boardBottom.classList.add('board-bottom')
 
                 const span1 = document.createElement('span');
-                span1.textContent = `등록번호 : ${res.data.data[i].BoardId}`;
+                span1.textContent = ``;
                 span1.id = 'board-ID'
 
                 const span2 = document.createElement('span');
-                span2.textContent= `제목 : ${res.data.data[i].title}`
+                span2.textContent= `${res.data.data[i].title}`
                 span2.className = 'board-title'
 
                 const span3 = document.createElement('span');
-                span3.textContent= `날짜 : ${res.data.data[i].date}`
+                span3.textContent= `${res.data.data[i].date}`
                 span3.className = 'board-date'
 
                 const span4 = document.createElement('span');
-                span4.textContent= `작성자 : ${res.data.data[i].writer}`
+                span4.textContent= `${res.data.data[i].writer}`
                 span4.className = 'board-writer'
+
+                const img = document.createElement('img')
+                img.src = `${res.data.data[i].place}`
+                img.className = 'board-writer-img'
 
                 const span5 = document.createElement('span');
                 let arr = Array.from(format(`${res.data.data[i].content}`))
@@ -522,6 +564,7 @@
                 boardHigh.appendChild(span1)
                 boardHigh.appendChild(span2)
 
+                boardMid.appendChild(img)
                 boardMid.appendChild(span4)
                 boardMid.appendChild(span3)
 

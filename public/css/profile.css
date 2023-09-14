@@ -8,6 +8,7 @@
 body {
   font-family: "S-CoreDream-3Light", sans-serif; /* 폰트를 적용합니다. */
   /* 다른 스타일 속성을 추가할 수 있습니다. */
+  background-color: rgba(73, 147, 250, 0.6);
 }
 
 .profile_img_div {
@@ -97,7 +98,7 @@ button {
   position: absolute;
   top: 0;
   width: 100%;
-  background-color: #9ac5f4;
+  background-color: #008cf3;
   color: white;
   border-radius: 10px 10px 0 0;
   padding: 5px;
@@ -193,6 +194,7 @@ button {
 
 .memo-zone {
   grid-area: memo;
+  overflow: hidden;
 }
 
 .myBoards {
@@ -201,19 +203,32 @@ button {
 }
 
 .board-object {
-  padding: 5px;
+  padding: 10px;
   margin: 5px 10px;
   border-radius: 5px;
-  background-color: #9dc6ff;
+  background-color: #f1fafb;
 }
-
+.board-high {
+  display: flex;
+  align-items: center;
+}
 .board-class {
   background-color: #4993fa;
   width: 15px;
   height: 15px;
-  font-weight: 700;
+  font-weight: 600;
   color: white;
   border-radius: 5px;
-  padding: 2px;
   text-align: center;
+}
+
+.board-high > * {
+  margin: 5px;
+  background-color: #9ac5f445;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.board-date.like-count {
+  font-size: small;
 }

@@ -5,15 +5,6 @@ let placeAddress = "";
 let placeLati;
 let placeLogi;
 
-//유저의 현재 위치 가져오기
-//위도 latitude/ 경도 longitude
-// let lati = '';
-// let longi = '';
-// navigator.geolocation.getCurrentPosition((position) => {
-//     lati = position.coords.latitude
-//     longi = position.coords.longitude
-// })
-
 // 마커를 담을 배열
 let markers = [];
 

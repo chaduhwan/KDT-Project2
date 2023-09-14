@@ -15,12 +15,10 @@
       rel="stylesheet"
     />
     <!-- 부트스트랩 -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
-      crossorigin="anonymous"
-    />
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"rel="stylesheet"integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"crossorigin="anonymous"/>
+    
 
     <link
       href="https://fonts.googleapis.com/css?family=Raleway"
@@ -57,21 +55,38 @@
         <i class="head1-profile fa-solid fa-user " data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="color: white; "></i>
           <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button> -->
       </div>
-      <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#"><i class="fa-solid fa-chalkboard-user"></i>  BOARD</a>
-          
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#"><i class="fa-solid fa-chair"></i>  SEAT</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#"><i class="fa-solid fa-comments"></i>  MESSAGE</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#"><i class="fa-solid fa-book"></i>  NOTE</a>
-        </li>
-      </ul>
+      <ul class="nav nav-tabs dropup">
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/board"><i class="fa-solid fa-chalkboard-user"></i>  BOARD</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown  dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false"><i class="fa-solid fa-chair"></i>  SEAT</a>
+            <ul class="dropdown-menu" style="min-width: fit-content;
+            width: 120px; ">
+              <li><a class="dropdown-item" href="/desk/reservation">자리 예약</a></li>
+              <li><a class="dropdown-item" href="/desk/generator">자리 배치</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active " href="/chat"><i class="fa-solid fa-comments"></i>  MESSAGE</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/noteManager"><i class="fa-solid fa-book"></i>  NOTE</a>
+          </li>
+        </ul>
+  
+        <div class="dropdown nav-drop">
+          <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            MENU
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" type="button" href="/board">BOARD</a></li>
+            <li><a class="dropdown-item" type="button" href="/desk/reservation"  >SEAT</a></li>
+            <li><a class="dropdown-item" type="button" href="/chat" >MESSAGE</a>
+            </li>
+            <li><a class="dropdown-item" type="button" href="/noteManager" >NOTE</a></li>
+          </ul>
+        </div>
           <div class="main-section">
       <div class="head-section">
         <div class="headLeft-section">
@@ -85,7 +100,7 @@
                 data-bs-toggle="modal"
                 data-bs-target="#staticBackdrop"
               ></i>
-              <input type="text" id="search" placeholder="대화할 사람이름" />
+              <input type="text" id="search" placeholder="리더, 크루 검색" />
               <button><i class="fa fa-search"></i></button>
               <!-- <button>초대하기</button> -->
             </form>
@@ -196,16 +211,15 @@
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
       <div class="offcanvas-body ">
-        <div class="profile_img"><img src="/public/default/defaultProfile.png" style="width: 200px;"></div>
+        <div class="profile_img" id="profile_img"></div>
         <br />
         <div class="offcanvas-menu ">
-          <div class="my_page btn">마이페이지</div>
+          <div class="my_page btn" >마이페이지</div>
           <div class="planner btn">플래너</div>
           
           <a class="btn" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             클래스 변경하기
           </a>
-        
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="#">KDT 9기</a></li>
             <li><a class="dropdown-item" href="#">두환이네</a></li>
@@ -231,11 +245,6 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- custom scrollbar plugin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
-    <!-- 부트스트랩 -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
-      crossorigin="anonymous"
-    ></script>
+   
   </body>
 </html>
