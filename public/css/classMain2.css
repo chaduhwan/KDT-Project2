@@ -15,9 +15,9 @@ font-family: 'Monoton', cursive;
 body {
   font-family: "S-CoreDream-3Light", sans-serif;
   margin: 0;
-  /* padding: 20px; */
-  width: 1500px;
-  height: 700px;
+  padding: 20px;
+  /* width: 1500px;
+  height: 700px; */
   background-color: rgba(73, 147, 250, 0.6);
   /* opacity: 0.6; */
   display: flex;
@@ -26,9 +26,9 @@ body {
 }
 
 .main_container {
-  margin-left: 45px;
-  width: 1400px;
-  height: 650px;
+  /* margin-left: 45px; */
+  width: 94vw;
+  height: 92vh;
   border-radius: 20px;
   background-color: rgb(255, 255, 255);
   padding: 0;
@@ -41,7 +41,7 @@ body {
   padding: 10px 20px 10px 10px;
   border-radius: 20px 20px 0 0;
   background-color: #4993fa;
-  height: 8%;
+  height: 50px;
   /* align-items: center; */
   /* justify-content: space-between; */
 }
@@ -65,8 +65,8 @@ body {
 }
 
 .nav {
-  opacity: 0.6;
-  height: 7%;
+  opacity: 1;
+  height: 40px;
   /* display: flex; */
   /* justify-content: space-between; */
   justify-content: space-around;
@@ -125,7 +125,7 @@ body {
 .main_content {
   margin: 0;
   width: 100%;
-  height: 85%;
+  height: calc(100% - 90px);
   border-radius: 0 0 20px 20px;
   background-color: rgba(128, 128, 128, 0.14);
 }
