@@ -4,7 +4,16 @@ font-family: 'ADLaM Display', cursive;
 font-family: 'Jua', sans-serif;
 font-family: 'Monoton', cursive;
  */
+@font-face {
+  font-family: "S-CoreDream-3Light";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
+  font-family: "S-CoreDream-3Light", sans-serif;
   margin: 0;
   /* padding: 20px; */
   width: 1500px;
@@ -42,7 +51,7 @@ body {
   font-size: 20px;
   color: white;
   align-items: center;
-  font-family: 'ADLaM Display', cursive;
+  font-family: "ADLaM Display", cursive;
 }
 .head1-logo > span {
   color: white;
