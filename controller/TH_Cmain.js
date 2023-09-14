@@ -1,4 +1,4 @@
-const { Desk, Position, Chosen, File } = require('../models');
+const { Desk, Position, Chosen, File, Memo } = require('../models');
 const { Op } = require('sequelize');
 
 exports.test = (req, res) => {
@@ -14,6 +14,23 @@ exports.test3 = (req, res) => {
 exports.noteManager = async (req, res) => {
   res.render('TH_noteManager');
 };
+
+exports.memo_post = async (req, res) => {
+  try {
+    await Memo.create({
+      userid: req.body.userid,
+      content: req.body.content,
+      name: req.body.name,
+    });
+    res.send('성공');
+  } catch (e) {
+    res.send('실패');
+  }
+};
+
+exports.memo_patch = async (req, res) => {};
+
+exports.memo_delete = async (req, res) => {};
 
 exports.get_noteManager = async (req, res) => {
   try {
