@@ -27,7 +27,15 @@
     <title>Document</title>
     <title>Document</title>
     <style>
+      @font-face {
+        font-family: "S-CoreDream-3Light";
+        src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff")
+          format("woff");
+        font-weight: normal;
+        font-style: normal;
+      }
       body {
+        font-family: "S-CoreDream-3Light", sans-serif;
         position: relative;
       }
       .result {
@@ -268,7 +276,7 @@
       </div>
       <ul class="nav nav-tabs dropup">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/board"><i class="fa-solid fa-chalkboard-user"></i>  BOARD</a>
+            <a class="nav-link" aria-current="page" href="/board"><i class="fa-solid fa-chalkboard-user"></i>  BOARD</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown  dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false"><i class="fa-solid fa-chair"></i>  SEAT</a>
@@ -282,7 +290,7 @@
             <a class="nav-link" href="/chat"><i class="fa-solid fa-comments"></i>  MESSAGE</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/noteManager"><i class="fa-solid fa-book"></i>  NOTE</a>
+            <a class="nav-link active " href="/noteManager"><i class="fa-solid fa-book"></i>  NOTE</a>
           </li>
         </ul>
   
