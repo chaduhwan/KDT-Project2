@@ -329,6 +329,7 @@ exports.profile = async (req, res) => {
     const myClass = await UserTakeClass.findAll({
       where: { userid: req.session.userId },
     }); //유저id 가 가지고 있는 클래스  row 반환
+    req.session.img = data.profileImgPath;
 
     let Classes = [];
     let ClassesId = [];
@@ -445,6 +446,7 @@ exports.profileImg = async (req, res) => {
   await User.update({ profileImgPath }, { where: { id: req.session.userId } });
   console.log(req.file); //userfile이 담김
   console.log(profileImgPath);
+  req.session.img = profileImgPath
   res.send(req.file);
 };
 

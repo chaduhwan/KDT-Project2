@@ -11,6 +11,37 @@ body {
   overflow: overlay;
 }
 
+.board-title{
+  font-size: x-large;
+  font-weight: 700;
+}
+
+.board-writer{
+  font-weight: 600;
+  font-size: small;
+}
+
+
+.board-date{
+  font-weight: 200;
+  font-size: x-small;
+}
+
+.board-content{
+  font-size: medium;
+  font-weight: 600;
+}
+
+.board-tag{
+  font-size: x-small;
+  font-weight: 700;
+}
+.board-writer-img {
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+}
+
 .main_content {
   position: relative;
  display: flex;
@@ -23,8 +54,9 @@ body {
   position: relative;
   height: 100%;
   padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: white;
 }
 /* 검색창 관련 */
 .search-bar {
@@ -57,7 +89,7 @@ body {
   margin-top: 5px;
 }
 .subject-object:hover {
-  background-color:white;
+  background-color:#ccc;
 }
 
 /* 게시글 추가  폼관련 */

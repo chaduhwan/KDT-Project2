@@ -79,12 +79,12 @@
                     <div class="subject-object" data-subject-id="<%= subjectId[i] %>" onclick="enterSubject(this)"># <%= subjectTitle[i] %></div>
                     <% } %>
                     <% if(userType == "leader" ){ %>
-                <form class="subject-List" name="subjectList">
-                    <input type="text" name="SubjectTitle" placeholder="게시판 제목">
-                    <button type="button" class="subject-button" onclick="SubjectMake()">
-                        <i class="fa-solid fa-plus"></i>
-                    </button>
-                </form>
+                    <form class="subject-List" name="subjectList">
+                        <input type="text" name="SubjectTitle" placeholder="게시판 제목">
+                        <button type="button" class="subject-button" onclick="SubjectMake()">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </form>
                 <% } %>
             </header>
             <div class="board-container">
@@ -92,13 +92,13 @@
                     <% for (let i = 0 ; i < data.length ; i ++) {%>
                     <div class="board-object" data-board-id="<%=data[i].BoardId%>" onclick="boardDetail(this)">
                             <div class="board-high">
-                                <span id="borad-ID">등록번호 : <%=data[i].BoardId%></span>
-                                <span class="board-title"> 제목 : <%=data[i].title%></span>
+                                <span id="borad-ID" hidden>등록번호 : <%=data[i].BoardId%></span>
+                                <span class="board-title"><%=data[i].title%></span>
                             </div>
                             <div class="board-mid">
-                                <img class="board-writer-img" src="">
-                                <span class="board-writer"> 작성자 : <%=data[i].writer%></span>
-                                <span class="board-date"> 날짜 : <%=data[i].date%></span>
+                                <img class="board-writer-img" src="<%=data[i].place%>">
+                                <span class="board-writer"> <%=data[i].writer%></span>
+                                <span class="board-date"> <%=data[i].date%></span>
                             </div>
                             <span class="board-content"> <%=data[i].content%></span>
                             <div class="board-bottom">
@@ -207,15 +207,14 @@
         )
     }
 
-    function SubjectMake() {
+    async function SubjectMake() {
         const form = document.forms['subjectList']
-        axios({
+        const result = await axios({
             method : 'POST',
             url : '/subject/make',
             data : {subjectTitle:form.SubjectTitle.value}
-        }).then(
-            window.location.reload()
-        )
+        })
+          window.location.reload();
     }
 
     async function enterSubject(element) {
@@ -246,19 +245,19 @@
                 boardBottom.classList.add('board-bottom')
 
                 const span1 = document.createElement('span');
-                span1.textContent = `등록번호 : ${res.data.data[i].BoardId}`;
+                span1.textContent = ``;
                 span1.id = 'board-ID'
 
                 const span2 = document.createElement('span');
-                span2.textContent= `제목 : ${res.data.data[i].title}`
+                span2.textContent= `${res.data.data[i].title}`
                 span2.className = 'board-title'
 
                 const span3 = document.createElement('span');
-                span3.textContent= `날짜 : ${res.data.data[i].date}`
+                span3.textContent= `${res.data.data[i].date}`
                 span3.className = 'board-date'
 
                 const span4 = document.createElement('span');
-                span4.textContent= `작성자 : ${res.data.data[i].writer}`
+                span4.textContent= `${res.data.data[i].writer}`
                 span4.className = 'board-writer'
 
                 const span5 = document.createElement('span');
@@ -362,19 +361,19 @@
                 boardBottom.classList.add('board-bottom')
 
                 const span1 = document.createElement('span');
-                span1.textContent = `등록번호 : ${res.data.data[i].BoardId}`;
+                span1.textContent = ``;
                 span1.id = 'board-ID'
 
                 const span2 = document.createElement('span');
-                span2.textContent= `제목 : ${res.data.data[i].title}`
+                span2.textContent= `${res.data.data[i].title}`
                 span2.className = 'board-title'
 
                 const span3 = document.createElement('span');
-                span3.textContent= `날짜 : ${res.data.data[i].date}`
+                span3.textContent= `${res.data.data[i].date}`
                 span3.className = 'board-date'
 
                 const span4 = document.createElement('span');
-                span4.textContent= `작성자 : ${res.data.data[i].writer}`
+                span4.textContent= `${res.data.data[i].writer}`
                 span4.className = 'board-writer'
 
                 const span5 = document.createElement('span');
@@ -482,19 +481,19 @@
                 boardBottom.classList.add('board-bottom')
 
                 const span1 = document.createElement('span');
-                span1.textContent = `등록번호 : ${res.data.data[i].BoardId}`;
+                span1.textContent = ``;
                 span1.id = 'board-ID'
 
                 const span2 = document.createElement('span');
-                span2.textContent= `제목 : ${res.data.data[i].title}`
+                span2.textContent= `${res.data.data[i].title}`
                 span2.className = 'board-title'
 
                 const span3 = document.createElement('span');
-                span3.textContent= `날짜 : ${res.data.data[i].date}`
+                span3.textContent= `${res.data.data[i].date}`
                 span3.className = 'board-date'
 
                 const span4 = document.createElement('span');
-                span4.textContent= `작성자 : ${res.data.data[i].writer}`
+                span4.textContent= `${res.data.data[i].writer}`
                 span4.className = 'board-writer'
 
                 const span5 = document.createElement('span');

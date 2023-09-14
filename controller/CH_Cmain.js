@@ -168,6 +168,7 @@ exports.BoardWrite = async (req, res) => {
   }
   const { title, date, writer, content, tag } = req.body;
   let likeArr = [];
+  
   const newboard = await board.create({
     title,
     date,
@@ -177,6 +178,7 @@ exports.BoardWrite = async (req, res) => {
     SubjectId: req.session.subjectId,
     ClassId: req.session.classId,
     id: req.session.userId,
+    place : req.session.img 
   });
   const result = await board.findOne({
     attributes: [[sequelize.fn("max", sequelize.col("BoardId")), "maxBoardId"]],
