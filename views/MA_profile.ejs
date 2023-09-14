@@ -43,26 +43,63 @@
 
         <!-- 클래스 리스트 영역 -->
         <div class="class_list itemM">
-          <div id="class-menu ">참여한 클래스</div>
+          <div id="class-menu">참여한 클래스</div>
           <!-- 클래스 목록 -->
           <div class="classes">
             <% for(let i = 0; i<Classes.length; i++){ %>
-              <div data-class-id="<%=ClassesId[i]%>" onclick="enterClass(this)"><%=Classes[i]%></div>
+              <div class="class-name" data-class-id="<%=ClassesId[i]%>" onclick="enterClass(this)"><%=Classes[i]%></div>
               <%} %>
           </div>
-         
-          .
+        <div class="class-make-btn">
+          <button type="button" data-bs-toggle="modal" data-bs-target="#classModal" >클래스 참여하기</button>
+        </div>
+
+        <!-- 클래스 참여 모달 -->
+        <div class="modal fade" id="classModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">클래스 참여하기</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form name="ClassSignin">
+                  <input type="text" name="token" placeholder="token">
+                  <button type="button" onclick="signinClass()">클래스 참여하기</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>   
+
+        <!-- 클래스 생성하기 -->
+        <div class="class-make">
             <% if(data.userType == "leader" ){ %>
-              <form name="ClassMake">
-                <input type="text" name="className" placeholder="className">
-                <button type="button" onclick="makeClass()">클래스 만들기</button>
-              </form>
+              <div id="makeNotice"> * Leader에게만 보이는 항목입니다 </div>
+              <div class="class-make-btn">
+              <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" >클래스 생성하기</button>
+            </div>
             <% } %> 
-      
-            <form name="ClassSignin">
-              <input type="text" name="token" placeholder="token">
-              <button type="button" onclick="signinClass()">클래스 참여하기</button>
-            </form>
+
+            <!-- 클래스 생성 Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">클래스 생성하기</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form name="ClassMake">
+                      <input type="text" id="setClassName" name="className" placeholder="className">
+                      <button type="button" onclick="makeClass()">클래스 생성하기</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>        
+          </div>
+            
         </div>
 
         <!-- 로그아웃, 탈퇴 영역 -->
