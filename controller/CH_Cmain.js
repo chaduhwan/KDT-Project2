@@ -26,6 +26,7 @@ exports.Subjectmake = async (req, res) => {
   const { subjectTitle } = req.body;
   const ClassId = req.session.classId;
   Subject.create({ subjectTitle, ClassId });
+  res.json({subjectIs:true})
 };
 
 ////////////게시판 들어가기
@@ -58,7 +59,7 @@ exports.EnterSubject = async (req, res) => {
       });
       likeArr.push(cou);
     }
-    res.send({ data: boards, likeArr });
+    res.json({ data: boards, likeArr, subjectIs: true});
   } else {
     const subject = await Subject.findAll({ where: { classId } });
 
@@ -76,7 +77,7 @@ exports.EnterSubject = async (req, res) => {
       });
       likeArr.push(cou);
     }
-    res.send({ data: boards, likeArr });
+    res.json({ data: boards, likeArr,subjectIs : false});
   }
 };
 
@@ -116,6 +117,7 @@ exports.BoardMain = async (req, res) => {
       subjectId,
       subjectTitle,
       userType,
+      subjectIs : false
     });
   } else {
     res.render("MA_login");
@@ -309,6 +311,11 @@ exports.ClassMake = async (req, res) => {
   };
   const token = await randomNumber(111111, 999999);
   const result = await Class.create({ className, leader, token });
+  const auto = await Class.findOne({where:{token}})
+  const signin = await UserTakeClass.create({
+    userId: req.session.userId,
+    classClassId : auto.ClassId
+  })
   res.json({ res: true, result, token });
 };
 
