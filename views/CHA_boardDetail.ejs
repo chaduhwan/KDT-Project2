@@ -21,6 +21,8 @@
      <!-- css 연결 -->
      <link rel="stylesheet" href="/public/css/classMain.css" />
      <link rel="stylesheet" href="/public/css/boardDetail.css" />
+         <!-- 소켓io 경로 -->
+    <script src="/socket.io/socket.io.js"></script>
     <title>Document</title>
 
 </head>
@@ -123,7 +125,8 @@
           </div>
 </body>
     <script>
-
+      //소켓io
+      const socket = io();
     if(document.querySelector(".board-main").hasChildNodes){
         for(let i = 0; i < document.querySelector(".board-main").children.length; i++){
             let temp = document.querySelector(".board-main").children[i].children[2].innerText 

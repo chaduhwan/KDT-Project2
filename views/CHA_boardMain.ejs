@@ -28,6 +28,8 @@
     <link rel="stylesheet" href="/public/css/classMain.css" />
     <link rel="stylesheet" href="/public/css/board.css" />
     <link rel="stylesheet" href="/public/css/placeSearch.css" />
+        <!-- 소켓io 경로 -->
+        <script src="/socket.io/socket.io.js"></script>
     <title>Document</title>
     <style>
         .for:hover {
@@ -207,6 +209,8 @@
       
 </body>
 <script>
+          //소켓io
+          const socket = io();
     var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
     var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
             return new bootstrap.Dropdown(dropdownToggleEl)
