@@ -369,6 +369,7 @@
     const postingZone = () => {
       console.log(flag)
       if(event.currentTarget.innerText == "+" && flag == 0){
+        flag = 3;
         event.currentTarget.innerText = "취소"
         let grandP = document.querySelector(".embla__container")
         let temp = document.createElement("div")
@@ -389,18 +390,18 @@
                       goBack()
         
       }else{
-        if(flag == 0){
+        if(flag == 0 || flag == 3){
           event.currentTarget.innerText = "+"
+          flag = 0;
           let grandP = document.querySelector(".embla__container")
           grandP.removeChild(grandP.firstChild)
         }
-        
       }
-      
     }
 
     const modeChange = () => {
-      if(event.target.classList.contains("memo-item")){
+      if(flag !== 3){
+        if(event.target.classList.contains("memo-item")){
         console.log("메롱")
         console.log(event.target)
         event.target.children[0].style.display= "none";
@@ -420,6 +421,8 @@
           flag = 0
         }
       }
+      }
+      
       // console.log(event.target)
       // if(event.target == event.currentTarget){
       //   //둘이 같을 때 = 바뀌면안됨
