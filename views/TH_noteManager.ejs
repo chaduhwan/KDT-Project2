@@ -73,8 +73,7 @@
         border-color: blue;
       }
       .overflow {
-        display: flex;
-        justify-content: center;
+        display: block;
         width: 120px;
         height: 48px;
         text-overflow: ellipsis;
@@ -420,6 +419,7 @@
             if (arr[i].filename.includes('.')) {
               // 파일
               div2 = document.createElement('a');
+              console.log(arr[i].filename)
               div2.innerText = arr[i].filename;
               div2.href = arr[i].fileLoca;
               div2.classList.add('overflow');
