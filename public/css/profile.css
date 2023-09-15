@@ -17,8 +17,8 @@ body {
   align-items: center; /* 세로 중앙 정렬 */
 }
 .profile_img {
-  width: 200px;
-  height: 200px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   background-color: rgb(128, 128, 128, 0.14);
 }
@@ -67,8 +67,10 @@ button {
   grid-template-areas:
     "class userinfo memo"
     "class userinfo memo"
+    "class userinfo memo"
     "class userinfo board"
-    "exit userinfo board";
+    "class userinfo board"
+    "exit note board";
   /* align-items: stretch; */
   /* justify-content: stretch; */
 
@@ -174,13 +176,14 @@ button {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: relative;
+  /* position: relative; */
 }
 
 .user-content {
-  position: absolute;
-  top: 35px;
-  height: min-content;
+  /* position: absolute; */
+  /* top: 35px;*/
+  margin-top: 20px;
+  /* height: min-content; */
   width: 100%;
   font-size: small;
 }
@@ -189,16 +192,22 @@ button {
 }
 
 .my-note {
-  /* grid-area: note;*/
-  position: absolute;
-  bottom: 10px;
+  grid-area: note;
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .my-note > div {
-  width: 100px;
-  height: 50px;
-  font-size: large;
-  margin: 20px;
+  width: 130px;
+  height: 40px;
+  background-color: #008cf3;
+  border-radius: 5px;
+  font-size: 15px;
+  margin: 0 20px;
+  text-align: center;
+  padding: 8px 0;
+  color: white;
+  font-weight: 400;
 }
 
 .memo-zone {
@@ -216,6 +225,9 @@ button {
   margin: 5px 10px;
   border-radius: 5px;
   background-color: #f1fafb;
+}
+.board-object:hover {
+  background-color: #ffeebb88;
 }
 .board-high {
   display: flex;
@@ -236,6 +248,15 @@ button {
   background-color: #9ac5f445;
   padding: 5px;
   border-radius: 5px;
+}
+.board-title {
+  width: 50%;
+}
+.board-date {
+  width: 20%;
+  background-color: #ffffff00;
+  font-size: 5px;
+  color: grey;
 }
 
 .board-date.like-count {
