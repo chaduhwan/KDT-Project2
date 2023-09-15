@@ -332,6 +332,7 @@ exports.profile = async (req, res) => {
     req.session.img = data.profileImgPath;
 
     let Classes = [];
+    let classToken = [];
     let ClassesId = [];
     let likeArr = [];
     for (const ele of myClass) {
@@ -340,6 +341,7 @@ exports.profile = async (req, res) => {
       });
       Classes.push(myClassName.className);
       ClassesId.push(myClassName.ClassId);
+      classToken.push(myClassName.token);
     }
 
     for (const my of myBoard) {
@@ -350,7 +352,14 @@ exports.profile = async (req, res) => {
     }
 
     console.log("프로필", data);
-    res.render("MA_profile", { data, Classes, ClassesId, myBoard, likeArr });
+    res.render("MA_profile", {
+      data,
+      Classes,
+      ClassesId,
+      myBoard,
+      likeArr,
+      classToken,
+    });
   } else {
     res.render("MA_login");
   }

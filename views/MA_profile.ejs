@@ -153,9 +153,14 @@
           <!-- 클래스 목록 -->
           <div class="itemBody">
           <div class="classes">
+            <% if(data.userType == "leader"){ %>
             <% for(let i = 0; i<Classes.length; i++){ %>
+                <div class="class-name" data-class-id="<%=ClassesId[i]%>" onclick="enterClass(this)"><%=Classes[i]%> : <%=classToken[i]%></div>
+            <% }}else{ %>
+              
+              <% for(let i = 0; i<Classes.length; i++){ %>
               <div class="class-name" data-class-id="<%=ClassesId[i]%>" onclick="enterClass(this)"><%=Classes[i]%></div>
-              <%} %>
+              <%}} %>
           </div>
         <div class="class-make-btn">
           <button type="button" class="btn-hover color-9" data-bs-toggle="modal" data-bs-target="#classModal" >클래스 참여하기</button>
@@ -314,7 +319,7 @@
               <% for (let i = 0 ; i < myBoard.length ; i ++) {%>
                 <div class="board-object" data-board-id="<%=myBoard[i].BoardId%>" onclick="boardDetail(this)">
                         <div class="board-high">
-                            <!-- <div class="board-class"> <%=myBoard[i].ClassId%> </div> -->
+                            <div class="board-class"> <%=myBoard[i].ClassId%> </div>
                             <div class="board-title"> <%=myBoard[i].title%></div>
                             <div class="board-date"> <%=myBoard[i].date%></div>
                             <div class="like-count"><i class="fa-regular fa-thumbs-up"> <%=likeArr[i]%></i></div>
