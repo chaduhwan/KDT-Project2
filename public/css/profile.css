@@ -189,7 +189,16 @@ button {
 }
 
 .my-note {
-  grid-area: note;
+  /* grid-area: note;*/
+  position: absolute;
+  bottom: 10px;
+  display: flex;
+}
+.my-note > div {
+  width: 100px;
+  height: 50px;
+  font-size: large;
+  margin: 20px;
 }
 
 .memo-zone {
@@ -231,4 +240,39 @@ button {
 
 .board-date.like-count {
   font-size: small;
+}
+
+@media screen and (max-width: 768px) {
+  .main_content {
+    overflow: auto;
+    padding: 20px 40px;
+    display: grid;
+    grid-template-areas:
+      "class"
+      "userinfo"
+      "memo "
+      "board"
+      "exit";
+    /* align-items: stretch; */
+    /* justify-content: stretch; */
+
+    /* grid-template-columns: 200px 200px 500px; */
+    grid-template-columns: 1fr;
+    /* grid-template-columns: repeat(3, 1fr) */
+    /* grid-template-columns: 200px 1fr */
+    /* grid-template-columns: 100px 200px auto */
+
+    /* grid-template-rows: 200px 200px 500px; */
+    grid-template-rows: 2fr 4fr 2fr 2fr 1fr;
+    /* grid-template-rows: repeat(3, 1fr) */
+    /* grid-template-rows: 200px 1fr */
+    /* grid-template-rows: 100px 200px auto */
+
+    gap: 10px 20px;
+    /* row-gap: 10px; column-gap: 20px; */
+  }
+
+  .main_content {
+    overflow: scroll;
+  }
 }
