@@ -344,6 +344,17 @@ exports.ClassMake = async (req, res) => {
 exports.ClassSignin = async (req, res) => {
   const { token } = req.body;
   const result = await Class.findOne({ where: { token } });
+ 
+  const dupli = await UserTakeClass.findOne({where : {
+    userId : req.session.userId,
+    classClassId : result.ClassId
+  }})
+
+  if(dupli) {
+    res.json({success: dupli})
+    return;
+  }
+
   if (result) {
     const signin = await UserTakeClass.create({
       userId: req.session.userId,

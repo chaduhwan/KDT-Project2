@@ -154,14 +154,19 @@
           <div class="itemBody">
           <div class="classes">
             <% if(data.userType == "leader"){ %>
-              <div class="class-name" data-class-id="<%=ClassesId[i]%>" onclick="enterClass(this)"><%=Classes[i]%>
-                <% if(data.userType == "leader" ){ %>
-              <button type="button" class="ClassdeleteButton" value="<%=ClassesId[i]%>" onclick="deleteClass(this)">
-                <i class="fa-solid fa-trash-can "></i>
-              </button>
-              <%} %>
-              </div>
-              <%} %>
+
+            <% for(let i = 0; i<Classes.length; i++){ %>
+                <div class="class-name" data-class-id="<%=ClassesId[i]%>" onclick="enterClass(this)"><%=Classes[i]%> : <%=classToken[i]%>
+                  <button type="button" class="ClassdeleteButton" value="<%=ClassesId[i]%>" onclick="deleteClass(this)">
+                    <i class="fa-solid fa-trash-can "></i>
+                  </button>
+                </div>
+            <% }}else{ %>
+              
+              <% for(let i = 0; i<Classes.length; i++){ %>
+              <div class="class-name" data-class-id="<%=ClassesId[i]%>" onclick="enterClass(this)"><%=Classes[i]%></div>
+              <%}} %>
+
           </div>
         <div class="class-make-btn">
           <button type="button" class="btn-hover color-9" data-bs-toggle="modal" data-bs-target="#classModal" >클래스 참여하기</button>
@@ -266,7 +271,7 @@
         <!-- 플래너, 노트 존 -->
         <div class="my-note itemM">
           <div id="myPlanner" class="btn-hover color-9"><i class="fa-regular fa-calendar-days"></i> PLANNER</div>
-          <div id="myNote" class="btn-hover color-9"><i class="fa-regular fa-clipboard"></i> NOTE</div>
+          <div id="myNote" class="btn-hover color-9"><i class="fa-solid fa-box-archive"></i> CABINET</div>
         </div>
         <script>
           $('#myPlanner').on('click', function() {
@@ -592,9 +597,11 @@
         if(res.data.success === true) {
           alert('참여완료!')
           window.location.reload()
-        } else {
+        } else if (res.data.success === false){
           alert('존재하지않는 클래스이거나 참여코드가 틀렸습니다!')
-        }
+        } else (
+          alert('중복된 클래스입니다!')
+        )
       }
 
   </script>
