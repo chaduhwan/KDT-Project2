@@ -91,19 +91,25 @@
         <div class="main_content">
             <header class="board-hearder">
                 <form  class="search-bar" name="board-search">
-                    <button type="button" class="search-button" onclick="boardSearch()">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
                     <select id="search_select">
                         <option value="title">제목</option>
                         <option value="content">내용</option>
                         <option value="tag">태그</option>
                     </select>
                     <input type="text" name="searchBar" placeholder="검색어를 입력해주세요">
+                    <button type="button" class="search-button" onclick="boardSearch()">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
                 </form>
                 <div class="subject-object" onclick="Allboard()"># 모든글</div>
                 <% for (let i = 0; i < subjectId.length; i++) { %>
-                    <div class="subject-object" data-subject-id="<%= subjectId[i] %>" onclick="enterSubject(this)"># <%= subjectTitle[i] %></div>
+                    <div class="subject-object" data-subject-id="<%= subjectId[i] %>" onclick="enterSubject(this)"># <%= subjectTitle[i] %>
+                        <% if(userType == "leader" ){ %>
+                            <button type="button" class="ClassdeleteButton" value="<%=subjectId[i]%>" onclick="deleteSuject(this)">
+                              <i class="fa-solid fa-trash-can "></i>
+                            </button>
+                            <%} %>
+                    </div>
                     <% } %>
                     <% if(userType == "leader" ){ %>
                     <div class="readerOnly">
@@ -603,8 +609,22 @@
         })
         window.location.reload()
     }
+
   let subjectIs = false;
     async function enterSubject(element) {
+        
+            // 현재 선택된 요소의 배경색을 변경
+            element.style.backgroundColor = '#ccc'; // 원하는 색상으로 변경
+
+            // 다른 모든 요소의 배경색을 초기화 (선택되지 않은 상태로)
+            const subjectObjects = document.querySelectorAll('.subject-object');
+            subjectObjects.forEach((item) => {
+                 if (item !== element) {
+                    item.style.backgroundColor = ''; // 빈 문자열로 설정하여 초기화
+                }
+                });
+
+
         subjectIs = true;
         const SubjectId = element.getAttribute('data-subject-id');
          const res = await axios({
@@ -696,23 +716,61 @@
             }
     }
 
-    let tagAdd = []
-     function boardTag() {
-        event.preventDefault()
-        const form = document.forms['board-write']
-        const bar = document.querySelector('.write-tag-bar')
-
-        const div = document.createElement('div')
-        div.textContent = `: ${form.tag.value}`;
-        div.classList.add('tag-object')
-
-        bar.appendChild(div)
-
-        tagAdd.push(form.tag.value)
-
-         console.log(tagAdd)
-        form.tag.value="";
+    async function deleteSuject(button) {
+      event.stopPropagation();
+      const subjectId = button.value
+      if(!confirm('삭제하시겠습니까?')){
+                return;
+            } 
+            const result = await axios({
+                method:"POST",
+                url:"/subject/delete",
+                data : {
+                    subjectId
+                }
+            })
+            if (result.data.result===true) {
+                alert('클래스가 삭제되었습니다!')
+                window.location.reload()
+            } else{
+                alert('다른 사람이 생성한 클래스입니다!')
+            }
+      
     }
+
+
+
+
+    let tagAdd = [];
+
+function boardTag() {
+    event.preventDefault();
+    const form = document.forms['board-write'];
+    const bar = document.querySelector('.write-tag-bar');
+
+    if (form.tag.value === '') {
+        alert("태그를 넣어주세요!");
+        return;
+    }
+
+    // 중복 확인
+    if (tagAdd.includes(form.tag.value)) {
+        alert("중복된 태그입니다");
+        return;
+    }
+
+    const div = document.createElement('div');
+    div.textContent = `: ${form.tag.value}`;
+    div.classList.add('tag-object');
+
+    bar.appendChild(div);
+
+    tagAdd.push(form.tag.value);
+
+    console.log(tagAdd);
+    form.tag.value = "";
+}
+
 
     async function boardWrite() {
         const form = document.forms['board-write']
@@ -809,7 +867,7 @@
                 div.appendChild(boardBottom)
 
                 const main = document.querySelector('.board-main')
-                main.appendChild(div)
+                main.insertBefore(div, main.firstChild);
             }
 
             const writeTagBar = document.querySelector('.write-tag-bar');
@@ -954,12 +1012,21 @@
         modal2.style.display = "none"
         const form = document.forms['board-write']
         form.reset()
+        tagAdd = [];
+        const bar = document.querySelector('.write-tag-bar');
+           while (bar.firstChild) {
+        bar.removeChild(bar.firstChild);
+    }
+        const content = document.querySelector('.ProseMirror');
+        while (content.firstChild) {
+        content.removeChild(content.firstChild);
+    }
     }})
 
        const Editor = toastui.Editor;
        const editor = new Editor({
                el: document.querySelector('#editor'),
-               height : '500px',
+               height : '400px',
                initialEditType: 'markdown',
                previewStyle: 'vertical'
            });

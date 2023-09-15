@@ -137,6 +137,7 @@ button {
   justify-content: center;
 }
 .class-name {
+  position: relative;
   cursor: pointer;
   padding: 2px;
   margin: 2px 0px;
@@ -296,4 +297,18 @@ button {
   .main_content {
     overflow: scroll;
   }
+}
+
+.ClassdeleteButton {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #4993fa;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  justify-self: end;
+}
+.ClassdeleteButton:hover {
+  background-color: #337ab7;
 }
