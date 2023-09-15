@@ -61,7 +61,7 @@ async function fileupload() {
     console.log("res", res.data.path);
     imgBox.empty();
     imgBox.append(
-      `<img src=${res.data.path} style="width: 200px; height: 200px; border-radius: 50%;">`
+      `<img src=${res.data.path} style="width: 140px; height: 140px; border-radius: 50%;">`
     );
     localStorage.setItem("profileImgPath", res.data.path);
   } catch (error) {
