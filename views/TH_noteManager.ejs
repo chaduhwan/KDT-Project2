@@ -373,7 +373,7 @@
 
       document.querySelectorAll('.button').forEach(button => button.innerHTML = '<div><span>' + button.textContent.trim().split('').join('</span><span>') + '</span></div>');
       const resultBox = document.querySelector('.result');
-      let picture = ['jpg', 'png', 'jpeg', 'webp', 'gif'];
+      let picture = ['jpg', 'png', 'jpeg', 'webp', 'gif', 'jfif'];
       let doc = {
         ppt: '../public/default/ppt.png',
         pptx: '../public/default/ppt.png',
@@ -386,6 +386,7 @@
         xls: '../public/default/xls.png',
         zip: '../public/default/zip.png',
         folder: '../public/default/folder.png',
+        file: "../public/default/file.png"
       };
       let database = [];
       let lastnum = 0;
