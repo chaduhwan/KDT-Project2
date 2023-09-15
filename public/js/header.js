@@ -4,7 +4,7 @@ function profileImg() {
 
   const profile = document.querySelector("#profile_img");
   console.log(profile, img);
-  profile.innerHTML = `<img src='${img}' style="width: 200px;">`;
+  profile.innerHTML = `<img src='${img}' style="width: 200px;height:200px; border-radius: 50%">`;
 }
 
 profileImg();

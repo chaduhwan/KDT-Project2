@@ -22,33 +22,31 @@ exports.BoardEnter = async (req, res) => {
 };
 
 /////////////// 클래스 삭제 하기
-exports.ClassDelete = async (req,res) => {
-  const { classId }= req.body;
-  const find = await Class.findOne({where:{ClassId:classId}})
-  if(find.leader == req.session.userName) {
-    Class.destroy({where:{ClassId:classId}})
-    res.json({result:true})
-  }else {
+exports.ClassDelete = async (req, res) => {
+  const { classId } = req.body;
+  const find = await Class.findOne({ where: { ClassId: classId } });
+  if (find.leader == req.session.userName) {
+    Class.destroy({ where: { ClassId: classId } });
+    res.json({ result: true });
+  } else {
     res.json({ result: false });
   }
-
-}
-
+};
 
 ////////////게시판 주제만들기
 exports.Subjectmake = async (req, res) => {
   const { subjectTitle } = req.body;
   const ClassId = req.session.classId;
   Subject.create({ subjectTitle, ClassId });
-  res.json({subjectIs:true})
+  res.json({ subjectIs: true });
 };
 
 ///////////// 게시판 삭제
-exports.SubjectDelete = async (req,res) => {
-  const { subjectId }= req.body;
-    Subject.destroy({where:{SubjectId:subjectId}})
-    res.json({result:true})
-}
+exports.SubjectDelete = async (req, res) => {
+  const { subjectId } = req.body;
+  Subject.destroy({ where: { SubjectId: subjectId } });
+  res.json({ result: true });
+};
 
 ////////////게시판 들어가기
 exports.EnterSubject = async (req, res) => {
@@ -72,7 +70,8 @@ exports.EnterSubject = async (req, res) => {
     let likeArr = [];
 
     const boards = await board.findAll({
-      where: { SubjectId: req.session.subjectId }, order: [['BoardId', 'DESC']],
+      where: { SubjectId: req.session.subjectId },
+      order: [["BoardId", "DESC"]],
     });
     for (const boardEle of boards) {
       const cou = await like.count({
@@ -80,7 +79,7 @@ exports.EnterSubject = async (req, res) => {
       });
       likeArr.push(cou);
     }
-    res.json({ data: boards, likeArr, subjectIs: true});
+    res.json({ data: boards, likeArr, subjectIs: true });
   } else {
     const subject = await Subject.findAll({ where: { classId } });
 
@@ -98,7 +97,7 @@ exports.EnterSubject = async (req, res) => {
       });
       likeArr.push(cou);
     }
-    res.json({ data: boards, likeArr,subjectIs : false});
+    res.json({ data: boards, likeArr, subjectIs: false });
   }
 };
 
@@ -123,7 +122,10 @@ exports.BoardMain = async (req, res) => {
     console.log(subject);
     let likeArr = [];
 
-    const boards = await board.findAll({ where: { ClassId: classId } ,order: [['BoardId', 'DESC']]});
+    const boards = await board.findAll({
+      where: { ClassId: classId },
+      order: [["BoardId", "DESC"]],
+    });
     for (const boardEle of boards) {
       const cou = await like.count({
         where: { BoardId: boardEle.BoardId },
@@ -138,7 +140,7 @@ exports.BoardMain = async (req, res) => {
       subjectId,
       subjectTitle,
       userType,
-      subjectIs : false
+      subjectIs: false,
     });
   } else {
     res.render("MA_login");
@@ -245,7 +247,11 @@ exports.BoardSearch = async (req, res) => {
   let result;
   if (searchValue === "title") {
     result = await board.findAll({
-      where: { title: { [Op.like]: "%" + searchBar + "%" } , ClassId : req.session.classId},order: [['BoardId', 'DESC']]
+      where: {
+        title: { [Op.like]: "%" + searchBar + "%" },
+        ClassId: req.session.classId,
+      },
+      order: [["BoardId", "DESC"]],
     });
     for (const boardEle of result) {
       const cou = await like.count({
@@ -255,17 +261,25 @@ exports.BoardSearch = async (req, res) => {
     }
   } else if (searchValue === "tag") {
     result = await board.findAll({
-      where: { tag: { [Op.like]: "%" + searchBar + "%" } ,ClassId : req.session.classId},order: [['BoardId', 'DESC']]
+      where: {
+        tag: { [Op.like]: "%" + searchBar + "%" },
+        ClassId: req.session.classId,
+      },
+      order: [["BoardId", "DESC"]],
     });
     for (const boardEle of result) {
       const cou = await like.count({
-        where: { BoardId: boardEle.BoardId ,},
+        where: { BoardId: boardEle.BoardId },
       });
       likeArr.push(cou);
     }
   } else if (searchValue === "content") {
     result = await board.findAll({
-      where: { content: { [Op.like]: "%" + searchBar + "%" } ,ClassId : req.session.classId},order: [['BoardId', 'DESC']]
+      where: {
+        content: { [Op.like]: "%" + searchBar + "%" },
+        ClassId: req.session.classId,
+      },
+      order: [["BoardId", "DESC"]],
     });
     for (const boardEle of result) {
       const cou = await like.count({
@@ -332,36 +346,53 @@ exports.ClassMake = async (req, res) => {
   };
   const token = await randomNumber(111111, 999999);
   const result = await Class.create({ className, leader, token });
-  const auto = await Class.findOne({where:{token}})
+  const auto = await Class.findOne({ where: { token } });
   const signin = await UserTakeClass.create({
     userId: req.session.userId,
-    classClassId : auto.ClassId
-  })
+    classClassId: auto.ClassId,
+  });
   res.json({ res: true, result, token });
 };
 
 ////////////////클래스 가입
 exports.ClassSignin = async (req, res) => {
   const { token } = req.body;
-  const result = await Class.findOne({ where: { token } });
- 
-  const dupli = await UserTakeClass.findOne({where : {
-    userId : req.session.userId,
-    classClassId : result.ClassId
-  }})
 
-  if(dupli) {
-    res.json({success: dupli})
-    return;
-  }
+  const result = await Class.findOne({ where: { token } });
 
   if (result) {
-    const signin = await UserTakeClass.create({
-      userId: req.session.userId,
-      classClassId: result.ClassId,
+    const dupli = await UserTakeClass.findOne({
+      where: {
+        userId: req.session.userId,
+        classClassId: result.ClassId,
+      },
     });
-    res.json({ success: true });
+    if (dupli) {
+      res.json({ success: dupli });
+      return;
+    } else {
+      const signin = await UserTakeClass.create({
+        userId: req.session.userId,
+        classClassId: result.ClassId,
+      });
+      res.json({ success: true });
+    }
   } else {
     res.json({ success: false });
   }
+
+  // if (dupli) {
+  //   res.json({ success: dupli });
+  //   return;
+  // } else {
+  //   if (result) {
+  //     const signin = await UserTakeClass.create({
+  //       userId: req.session.userId,
+  //       classClassId: result.ClassId,
+  //     });
+  //     res.json({ success: true });
+  //   } else {
+  //     res.json({ success: false });
+  //   }
+  // }
 };
