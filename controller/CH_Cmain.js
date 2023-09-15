@@ -21,6 +21,20 @@ exports.BoardEnter = async (req, res) => {
   res.json({ result: true });
 };
 
+/////////////// 클래스 삭제 하기
+exports.ClassDelete = async (req,res) => {
+  const { classId }= req.body;
+  const find = await Class.findOne({where:{ClassId:classId}})
+  if(find.leader == req.session.userName) {
+    Class.destroy({where:{ClassId:classId}})
+    res.json({result:true})
+  }else {
+    res.json({ result: false });
+  }
+
+}
+
+
 ////////////게시판 주제만들기
 exports.Subjectmake = async (req, res) => {
   const { subjectTitle } = req.body;
@@ -28,6 +42,13 @@ exports.Subjectmake = async (req, res) => {
   Subject.create({ subjectTitle, ClassId });
   res.json({subjectIs:true})
 };
+
+///////////// 게시판 삭제
+exports.SubjectDelete = async (req,res) => {
+  const { subjectId }= req.body;
+    Subject.destroy({where:{SubjectId:subjectId}})
+    res.json({result:true})
+}
 
 ////////////게시판 들어가기
 exports.EnterSubject = async (req, res) => {
@@ -51,7 +72,7 @@ exports.EnterSubject = async (req, res) => {
     let likeArr = [];
 
     const boards = await board.findAll({
-      where: { SubjectId: req.session.subjectId },
+      where: { SubjectId: req.session.subjectId }, order: [['BoardId', 'DESC']],
     });
     for (const boardEle of boards) {
       const cou = await like.count({
@@ -102,7 +123,7 @@ exports.BoardMain = async (req, res) => {
     console.log(subject);
     let likeArr = [];
 
-    const boards = await board.findAll({ where: { ClassId: classId } });
+    const boards = await board.findAll({ where: { ClassId: classId } ,order: [['BoardId', 'DESC']]});
     for (const boardEle of boards) {
       const cou = await like.count({
         where: { BoardId: boardEle.BoardId },
@@ -224,7 +245,7 @@ exports.BoardSearch = async (req, res) => {
   let result;
   if (searchValue === "title") {
     result = await board.findAll({
-      where: { title: { [Op.like]: "%" + searchBar + "%" } , ClassId : req.session.classId},
+      where: { title: { [Op.like]: "%" + searchBar + "%" } , ClassId : req.session.classId},order: [['BoardId', 'DESC']]
     });
     for (const boardEle of result) {
       const cou = await like.count({
@@ -234,7 +255,7 @@ exports.BoardSearch = async (req, res) => {
     }
   } else if (searchValue === "tag") {
     result = await board.findAll({
-      where: { tag: { [Op.like]: "%" + searchBar + "%" } ,ClassId : req.session.classId},
+      where: { tag: { [Op.like]: "%" + searchBar + "%" } ,ClassId : req.session.classId},order: [['BoardId', 'DESC']]
     });
     for (const boardEle of result) {
       const cou = await like.count({
@@ -244,7 +265,7 @@ exports.BoardSearch = async (req, res) => {
     }
   } else if (searchValue === "content") {
     result = await board.findAll({
-      where: { content: { [Op.like]: "%" + searchBar + "%" } ,ClassId : req.session.classId},
+      where: { content: { [Op.like]: "%" + searchBar + "%" } ,ClassId : req.session.classId},order: [['BoardId', 'DESC']]
     });
     for (const boardEle of result) {
       const cou = await like.count({

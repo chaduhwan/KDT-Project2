@@ -81,6 +81,13 @@ body {
   background-color: #4993fa;
 }
 
+.fa-pen-to-square{
+  font-size: medium;
+}
+.fa-tags {
+  font-size: medium;
+}
+
 /* 게시판 리스트관련 */
 .subject-object {
   font-weight: 700;
@@ -89,6 +96,10 @@ body {
   cursor: pointer;
   margin-bottom: 5px;
   margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  align-items: center;
 }
 .subject-object:hover {
   background-color:#ccc;
@@ -261,6 +272,18 @@ input{
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
-  height: 65%;
+  height: fit-content;
 }
 
+.ClassdeleteButton {
+  position: absolute;
+  right: 0;
+  background-color: #4993fa;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  justify-self: end;
+}
+.ClassdeleteButton:hover {
+  background-color: #337ab7;
+}
