@@ -11,6 +11,10 @@ const Desk = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    classId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   });
   return Desk;
 };

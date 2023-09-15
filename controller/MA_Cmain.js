@@ -13,7 +13,7 @@ const nodemailer = require("nodemailer");
 //카카오 rest api활용
 const kakao = {
   clientID: process.env.KAKAO_ID,
-  redirectUri: "http://localhost:8000/auth/kakao/callback",
+  redirectUri: "http://www.clavi.site/auth/kakao/callback",
 };
 
 /////////////////////GET///////////////////////
@@ -45,13 +45,13 @@ exports.login = (req, res) => {
 };
 exports.kakao_get_join = (req, res) => {
   res.redirect(
-    `https://kauth.kakao.com/oauth/authorize?client_id=${kakao.clientID}&redirect_uri=http://localhost:8000/auth/kakao/join/callback&response_type=code&scope=profile_nickname,account_email`
+    `https://kauth.kakao.com/oauth/authorize?client_id=${kakao.clientID}&redirect_uri=http://www.clavi.site/auth/kakao/join/callback&response_type=code&scope=profile_nickname,account_email`
   );
 };
 //카카오 로그인 요청
 exports.kakao_get = (req, res) => {
   res.redirect(
-    `https://kauth.kakao.com/oauth/authorize?client_id=${kakao.clientID}&redirect_uri=http://localhost:8000/auth/kakao/login/callback&response_type=code&scope=profile_nickname,account_email`
+    `https://kauth.kakao.com/oauth/authorize?client_id=${kakao.clientID}&redirect_uri=http://www.clavi.site/auth/kakao/login/callback&response_type=code&scope=profile_nickname,account_email`
   );
 };
 //카카오 회원가입
@@ -195,7 +195,7 @@ const google = {
 //구글 회원가입요청
 exports.google_get_join = (req, res) => {
   res.redirect(
-    `https://accounts.google.com/o/oauth2/v2/auth?client_id=${google.clientID}&redirect_uri=http://localhost:8000/auth/google/join/callback&response_type=code&scope=email profile`
+    `https://accounts.google.com/o/oauth2/v2/auth?client_id=${google.clientID}&redirect_uri=http://www.clavi.site/auth/google/join/callback&response_type=code&scope=email profile`
   );
   console.log("로그인 요청 완료");
 };
@@ -203,7 +203,7 @@ exports.google_get_join = (req, res) => {
 //구글 로그인 요청
 exports.google_get = (req, res) => {
   res.redirect(
-    `https://accounts.google.com/o/oauth2/v2/auth?client_id=${google.clientID}&redirect_uri=http://localhost:8000/auth/google/login/callback&response_type=code&scope=email profile`
+    `https://accounts.google.com/o/oauth2/v2/auth?client_id=${google.clientID}&redirect_uri=http://www.clavi.site/auth/google/login/callback&response_type=code&scope=email profile`
   );
   console.log("로그인 요청 완료");
 };
@@ -220,7 +220,7 @@ exports.google_join = async (req, res) => {
       code,
       client_id: google.clientID,
       client_secret: google.client_secret,
-      redirect_uri: "http://localhost:8000/auth/google/join/callback",
+      redirect_uri: "http://www.clavi.site/auth/google/join/callback",
       grant_type: "authorization_code",
     },
   });
@@ -283,7 +283,7 @@ exports.google_callback = async (req, res) => {
       code,
       client_id: google.clientID,
       client_secret: google.client_secret,
-      redirect_uri: "http://localhost:8000/auth/google/login/callback",
+      redirect_uri: "http://www.clavi.site/auth/google/login/callback",
       grant_type: "authorization_code",
     },
   });
@@ -332,6 +332,7 @@ exports.profile = async (req, res) => {
     req.session.img = data.profileImgPath;
 
     let Classes = [];
+    let classToken = [];
     let ClassesId = [];
     let likeArr = [];
     for (const ele of myClass) {
@@ -340,6 +341,7 @@ exports.profile = async (req, res) => {
       });
       Classes.push(myClassName.className);
       ClassesId.push(myClassName.ClassId);
+      classToken.push(myClassName.token);
     }
 
     for (const my of myBoard) {
@@ -350,7 +352,14 @@ exports.profile = async (req, res) => {
     }
 
     console.log("프로필", data);
-    res.render("MA_profile", { data, Classes, ClassesId, myBoard, likeArr });
+    res.render("MA_profile", {
+      data,
+      Classes,
+      ClassesId,
+      myBoard,
+      likeArr,
+      classToken,
+    });
   } else {
     res.render("MA_login");
   }

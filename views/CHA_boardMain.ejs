@@ -272,7 +272,12 @@
             return false;
         }
         // 장소검색 객체를 통해 키워드로 장소검색을 요청
-        ps.keywordSearch(keyword, placesSearchCB);
+        ps.keywordSearch(keyword, placesSearchCB, {
+            location: new kakao.maps.LatLng( 37.54760355129859, 126.94559171370817),
+            // radius: 10000,
+            size: 5,
+            sort: kakao.maps.services.SortBy.DISTANCE
+        } );
         }
 
         // 장소검색이 완료됐을 때 호출되는 콜백

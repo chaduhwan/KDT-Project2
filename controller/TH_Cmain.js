@@ -1,21 +1,21 @@
-const { Desk, Position, Chosen, File, Memo } = require("../models");
-const { Op } = require("sequelize");
+const { Desk, Position, Chosen, File, Memo } = require('../models');
+const { Op } = require('sequelize');
 
 exports.test = (req, res) => {
-  res.render("test");
+  res.render('test');
 };
 exports.test2 = (req, res) => {
-  res.render("test2");
+  res.render('test2');
 };
 exports.test3 = (req, res) => {
-  res.render("test3");
+  res.render('test3');
 };
 
 exports.noteManager = async (req, res) => {
   if (req.session.isLogined) {
-    res.render("TH_noteManager");
+    res.render('TH_noteManager');
   } else {
-    res.render("MA_login");
+    res.render('MA_login');
   }
 };
 
@@ -27,9 +27,9 @@ exports.memo_post = async (req, res) => {
       content: req.body.content,
       name: req.session.userName,
     });
-    res.send("성공");
+    res.send('성공');
   } catch (e) {
-    res.send("실패");
+    res.send('실패');
   }
 };
 
@@ -102,7 +102,7 @@ exports.noteUpload = async (req, res) => {
           data[j].filename == req.files[i].key &&
           data[j].userid == req.session.userId
         ) {
-          res.send({ status: "중복" });
+          res.send({ status: '중복' });
           return;
         }
       }
@@ -113,7 +113,7 @@ exports.noteUpload = async (req, res) => {
         isFolder: false,
         location: req.files[i].location,
         parent:
-          typeof req.body.folder_location == "string"
+          typeof req.body.folder_location == 'string'
             ? req.body.folder_location
             : req.body.folder_location[i],
       });
@@ -125,10 +125,10 @@ exports.noteUpload = async (req, res) => {
       console.log(obj);
       fileSet.push(obj);
     }
-    res.send({ status: "성공", files: fileSet });
+    res.send({ status: '성공', files: fileSet });
   } catch (err) {
     console.log(err);
-    res.send({ status: "실패" });
+    res.send({ status: '실패' });
   }
 };
 
@@ -140,7 +140,7 @@ exports.noteUpload_folder = async (req, res) => {
         data[j].filename == req.body.filename &&
         data[j].userid == req.session.userId
       ) {
-        res.send("중복");
+        res.send('중복');
         return;
       }
     }
@@ -152,10 +152,10 @@ exports.noteUpload_folder = async (req, res) => {
       location: null,
       parent: req.body.parent,
     });
-    res.send("성공");
+    res.send('성공');
   } catch (err) {
     console.log(err);
-    res.send("실패");
+    res.send('실패');
   }
 };
 
@@ -186,9 +186,9 @@ exports.erase_files = async (req, res) => {
         });
       }
     }
-    res.send("성공");
+    res.send('성공');
   } catch (e) {
-    res.send("실패");
+    res.send('실패');
   }
 };
 
@@ -203,29 +203,29 @@ exports.patch_files = async (req, res) => {
             userid: req.session.userId,
             filename: req.body.movers[i],
           },
-        }
+        },
       );
     }
-    res.send("성공");
+    res.send('성공');
   } catch (e) {
-    res.send("실패");
+    res.send('실패');
   }
 };
 
 exports.desk = (req, res) => {
   if (req.session.isLogined) {
-    res.render("TH_desk");
+    res.render('TH_desk');
   } else {
-    res.render("MA_login");
+    res.render('MA_login');
   }
 };
 exports.generator = (req, res) => {
   if (req.session.isLogined) {
     let name = req.session.userName;
     let userType = req.session.userType;
-    res.render("TH_deskGenerate", { name, userType });
+    res.render('TH_deskGenerate', { name, userType });
   } else {
-    res.render("MA_login");
+    res.render('MA_login');
   }
 };
 
@@ -253,7 +253,7 @@ exports.get_generator = async (req, res) => {
       }
     }
     console.log(desk);
-    res.json({ desk });
+    res.json({ desk: desk, classId: req.session.classId });
   } catch (err) {
     console.log(err);
   }
@@ -263,9 +263,9 @@ exports.reservation = (req, res) => {
   if (req.session.isLogined) {
     let name = req.session.userName;
     let userType = req.session.userType;
-    res.render("TH_placeReservation", { name, userType });
+    res.render('TH_placeReservation', { name, userType });
   } else {
-    res.render("MA_login");
+    res.render('MA_login');
   }
 };
 
@@ -275,6 +275,7 @@ exports.reservationConfirm = async (req, res) => {
     const desk = await Desk.create({
       name,
       num,
+      classId: req.session.classId,
     });
     for (let i = 0; i < position.length; i++) {
       const desk_position = await Position.create({
@@ -291,9 +292,9 @@ exports.reservationConfirm = async (req, res) => {
         which: chosen[i].which,
       });
     }
-    res.send("성공");
+    res.send('성공');
   } catch (err) {
-    res.send("실패");
+    res.send('실패');
   }
 };
 
@@ -308,9 +309,9 @@ exports.reservationEdit = async (req, res) => {
         which: chosen[i].which,
       });
     }
-    res.send("성공");
+    res.send('성공');
   } catch (err) {
-    res.send("실패");
+    res.send('실패');
   }
 };
 
@@ -319,8 +320,8 @@ exports.delete_generator = async (req, res) => {
     await Desk.destroy({ where: { name: req.body.data } });
     await Position.destroy({ where: { name: req.body.data } });
     await Chosen.destroy({ where: { name: req.body.data } });
-    res.send("성공");
+    res.send('성공');
   } catch (err) {
-    res.send("실패");
+    res.send('실패');
   }
 };

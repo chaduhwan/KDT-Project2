@@ -30,7 +30,7 @@
         height: 100%;
       }
       .right-bar {
-        width: 200px;
+        width: 15%;
         border-style: solid;
         border-radius: 5px;
         border-color: white;
@@ -42,6 +42,7 @@
         position: absolute;
         display: flex;
         flex-direction: column;
+        align-items: center;
       }
       .square {
         width: 60px;
@@ -128,6 +129,9 @@
             <!-- <ul class="data-list"></ul> -->
             <select id="data-list2" onchange="positionChange()">
             </select>
+            <div class="button-place">
+              <button class="btn-custom" onclick="deleteChair()"> 데이터삭제</button>
+            </div>
           </div>
         </div>
       </div>
@@ -159,22 +163,8 @@
     </div>
     <script src="/public/js/header.js"></script>
     <script>
+      let flag = 0;
       $(".right-bar").draggable()
-      // if(window.innerWidth < 1200){
-      //     document.querySelector(".warn").style.display = "flex";
-      //   }
-      //   else{
-      //     document.querySelector(".warn").style.display = "none";
-      //   }
-      // window.addEventListener('resize', (e) => {
-      //   console.log(window.innerWidth)
-      //   if(window.innerWidth < 1200){
-      //     document.querySelector(".warn").style.display = "flex";
-      //   }
-      //   else{
-      //     document.querySelector(".warn").style.display = "none";
-      //   }
-      // })
       let whoAmI = '<%= name %>';
       let myType = '<%= userType %>';
       if (myType != 'leader') {
@@ -199,12 +189,17 @@
         dataBase = res.data.desk;
         const { desk: data } = res.data;
         for (let i = 0; i < data.length; i++) {
-          let op = document.createElement('option');
+          console.log(res.data.classId)
+          console.log(res.data.desk[i].classId)
+          if(res.data.classId == res.data.desk[i].classId){
+            let op = document.createElement('option');
           op.classList.add(`${data[i].name}`);
           op.innerHTML = `<p class="${data[i].name}">${data[i].name}</p>`;
           op.oncontextmenu = deleteChair;
           op.style.cursor = 'pointer';
           select.appendChild(op);
+          }
+          
         }
       });
 
@@ -221,6 +216,7 @@
       let nemoMuch = 0;
 
       const createChair = () => {
+        flag = 1;
         nemoNum++;
         nemoMuch++;
         console.log(nemoNum);
@@ -254,6 +250,7 @@
       };
 
       const garo = (i) => {
+        flag = 1;
         let each = document.querySelector(`.num${i}`);
         let standard = 60;
         // let standard = numeric;
@@ -280,6 +277,7 @@
       };
 
       const sero = (i) => {
+        flag = 1
         let each = document.querySelector(`.num${i}`);
         let standard = 60;
         // let standard = numeric;
@@ -309,6 +307,9 @@
       const saveChair = async () => {
         let prompt = window.prompt('이름을 설정해주세요');
         if (prompt) {
+          if(prompt.includes(" ")){
+            prompt = prompt.replace(" ", "_")
+          }
           let data = document.querySelector('.room').innerHTML;
           let select = document.querySelector("#data-list2")
           // let ul = document.querySelector('.data-list');
@@ -338,12 +339,16 @@
           op.oncontextmenu = deleteChair;
           op.style.cursor = 'pointer';
           select.appendChild(op);
+          flag = 0;
         }
       };
 
       const loadChairs2 = () => {
-        if (document.querySelector('.room').hasChildNodes()) {
-          let confirm = window.confirm(
+        console.log(flag)
+        if(flag == 1){
+          if (document.querySelector('.room').hasChildNodes()) {
+
+            let confirm = window.confirm(
             '현재 상태를 저장하지 않고 로드하시겠습니까?',
           );
           if (confirm) {
@@ -352,16 +357,23 @@
             let whichOne = which.options[which.selectedIndex].children[0].innerText;
             chairGenerator(whichOne);
             $('.square').draggable();
+            flag = 0;
           }
           else{
             let which = event.currentTarget
             which.options[0].selected = true
           }
-        } else {
+
+          
+        }
+        }
+         else {
+          document.querySelector('.room').innerHTML = '';
           let which = event.currentTarget
           let whichOne = which.options[which.selectedIndex].children[0].innerText;
           chairGenerator(whichOne);
           $('.square').draggable();
+          flag = 0;
         }
       };
 
@@ -433,7 +445,8 @@
       };
 
       const deleteChair = async (event) => {
-        event.preventDefault();
+        if(event){
+          event.preventDefault();
         if (event.currentTarget.classList.contains('square')) {
           let id = event.currentTarget.children[0].innerText;
           if(id.includes(":")){
@@ -445,31 +458,24 @@
             nemoMuch--;
             console.log(nemoNum);
           }
-        } else {
-          const liName = event.currentTarget.children[0].innerText;
+        }
+        }
+         else {
+          let which = document.querySelector("#data-list2")
+          let liName = which.options[which.selectedIndex].children[0].innerText
           let confirm = window.confirm('해당 데이터를 삭제하시겠습니까?');
           if (confirm) {
-            let ul = document.querySelector('.data-list');
-            console.log(typeof ul);
-            let i = 0;
-            while (true) {
-              if (ul.childNodes[i].classList.contains(`${liName}`)) {
-                ul.childNodes[i].remove();
-                // socket.emit('dataPop', liName);
-                let res = await axios({
+            let res = await axios({
                   method: 'post',
                   url: '/desk/delete_generator',
                   data: { data: liName },
                 });
                 if (res.data == '성공') {
                   alert('데이터를 삭제하셨습니다!');
+                  window.location.reload()
                 } else {
                   alert('데이터를 삭제하지 못했습니다');
                 }
-                return;
-              }
-              i++;
-            }
           }
         }
       };
