@@ -24,9 +24,43 @@ exports.classMain = (req, res) => {
 
 exports.intro = async (req, res) => {
   if (req.session.isLogined) {
+    //세션이 있는경우
     const data = await User.findOne({ where: { id: req.session.userId } });
-    // console.log('프로필', data)
-    res.render("MA_profile", { data });
+    const myBoard = await board.findAll({ where: { id: req.session.userId } });
+    const myClass = await UserTakeClass.findAll({
+      where: { userid: req.session.userId },
+    }); //유저id 가 가지고 있는 클래스  row 반환
+    req.session.img = data.profileImgPath;
+
+    let Classes = [];
+    let classToken = [];
+    let ClassesId = [];
+    let likeArr = [];
+    for (const ele of myClass) {
+      const myClassName = await Class.findOne({
+        where: { ClassId: ele.classClassId }, // 원하는 조건을 지정합니다.
+      });
+      Classes.push(myClassName.className);
+      ClassesId.push(myClassName.ClassId);
+      classToken.push(myClassName.token);
+    }
+
+    for (const my of myBoard) {
+      const cou = await like.count({
+        where: { BoardId: my.BoardId },
+      });
+      likeArr.push(cou);
+    }
+
+    console.log("프로필", data);
+    res.render("MA_profile", {
+      data,
+      Classes,
+      ClassesId,
+      myBoard,
+      likeArr,
+      classToken,
+    });
   } else {
     res.render("intro");
   }
@@ -36,9 +70,45 @@ exports.join = (req, res) => {
   res.render("MA_join");
 };
 //로그인
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
   if (req.session.isLogined) {
-    res.render("MA_profile");
+    //세션이 있는경우
+    const data = await User.findOne({ where: { id: req.session.userId } });
+    const myBoard = await board.findAll({ where: { id: req.session.userId } });
+    const myClass = await UserTakeClass.findAll({
+      where: { userid: req.session.userId },
+    }); //유저id 가 가지고 있는 클래스  row 반환
+    req.session.img = data.profileImgPath;
+
+    let Classes = [];
+    let classToken = [];
+    let ClassesId = [];
+    let likeArr = [];
+    for (const ele of myClass) {
+      const myClassName = await Class.findOne({
+        where: { ClassId: ele.classClassId }, // 원하는 조건을 지정합니다.
+      });
+      Classes.push(myClassName.className);
+      ClassesId.push(myClassName.ClassId);
+      classToken.push(myClassName.token);
+    }
+
+    for (const my of myBoard) {
+      const cou = await like.count({
+        where: { BoardId: my.BoardId },
+      });
+      likeArr.push(cou);
+    }
+
+    console.log("프로필", data);
+    res.render("MA_profile", {
+      data,
+      Classes,
+      ClassesId,
+      myBoard,
+      likeArr,
+      classToken,
+    });
   } else {
     res.render("MA_login");
   }
