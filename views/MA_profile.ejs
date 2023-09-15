@@ -154,13 +154,14 @@
           <div class="itemBody">
           <div class="classes">
             <% if(data.userType == "leader"){ %>
-            <% for(let i = 0; i<Classes.length; i++){ %>
-                <div class="class-name" data-class-id="<%=ClassesId[i]%>" onclick="enterClass(this)"><%=Classes[i]%> : <%=classToken[i]%></div>
-            <% }}else{ %>
-              
-              <% for(let i = 0; i<Classes.length; i++){ %>
-              <div class="class-name" data-class-id="<%=ClassesId[i]%>" onclick="enterClass(this)"><%=Classes[i]%></div>
-              <%}} %>
+              <div class="class-name" data-class-id="<%=ClassesId[i]%>" onclick="enterClass(this)"><%=Classes[i]%>
+                <% if(data.userType == "leader" ){ %>
+              <button type="button" class="ClassdeleteButton" value="<%=ClassesId[i]%>" onclick="deleteClass(this)">
+                <i class="fa-solid fa-trash-can "></i>
+              </button>
+              <%} %>
+              </div>
+              <%} %>
           </div>
         <div class="class-make-btn">
           <button type="button" class="btn-hover color-9" data-bs-toggle="modal" data-bs-target="#classModal" >클래스 참여하기</button>
@@ -660,5 +661,26 @@
       nextBtn,
     );
     emblaApi.on('destroy', removePrevNextBtnsClickHandlers);
+    async function deleteClass(button) {
+      event.stopPropagation();
+      const classId = button.value
+      if(!confirm('삭제하시겠습니까?')){
+                return;
+            } 
+            const result = await axios({
+                method:"POST",
+                url:"/class/delete",
+                data : {
+                    classId
+                }
+            })
+            if (result.data.result===true) {
+                alert('클래스가 삭제되었습니다!')
+                window.location.reload()
+            } else{
+                alert('다른 사람이 생성한 클래스입니다!')
+            }
+      
+    }
   </script>
 </html>
