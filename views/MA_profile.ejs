@@ -253,18 +253,23 @@
                 </form>
               </div>
             </div>
-            <div class="my-note">
-              <div id="myPlanner"><i class="fa-regular fa-calendar-days"></i> PLANNER</div>
-              <div id="myNote"><i class="fa-regular fa-clipboard"></i> NOTE</div>
-            </div>
+            
             </div>
         </div>
 
         <!-- 플래너, 노트 존 -->
-        <!-- <div class="my-note itemM">
-          <div id="myPlanner"></div>
-          <div id="myNote"></div>
-        </div> -->
+        <div class="my-note itemM">
+          <div id="myPlanner" class="btn-hover color-9"><i class="fa-regular fa-calendar-days"></i> PLANNER</div>
+          <div id="myNote" class="btn-hover color-9"><i class="fa-regular fa-clipboard"></i> NOTE</div>
+        </div>
+        <script>
+          $('#myPlanner').on('click', function() {
+            window.location.href = '/calendar';
+          });
+          $('#myNote').on('click', function() {
+            window.location.href = '/noteManager';
+          });
+        </script>
 
         <!-- 메모 -->
         <div class="memo-zone itemM" onclick="modeChange()">
@@ -309,7 +314,7 @@
               <% for (let i = 0 ; i < myBoard.length ; i ++) {%>
                 <div class="board-object" data-board-id="<%=myBoard[i].BoardId%>" onclick="boardDetail(this)">
                         <div class="board-high">
-                            <div class="board-class"> <%=myBoard[i].ClassId%> </div>
+                            <!-- <div class="board-class"> <%=myBoard[i].ClassId%> </div> -->
                             <div class="board-title"> <%=myBoard[i].title%></div>
                             <div class="board-date"> <%=myBoard[i].date%></div>
                             <div class="like-count"><i class="fa-regular fa-thumbs-up"> <%=likeArr[i]%></i></div>
