@@ -217,7 +217,7 @@
                 data : {id : '<%=userid%>',BoardId : buttonValue}
             }).then(res=> {
                 if (res.data.result==true) {
-                    button.innerText =`${res.data.cou}`
+                    button.children[0].innerText =`${res.data.cou}`
                 } else {
                     alert("이미 좋아요한 게시글입니다.!")
                 }
