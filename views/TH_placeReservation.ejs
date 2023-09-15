@@ -209,6 +209,9 @@
           select.appendChild(defaultOne);
           const { desk: data } = res.data;
           for (let i = 0; i < data.length; i++) {
+            console.log(res.data.classId)
+            console.log(data[i].classId)
+            if(res.data.classId == res.data.desk[i].classId){
               let op = document.createElement('option');
               op.classList.add(`${data[i].name}`);
               op.innerHTML = `<p class="${data[i].name}">${data[i].name}</p>`;
@@ -216,6 +219,7 @@
               op.style.cursor = 'pointer';
               console.log(op)
               select.appendChild(op);
+            }
             }
         });
       }
