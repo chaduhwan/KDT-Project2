@@ -9,7 +9,7 @@
 www.clavi.site
 
 # 웹 개발팀 소개
-|차두환|이태희|이상녕|마아송|
+|차두환(팀장)|이태희|이상녕|마아송|
 |:-:|:-:|:-:|:-:|
 |![image](https://github.com/chaduhwan/Project2/assets/56573530/407357e4-210c-46e9-a48b-65910dcab359)|![image](https://github.com/chaduhwan/Project2/assets/56573530/8667b895-443d-4cc9-89df-08d46ec5c1bc)|![image](https://github.com/chaduhwan/Project2/assets/56573530/6f26bc67-619e-4bf8-883f-b4836c4c7439)|![image](https://github.com/chaduhwan/Project2/assets/56573530/8e1de7c5-7260-479e-9359-02082f4af6ce)|
 |<a href="https://github.com/chaduhwan">@chaduhwan</a>|<a href="https://github.com/thbrthbr">@thbrthbr</a>|<a href="https://github.com/SangNyungLee">@SangNyungLee</a>|<a href="https://github.com/asonghub">@asonghub</a>|
